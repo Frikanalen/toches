@@ -1,3 +1,4 @@
+import { toCamelCase } from "../../lang/string"
 import { RowStructure } from "../types/RowStructure"
 
 /** Parses a row of data with prefixed keys into a structured object */
@@ -12,18 +13,20 @@ export const parseRowStructure = (row: Record<string, any>, structure: RowStruct
   for (const [pair, value] of Object.entries(row)) {
     const [pref, key] = pair.split("__")
 
+    const safeKey = toCamelCase(key)
+
     // Parse subqueries correctly
-    if (subqueryKeys.includes(key)) {
-      const subStructure = subqueries[key]
+    if (subqueryKeys.includes(safeKey)) {
+      const subStructure = subqueries[safeKey]
       const arr = Array.isArray(value) ? value : [value]
 
-      obj[key] = arr.map((v) => parseRowStructure(v, subStructure))
+      obj[safeKey] = arr.map((v) => parseRowStructure(v, subStructure))
 
       continue
     }
 
     if (pref === prefix) {
-      obj[key] = value
+      obj[safeKey] = value
     }
   }
 

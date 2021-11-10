@@ -4,9 +4,15 @@ test("parseRowStructure", () => {
   const result = parseRowStructure(
     {
       User__id: 1,
-      User__username: "enitoni",
+      User__email: "enitoni",
+      User__created_at: "today",
+      User__roles: [
+        {
+          Role__id: 4,
+          Role__name: "admin",
+        },
+      ],
       UserAvatar__path: "path",
-      UserCoverAvatar__path: null,
     },
     {
       prefix: "User",
@@ -16,18 +22,26 @@ test("parseRowStructure", () => {
           prefix: "UserAvatar",
           property: "avatar",
         },
-        {
-          prefix: "UserCoverAvatar",
-          property: "coverAvatar",
-        },
       ],
+      subqueries: {
+        roles: {
+          prefix: "Role",
+          property: "role",
+        },
+      },
     },
   )
 
   expect(result).toMatchObject({
-    username: "enitoni",
-    coverAvatar: null,
     id: 1,
+    email: "enitoni",
+    createdAt: "today",
+    roles: [
+      {
+        id: 4,
+        name: "admin",
+      },
+    ],
     avatar: {
       path: "path",
     },
