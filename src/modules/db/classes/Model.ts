@@ -2,24 +2,24 @@ import { RowStructure } from "../types/RowStructure"
 import { Knex } from "knex"
 import { parseRowStructure } from "../helpers/parseRowStructure"
 
-export type ModelData<D extends object> = {
+export type ModelData = {
   tableName: string
-  columns: ReadonlyArray<keyof D>
   structure: RowStructure
+  columns: ReadonlyArray<string>
 }
 
 export class Model<D extends object> {
-  constructor(private data: ModelData<D>) {}
+  constructor(private data: ModelData) {}
 
-  public async parseFromQuery(query: Knex.QueryBuilder): Promise<any> {
+  public async parseFromQuery(query: Knex.QueryBuilder) {
     const data = await query
     if (!data) return
 
     if (Array.isArray(data)) {
-      return data.map((x) => parseRowStructure(x, this.structure))
+      return data.map((x) => parseRowStructure(x, this.structure) as D)
     }
 
-    return parseRowStructure(data, this.structure)
+    return parseRowStructure(data, this.structure) as D
   }
 
   public get tableName() {
