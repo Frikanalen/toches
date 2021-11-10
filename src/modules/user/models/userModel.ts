@@ -13,9 +13,6 @@ export type UserData = {
   lastLoggedInAt: Date
 
   banned: boolean
-
-  // This column needs to be dropped when there are no more legacy rows
-  legacy: boolean
 }
 
 export const userModel = new Model<UserData>({
