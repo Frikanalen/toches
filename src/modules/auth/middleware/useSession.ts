@@ -1,7 +1,7 @@
 import session from "koa-session"
 import Koa from "koa"
 import { db } from "../../db/db"
-import { IS_DEV, IS_PROD } from "../../core/constants"
+import { IS_PROD } from "../../core/constants"
 
 export const setCookie = async (key: string, session: any, maxAge: number) => {
   await deleteCookie(key)
