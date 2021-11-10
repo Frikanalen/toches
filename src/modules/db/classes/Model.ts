@@ -13,13 +13,13 @@ export class Model<D extends object> {
 
   public async parseFromQuery(query: Knex.QueryBuilder) {
     const data = await query
-    if (!data) return
+    if (!data) return []
 
     if (Array.isArray(data)) {
       return data.map((x) => parseRowStructure(x, this.structure) as D)
     }
 
-    return parseRowStructure(data, this.structure) as D
+    return [parseRowStructure(data, this.structure) as D]
   }
 
   public get tableName() {
