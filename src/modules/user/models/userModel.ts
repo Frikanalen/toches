@@ -30,7 +30,6 @@ export const userModel = new Model<UserData>({
     "updated_at",
     "last_logged_in_at",
     "banned",
-    "legacy",
   ],
   structure: {
     prefix: "user",

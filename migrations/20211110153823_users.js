@@ -18,9 +18,6 @@ exports.up = async (knex) => {
     table.timestamp("last_logged_in_at")
 
     table.boolean("banned").defaultTo("false").notNullable()
-
-    // This user is imported from the old database and needs to update their password
-    table.boolean("legacy").notNullable()
   })
 }
 
