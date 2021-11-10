@@ -1,4 +1,4 @@
-import { object, string } from "yup"
+import { InferType, object, string } from "yup"
 
 export const userSchema = object({
   email: string().email().required().max(255),
@@ -6,3 +6,5 @@ export const userSchema = object({
   firstName: string().required().max(255),
   lastName: string().required().max(255),
 })
+
+export type ValidatedUser = InferType<typeof userSchema>
