@@ -1,13 +1,12 @@
 import { ValidatedUser } from "../schema/userSchema"
-import bcrypt from "bcrypt"
 import { db } from "../../db/db"
 import { userModel } from "../models/userModel"
 import { getUser } from "./getUser"
-import { BCRYPT_COST_FACTOR } from "../../auth/constants"
+import { hashPassword } from "../../auth/helpers/hashPassword"
 
 export const createUser = async (data: ValidatedUser) => {
   const { password, email, firstName, lastName } = data
-  const hashed = await bcrypt.hash(password, BCRYPT_COST_FACTOR)
+  const hashed = await hashPassword(password)
 
   const [id] = await db
     .insert({
