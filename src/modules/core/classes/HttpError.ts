@@ -2,6 +2,7 @@ export const statusCodes = {
   notFound: 404,
   badRequest: 400,
   unauthorized: 401,
+  forbidden: 403,
   conflict: 409,
   internalServerError: 500,
 } as const
@@ -9,6 +10,7 @@ export const statusCodes = {
 export const reasonToCodeMap: Record<HttpStatus, string> = {
   "400": "Bad Request",
   "401": "Unauthorized",
+  "403": "Forbidden",
   "404": "Not Found",
   "409": "Conflict",
   "500": "Internal Server Error",
