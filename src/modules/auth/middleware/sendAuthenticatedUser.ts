@@ -14,6 +14,6 @@ export const sendAuthenticatedUser = (): Middleware => async (context, next) => 
 
   context.body = {
     authenticated: true,
-    user: serializeUser(user),
+    user: serializeUser({ withRoles: true })(user),
   }
 }

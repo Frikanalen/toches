@@ -26,7 +26,7 @@ export const register = (): Middleware => async (context, next) => {
   context.session!.user = user.id
   context.body = {
     message: "Successfully registered",
-    user: serializeUser(user),
+    user: serializeUser()(user),
   }
 
   return next()

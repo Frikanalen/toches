@@ -1,3 +1,4 @@
+import { RoleData } from "../../access-control/models/roleModel"
 import { Model } from "../../db/classes/Model"
 
 export type UserData = {
@@ -13,6 +14,7 @@ export type UserData = {
   lastLoggedInAt: Date
 
   banned: boolean
+  roles?: RoleData[]
 }
 
 export const userModel = new Model<UserData>({
@@ -31,5 +33,11 @@ export const userModel = new Model<UserData>({
   structure: {
     prefix: "user",
     property: "user",
+    subqueries: {
+      roles: {
+        prefix: "role",
+        property: "role",
+      },
+    },
   },
 })
