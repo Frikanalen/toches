@@ -11,9 +11,9 @@ const router = new Router({
   prefix: "/auth",
 })
 
+router.post("/register", sendCSRFToken(), register())
 router.post("/login", sendCSRFToken(), login())
 router.post("/logout", logout())
-router.post("/register", register())
 
 router.get(
   "/user",
