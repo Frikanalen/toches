@@ -17,8 +17,10 @@ export const sendUserPermissionState = (): Middleware<State> => (context, next) 
   const { hasPermission: permissionParam } = context.query
   const { user } = context.state
 
-  if (!user || !permissionParam) {
-    return next()
+  if (!permissionParam) return next()
+
+  if (!user) {
+    throw new HttpError(401, "Authentication required")
   }
 
   if (!user.roles) {
