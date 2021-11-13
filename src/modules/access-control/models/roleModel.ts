@@ -1,8 +1,9 @@
 import { Model } from "../../db/classes/Model"
+import { Role } from "../types"
 
 export type RoleData = {
   id: number
-  name: string
+  name: Role
 }
 
 export const roleModel = new Model<RoleData>({

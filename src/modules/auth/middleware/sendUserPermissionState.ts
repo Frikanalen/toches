@@ -1,23 +1,23 @@
 import { Middleware } from "koa"
-import {
-  ASSIGNED_PERMISSIONS,
-  PERMISSIONS,
-  ROOT_ROLE_NAME,
-} from "../../access-control/constants"
+import { PERMISSIONS } from "../../access-control/constants"
 import { hasPermission } from "../../access-control/helpers/hasPermission"
-import { Permission, RoleName } from "../../access-control/types"
+import { Permission } from "../../access-control/types"
 import { HttpError } from "../../core/classes/HttpError"
+import { resolveToValue } from "../../lang/array"
 import { UserData } from "../../user/models/userModel"
 
 export type State = {
   user?: UserData
 }
 
+const isPermission = (permission: string): permission is Permission =>
+  PERMISSIONS.some((p) => p === permission)
+
 export const sendUserPermissionState = (): Middleware<State> => (context, next) => {
-  const { hasPermission: permission } = context.query
+  const { hasPermission: permissionParam } = context.query
   const { user } = context.state
 
-  if (!user || !permission) {
+  if (!user || !permissionParam) {
     return next()
   }
 
@@ -25,13 +25,15 @@ export const sendUserPermissionState = (): Middleware<State> => (context, next) 
     throw new Error("user.roles is undefined! Did you forget { withRoles: true }?")
   }
 
-  if (!PERMISSIONS.some((p) => p === permission)) {
+  const permission = resolveToValue(permissionParam)
+
+  if (!isPermission(permission)) {
     throw new HttpError(400, `Permission ${permission} doesn't exist.`)
   }
 
   const roleNames = user.roles.map((x) => x.name)
 
-  if (hasPermission(roleNames as RoleName[], permission as any)) {
+  if (hasPermission(roleNames, permission)) {
     context.body = { message: "Permission granted" }
     return
   }
