@@ -15,12 +15,24 @@ export type ListOptions = {
   limit: number
 }
 
+export type Options = {
+  offset?: number
+  limit?: number
+  maxLimit?: number
+}
+
 export const sendResourceList =
-  (action: GetListAction, serialize: (data: any) => any): Middleware =>
+  (action: GetListAction, serialize: (data: any) => any, options?: Options): Middleware =>
   async (context, next) => {
     const { offset, limit } = await object({
-      offset: number().default(0).max(100000).min(0),
-      limit: number().default(5).min(1).max(50),
+      offset: number()
+        .default(options?.offset ?? 0)
+        .max(100000)
+        .min(0),
+      limit: number()
+        .default(options?.limit ?? 5)
+        .min(1)
+        .max(options?.maxLimit ?? 50),
     }).validate(context.query)
 
     const { rows, count } = await action({ offset, limit, context })
