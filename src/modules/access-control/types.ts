@@ -1,4 +1,4 @@
-import { PERMISSIONS, ROLES } from "./constants"
+import { ROLE_PERMISSIONS, ROLES } from "./constants"
 
 export type Role = typeof ROLES[number]
-export type Permission = typeof PERMISSIONS[number]
+export type RolePermission = typeof ROLE_PERMISSIONS[number]

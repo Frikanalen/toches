@@ -1,7 +1,7 @@
 import { Middleware } from "koa"
-import { PERMISSIONS } from "../../access-control/constants"
+import { ROLE_PERMISSIONS } from "../../access-control/constants"
 import { hasPermission } from "../../access-control/helpers/hasPermission"
-import { Permission } from "../../access-control/types"
+import { RolePermission } from "../../access-control/types"
 import { HttpError } from "../../core/classes/HttpError"
 import { resolveToValue } from "../../lang/array"
 import { UserData } from "../../user/models/userModel"
@@ -10,8 +10,8 @@ export type State = {
   user?: UserData
 }
 
-const isPermission = (permission: string): permission is Permission =>
-  PERMISSIONS.some((p) => p === permission)
+const isPermission = (permission: string): permission is RolePermission =>
+  ROLE_PERMISSIONS.some((p) => p === permission)
 
 export const sendUserPermissionState = (): Middleware<State> => (context, next) => {
   const { hasPermission: permissionParam } = context.query
