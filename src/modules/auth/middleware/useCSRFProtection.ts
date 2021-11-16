@@ -11,7 +11,9 @@ export const useCSRFProtection = (): Middleware => async (context, next) => {
 
   // Ensure there's always a token
   if (!cookie) {
-    cookies.set(CSRF_COOKIE, await createCSRFToken())
+    cookies.set(CSRF_COOKIE, await createCSRFToken(), {
+      httpOnly: false,
+    })
   }
 
   // We don't care about protecting non-authenticated routes or safe http methods
