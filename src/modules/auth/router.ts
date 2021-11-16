@@ -4,15 +4,15 @@ import { login } from "./middleware/login"
 import { logout } from "./middleware/logout"
 import { register } from "./middleware/register"
 import { sendAuthenticatedUser } from "./middleware/sendAuthenticatedUser"
-import { sendCSRFToken } from "./middleware/sendCSRFToken"
+import { sendNewCSRFToken } from "./middleware/sendNewCSRFToken"
 import { sendUserPermissionState } from "./middleware/sendUserPermissionState"
 
 const router = new Router({
   prefix: "/auth",
 })
 
-router.post("/register", sendCSRFToken(), register())
-router.post("/login", sendCSRFToken(), login())
+router.post("/register", register(), sendNewCSRFToken())
+router.post("/login", login(), sendNewCSRFToken())
 router.post("/logout", logout())
 
 router.get(
