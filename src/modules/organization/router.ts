@@ -23,6 +23,56 @@ const organizationGetterMiddleware = getResource((context) =>
   getOrganization(context.params.id),
 )
 
+/**
+ * @openapi
+ * /organizations:
+ *   get:
+ *     tags:
+ *       - Organization
+ *     summary: Get a list of organizations
+ *     parameters:
+ *       - $ref: '#/components/parameters/offset'
+ *       - $ref: '#/components/parameters/limit'
+ *     responses:
+ *       200:
+ *         description: A list of organizations
+ *         content:
+ *           application/json:
+ *             schema:
+ *               allOf:
+ *                 - $ref: '#/components/schemas/ResourceList'
+ *                 - type: object
+ *                   properties:
+ *                     rows:
+ *                       type: array
+ *                       items:
+ *                         $ref: '#/components/schemas/Organization'
+ */
+router.get("/", sendOrganizationList())
+
+/**
+ * @openapi
+ * /organizations:
+ *   post:
+ *     tags:
+ *       - Organization
+ *     summary: Create a new organization
+ *     security:
+ *       - cookie: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/NewOrganizationForm'
+ *     responses:
+ *       200:
+ *         description: Organization was created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Organization'
+ */
 router.post(
   "/",
   authenticate({ required: true }),
@@ -31,8 +81,29 @@ router.post(
   sendResource(serializeOrganization),
 )
 
-router.get("/", sendOrganizationList())
-
+/**
+ * @openapi
+ * /organizations/{id}:
+ *   parameters:
+ *     - in: path
+ *       name: id
+ *       required: true
+ *       schema:
+ *         type: integer
+ *   get:
+ *     tags:
+ *       - Organization
+ *     summary: Get a specific organization by id
+ *     responses:
+ *       200:
+ *         description: An organization
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Organization'
+ *       404:
+ *          $ref: '#/components/responses/ResourceNotFound'
+ */
 router.get("/:id", organizationGetterMiddleware, sendResource(serializeOrganization))
 
 // Member management
@@ -43,8 +114,105 @@ router.use(
   checkPermissions([isOrganizationEditor]),
 )
 
+/**
+ * @openapi
+ * /organizations/{id}/members:
+ *   parameters:
+ *     - in: path
+ *       name: id
+ *       required: true
+ *       schema:
+ *         type: integer
+ *   get:
+ *     tags:
+ *       - Organization
+ *     summary: Get a list of members for an organization
+ *     security:
+ *       - cookie: []
+ *     responses:
+ *       200:
+ *         description: A list of users
+ *         content:
+ *           application/json:
+ *             schema:
+ *               allOf:
+ *                 - $ref: '#/components/schemas/ResourceList'
+ *                 - type: object
+ *                   properties:
+ *                     rows:
+ *                       type: array
+ *                       items:
+ *                         $ref: '#/components/schemas/User'
+ *       403:
+ *         $ref: '#/components/responses/PermissionDenied'
+ *       404:
+ *          $ref: '#/components/responses/ResourceNotFound'
+ *       401:
+ *         $ref: '#/components/responses/AuthenticationRequired'
+ *   post:
+ *     tags:
+ *       - Organization
+ *     summary: Add a user as a member to an organization
+ *     security:
+ *       - cookie: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *     responses:
+ *       200:
+ *         description: The user was added as a member
+ *       404:
+ *         description: The user with that email doesn't exist
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: No user with that email exists
+ *                 details:
+ *                   type: string
+ *                   example: email_invalid
+ *       401:
+ *         $ref: '#/components/responses/AuthenticationRequired'
+ */
 router.get("/:id/members", sendOrganizationMemberList())
 router.post("/:id/members", addOrganizationMember())
+
+/**
+ * @openapi
+ * /organization/{id}/members/{member}:
+ *   parameters:
+ *     - in: path
+ *       name: id
+ *       required: true
+ *       schema:
+ *         type: integer
+ *     - in: path
+ *       name: member
+ *       required: true
+ *       schema:
+ *         type: integer
+ *   delete:
+ *     tags:
+ *       - Organization
+ *     summary: Remove a member from an organization
+ *     security:
+ *       - cookie: []
+ *     responses:
+ *       200:
+ *         description: The member was removed from the organization
+ */
 router.delete("/:id/members/:member", removeOrganizationMember())
 
 export { router as organizationRouter }

@@ -1,5 +1,5 @@
 import { Middleware } from "koa"
-import { HttpError } from "../../core/classes/HttpError"
+import { number, object } from "yup"
 import { db } from "../../db/db"
 import { OrganizationData } from "../models/organizationModel"
 
@@ -7,11 +7,9 @@ export const removeOrganizationMember = (): Middleware => async (context, next) 
   const { state, params } = context
 
   const organization = state.resource as OrganizationData
-  const user = Number(params.member)
-
-  if (isNaN(user)) {
-    throw new HttpError(400, "User id must be a number")
-  }
+  const { member: user } = await object({
+    member: number().required(),
+  }).validate(params)
 
   await db
     .delete()

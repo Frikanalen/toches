@@ -2,6 +2,7 @@ import session from "koa-session"
 import Koa from "koa"
 import { db } from "../../db/db"
 import { IS_PROD } from "../../core/constants"
+import { SESSION_COOKIE } from "../constants"
 
 export const setCookie = async (key: string, session: any, maxAge: number) => {
   await deleteCookie(key)
@@ -31,7 +32,7 @@ export const useSession = (app: Koa) =>
         set: setCookie,
         destroy: deleteCookie,
       },
-      key: "fk:session",
+      key: SESSION_COOKIE,
       maxAge: 604800000, // a week
       httpOnly: true,
       signed: false,
