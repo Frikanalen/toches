@@ -191,7 +191,7 @@ router.post("/:id/members", addOrganizationMember())
 
 /**
  * @openapi
- * /organization/{id}/members/{member}:
+ * /organizations/{id}/members/{member}:
  *   parameters:
  *     - in: path
  *       name: id
