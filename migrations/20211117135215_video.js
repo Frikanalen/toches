@@ -23,9 +23,6 @@ exports.up = async (knex) => {
 
     table.integer("media_id").notNullable()
     table.foreign("media_id").references("video_media.id").onDelete("CASCADE")
-
-    table.integer("job_id").notNullable()
-    table.foreign("job_id").references("jobs.id").onDelete("RESTRICT")
   })
 
   await knex.schema.createTable("videos", (table) => {
