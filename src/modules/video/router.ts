@@ -1,9 +1,14 @@
 import Router from "@koa/router"
+import { requireSecretKey } from "../auth/middleware/requireSecretKey"
+import { createResource } from "../core/middleware/createResource"
 import { getResource } from "../core/middleware/getResource"
 import { sendResource } from "../core/middleware/sendResource"
+import { validateSchema } from "../validation/middleware/validateSchema"
+import { createVideoMedia } from "./helpers/createVideoMedia"
 import { getVideo } from "./helpers/getVideo"
 import { serializeVideo } from "./helpers/serializeVideo"
 import { sendVideoList } from "./middleware/sendVideoList"
+import { videoMediaSchema } from "./schemas/videoMediaSchema"
 
 const router = new Router({
   prefix: "/videos",
@@ -63,6 +68,38 @@ router.get(
   "/:id",
   getResource((context) => getVideo(context.params.id)),
   sendResource(serializeVideo),
+)
+
+/**
+ * @openapi
+ * videos/media:
+ *   post:
+ *     tags:
+ *       - Video
+ *     summary: Internally create a video media entry
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/VideoMediaForm'
+ *     responses:
+ *       201:
+ *         description: Video media was created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: number
+ */
+router.post(
+  "/videos/media",
+  requireSecretKey(),
+  validateSchema(videoMediaSchema),
+  createResource(createVideoMedia),
+  sendResource((m) => ({ id: m })),
 )
 
 export { router as videoRouter }
