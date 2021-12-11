@@ -4,7 +4,13 @@ import { ValidatedUpdatedUser } from "../schema/updateUserSchema"
 import { getUser } from "./getUser"
 
 export const updateUser = async (id: number, data: ValidatedUpdatedUser) => {
-  await db.update(data).into(userModel.tableName).where("id", id)
+  await db
+    .update({
+      first_name: data.firstName,
+      last_name: data.lastName,
+    })
+    .into(userModel.tableName)
+    .where("id", id)
 
   return getUser(id)
 }
