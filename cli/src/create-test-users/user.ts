@@ -9,7 +9,7 @@ export const createAdminCommand = new Command("admin")
     const password = await bcrypt.hash("dev-admin", 12)
     const user = {
         email: "dev-admin@frikanalen.no",
-        password,
+        password: `bcrypt${password}`,
         first_name: "Frikanalen admin",
         last_name: "Istrator",
       }
