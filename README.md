@@ -2,6 +2,8 @@
 
 This is the new Frikanalen API which will finally replace Django.
 
+It is not yet in production.
+
 ## Dev environment
 
 The following guide assumes a recent-ish Node, yarn, docker and docker compose.
