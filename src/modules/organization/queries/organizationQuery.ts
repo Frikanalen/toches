@@ -12,13 +12,19 @@ const editor = new Relationship({
   template: userQuery,
 })
 
-export type OrganizationQueryParams = {}
+export type OrganizationQueryParams = {
+  editor?: number
+}
 
 export const organizationQuery = new QueryTemplate<
   DefaultQueryOptions & OrganizationQueryParams
 >({
   build: async (context) => {
     const { query, options } = context
+
+    if (options.editor) {
+      query.where("organizations.editor_id", options.editor)
+    }
 
     if (!options.count) {
       editor.apply(query, {})

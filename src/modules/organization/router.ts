@@ -33,6 +33,13 @@ const organizationGetterMiddleware = getResource((context) =>
  *     parameters:
  *       - $ref: '#/components/parameters/offset'
  *       - $ref: '#/components/parameters/limit'
+ *       - editor:
+ *           in: query
+ *           name: offset
+ *           description: An id of the editor (user) to filter by
+ *           required: false
+ *           schema:
+ *             type: integer
  *     responses:
  *       200:
  *         description: A list of organizations
