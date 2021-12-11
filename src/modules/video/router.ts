@@ -95,7 +95,7 @@ router.get(
  *                   type: number
  */
 router.post(
-  "/videos/media",
+  "/media",
   requireSecretKey(),
   validateSchema(videoMediaSchema),
   createResource(createVideoMedia),
