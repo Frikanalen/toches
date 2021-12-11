@@ -24,3 +24,9 @@ yarn run dev
 
 In dev mode, toches will proxy requests coming in on /api/videos/upload to localhost:1080.
 In production mode, this is handled by our traefik ingress controller.
+
+## Unit tests
+
+```bash
+yarn test
+```
