@@ -8,10 +8,12 @@ exports.up = async (knex) => {
     table.increments("id")
 
     table.string("file_name").notNullable()
-    table.string("orginal_path").notNullable()
+    table.string("locator").notNullable()
 
     table.float("duration").notNullable()
     table.json("metadata").notNullable()
+
+    table.timestamp("created_at").defaultTo(knex.fn.now()).notNullable()
   })
 
   await knex.schema.createTable("video_media_assets", (table) => {
