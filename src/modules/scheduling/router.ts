@@ -1,7 +1,7 @@
 import Router from "@koa/router"
 
 const router = new Router({
-  prefix: "schedule-entries",
+  prefix: "/schedule-entries",
 })
 
 // Temporary mock route to get frontend working
