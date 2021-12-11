@@ -24,7 +24,7 @@ router.put(
   validateSchema(updateUserSchema),
   checkPermissions([isSelf]),
   updateResource((data, context) => updateUser(context.params.id, data)),
-  sendResource(serializeUser),
+  sendResource(serializeUser()),
 )
 
 export { router as userRouter }
