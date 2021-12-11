@@ -17,6 +17,8 @@ docker-compose up -d
 export DATABASE_URL=postgres://postgres:fk@localhost/fk
 # database migration
 yarn knex migrate:latest
+# create admin user (user: dev-admin@frikanalen.no password: dev-admin)
+yarn cli create-test-user admin
 # create mock data
 yarn cli create-mock-data users 20
 yarn cli create-mock-data orgs 20
