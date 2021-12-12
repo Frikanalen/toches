@@ -6,7 +6,7 @@ export const requireSecretKey = (): Middleware => (context, next) => {
   const key = context.get(SECRET_KEY_HEADER)
 
   if (key !== SECRET_KEY) {
-    throw new HttpError(400)
+    throw new HttpError(400, `${SECRET_KEY_HEADER} missing or incorrect`);
   }
 
   return next()
