@@ -8,6 +8,7 @@ import { createVideoMedia } from "./helpers/createVideoMedia"
 import { createVideoMediaAsset } from "./helpers/createVideoMediaAsset"
 import { getVideo } from "./helpers/getVideo"
 import { serializeVideo } from "./helpers/serializeVideo"
+import { sendMediaFromTus } from "./middleware/sendMediaFromTus"
 import { sendVideoList } from "./middleware/sendVideoList"
 import { videoMediaAssetSchema } from "./schemas/videoMediaAssetSchema"
 import { videoMediaSchema } from "./schemas/videoMediaSchema"
@@ -131,7 +132,7 @@ router.post(
  *                 id:
  *                   type: number
  */
-router.get("/media/tus/:key", requireSecretKey())
+router.get("/media/tus/:key", requireSecretKey(), sendMediaFromTus())
 
 /**
  * @openapi
