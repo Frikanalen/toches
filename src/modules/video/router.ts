@@ -106,6 +106,35 @@ router.post(
 
 /**
  * @openapi
+ * /videos/media/tus:
+ *   post:
+ *     tags:
+ *       - Video
+ *     summary: Get media asset ID from TUS upload ID (until tus v2)
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               uploadId:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Video media ID
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: number
+ */
+router.get("/media/tus/:key", requireSecretKey())
+
+/**
+ * @openapi
  * /videos/media/{id}/assets:
  *   post:
  *     tags:

@@ -15,17 +15,21 @@ import { InferType, number, object, string } from "yup"
  *          type: number
  *        metadata:
  *          type: object
+ *        uploadId:
+ *          type: string
  *      required:
  *        - fileName
  *        - locator
  *        - duration
  *        - metadata
+ *        - uploadId
  */
 export const videoMediaSchema = object({
   fileName: string().required(),
   locator: string().required(),
   duration: number().required(),
   metadata: object().required(),
+  uploadId: string().required(),
 })
 
 export type ValidatedVideoMedia = InferType<typeof videoMediaSchema>
