@@ -5,9 +5,11 @@ import { getResource } from "../core/middleware/getResource"
 import { sendResource } from "../core/middleware/sendResource"
 import { validateSchema } from "../validation/middleware/validateSchema"
 import { createVideoMedia } from "./helpers/createVideoMedia"
+import { createVideoMediaAsset } from "./helpers/createVideoMediaAsset"
 import { getVideo } from "./helpers/getVideo"
 import { serializeVideo } from "./helpers/serializeVideo"
 import { sendVideoList } from "./middleware/sendVideoList"
+import { videoMediaAssetSchema } from "./schemas/videoMediaAssetSchema"
 import { videoMediaSchema } from "./schemas/videoMediaSchema"
 
 const router = new Router({
@@ -72,7 +74,7 @@ router.get(
 
 /**
  * @openapi
- * videos/media:
+ * /videos/media:
  *   post:
  *     tags:
  *       - Video
@@ -100,6 +102,38 @@ router.post(
   validateSchema(videoMediaSchema),
   createResource(createVideoMedia),
   sendResource((m) => ({ id: m })),
+)
+
+/**
+ * @openapi
+ * /videos/media/{id}/assets:
+ *   post:
+ *     tags:
+ *       - Video
+ *     summary: Internally create a video media asset entry
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/VideoMediaAssetForm'
+ *     responses:
+ *       201:
+ *         description: Video media asset was created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: number
+ */
+router.post(
+  "/media/:id/assets",
+  requireSecretKey(),
+  validateSchema(videoMediaAssetSchema),
+  createResource((data, context) => createVideoMediaAsset(context.params.id, data)),
+  sendResource((a) => ({ id: a })),
 )
 
 export { router as videoRouter }
