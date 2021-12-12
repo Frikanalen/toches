@@ -9,12 +9,13 @@ It is not yet in production.
 The following guide assumes a recent-ish Node, yarn, docker and docker compose.
 
 ```bash
+# Use development database and trivial API key
+export DATABASE_URL=postgres://postgres:fk@localhost/fk
+export FK_API_KEY=1234
 # install dependencies
 yarn install
 # bring up dev database
 docker-compose up -d
-# this is used by following commands
-export DATABASE_URL=postgres://postgres:fk@localhost/fk
 # database migration
 yarn knex migrate:latest
 # transpile the command-line utilities
