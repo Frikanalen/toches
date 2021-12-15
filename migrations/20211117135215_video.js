@@ -25,6 +25,8 @@ exports.up = async (knex) => {
 
     table.integer("media_id").notNullable()
     table.foreign("media_id").references("video_media.id").onDelete("CASCADE")
+
+    table.unique(["type", "media_id"])
   })
 
   await knex.schema.createTable("videos", (table) => {
