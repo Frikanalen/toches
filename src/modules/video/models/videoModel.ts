@@ -1,5 +1,8 @@
 import { Model } from "../../db/classes/Model"
-import { OrganizationData } from "../../organization/models/organizationModel"
+import {
+  OrganizationData,
+  organizationModel,
+} from "../../organization/models/organizationModel"
 
 export type VideoData = {
   id: number
@@ -21,5 +24,6 @@ export const videoModel = new Model<VideoData>({
   structure: {
     prefix: "video",
     property: "video",
+    children: [{ ...organizationModel.structure, property: "organization" }],
   },
 })
