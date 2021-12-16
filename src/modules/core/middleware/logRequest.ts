@@ -40,6 +40,6 @@ export const logRequest = (): Middleware => async (context, next) => {
   const coloredQueryString = querystring ? chalk.magentaBright("?" + querystring) : ""
 
   console.log(
-    `${time}${separator}${coloredMethod}${separator}${coloredPath}${coloredQueryString}`,
+    `${time}${separator}${coloredMethod}${separator}${context.status}${separator}${coloredPath}${coloredQueryString}`,
   )
 }
