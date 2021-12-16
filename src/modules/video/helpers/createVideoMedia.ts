@@ -2,7 +2,7 @@ import { db } from "../../db/db"
 import { ValidatedVideoMedia } from "../schemas/videoMediaSchema"
 
 export const createVideoMedia = async (data: ValidatedVideoMedia) => {
-  const { fileName, locator, duration, metadata, uploadId } = data
+  const { fileName, locator, duration, metadata } = data
 
   console.log({ data })
   const [id] = await db
@@ -14,10 +14,6 @@ export const createVideoMedia = async (data: ValidatedVideoMedia) => {
     })
     .into("video_media")
     .returning<number[]>("id")
-
-  await db
-    .insert({ video_media_id: id, tus_upload_id: uploadId })
-    .into("tus_media_map")
 
   return id
 }

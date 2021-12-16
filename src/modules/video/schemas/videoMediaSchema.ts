@@ -29,7 +29,6 @@ export const videoMediaSchema = object({
   locator: string().required(),
   duration: number().required(),
   metadata: object().required(),
-  uploadId: string().required(),
 })
 
 export type ValidatedVideoMedia = InferType<typeof videoMediaSchema>
