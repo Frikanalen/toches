@@ -1,0 +1,23 @@
+import { db } from "../../db/db"
+import { videoModel } from "../models/videoModel"
+import { ValidatedVideo } from "../schemas/videoSchema"
+import { getVideo } from "./getVideo"
+
+export const createVideo = async (
+  data: ValidatedVideo,
+  organization: number,
+  user: number,
+) => {
+  const [id] = await db
+    .insert({
+      uploader_id: user,
+      organization_id: organization,
+      media_id: data.mediaId,
+      title: data.title,
+      description: data.description,
+    })
+    .into(videoModel.tableName)
+    .returning<number[]>("id")
+
+  return getVideo(id)
+}

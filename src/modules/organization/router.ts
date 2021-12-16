@@ -5,6 +5,9 @@ import { createResource } from "../core/middleware/createResource"
 import { getResource } from "../core/middleware/getResource"
 import { sendResource } from "../core/middleware/sendResource"
 import { validateSchema } from "../validation/middleware/validateSchema"
+import { createVideo } from "../video/helpers/createVideo"
+import { serializeVideo } from "../video/helpers/serializeVideo"
+import { videoSchema } from "../video/schemas/videoSchema"
 import { createOrganization } from "./helpers/createOrganization"
 import { getOrganization } from "./helpers/getOrganization"
 import { serializeOrganization } from "./helpers/serializeOrganization"
@@ -112,6 +115,42 @@ router.post(
  *          $ref: '#/components/responses/ResourceNotFound'
  */
 router.get("/:id", organizationGetterMiddleware, sendResource(serializeOrganization))
+
+/**
+ * @openapi
+ * /organizations/{id}/videos:
+ *   post:
+ *     tags:
+ *       - Organization
+ *       - Video
+ *     summary: Create a new video for an organization
+ *     security:
+ *       - cookie: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/NewVideoForm'
+ *     responses:
+ *       200:
+ *         description: Video was created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Video'
+ */
+router.post(
+  "/:id/videos",
+  authenticate({ required: true }),
+  organizationGetterMiddleware,
+  checkPermissions([isOrganizationEditor]),
+  validateSchema(videoSchema),
+  createResource((data, context) =>
+    createVideo(data, context.params.id, context.state.user.id),
+  ),
+  sendResource(serializeVideo),
+)
 
 // Member management
 router.use(
