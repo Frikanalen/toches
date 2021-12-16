@@ -1,5 +1,6 @@
 import { serializeOrganization } from "../../organization/helpers/serializeOrganization"
 import { VideoData } from "../models/videoModel"
+import { serializeVideoMediaAsset } from "./serializeVideoMediaAsset"
 
 /**
  * @openapi
@@ -29,7 +30,16 @@ import { VideoData } from "../models/videoModel"
  *
  */
 export const serializeVideo = (video: VideoData) => {
-  const { id, title, description, createdAt, updatedAt, organization, viewCount } = video
+  const {
+    id,
+    title,
+    description,
+    createdAt,
+    updatedAt,
+    organization,
+    assets,
+    viewCount,
+  } = video
 
   return {
     id,
@@ -38,6 +48,7 @@ export const serializeVideo = (video: VideoData) => {
     createdAt,
     updatedAt,
     organization: serializeOrganization(organization),
+    assets: assets.map((a) => serializeVideoMediaAsset(a)),
     viewCount,
   }
 }

@@ -2,6 +2,7 @@ import { DefaultQueryOptions, QueryTemplate } from "../../db/classes/QueryTempla
 import { Relationship } from "../../db/classes/Relationship"
 import { db } from "../../db/db"
 import { getAliasedColumns } from "../../db/helpers/getAliasedColumns"
+import { getArrayFromSubquery } from "../../db/helpers/getArrayFromSubquery"
 import { organizationModel } from "../../organization/models/organizationModel"
 import { organizationQuery } from "../../organization/queries/organizationQuery"
 import { videoModel } from "../models/videoModel"
@@ -20,6 +21,13 @@ export const videoQuery = new QueryTemplate<DefaultQueryOptions & VideoQueryPara
 
     if (!options.count) {
       organization.apply(query, {})
+
+      const assetSubquery = db
+        .select(["id", "type", "locator", "metadata"])
+        .from("video_media_assets")
+        .whereRaw("video_media_assets.media_id = videos.media_id")
+
+      query.select(getArrayFromSubquery(assetSubquery, "video__assets"))
     }
   },
   prepare: () => {

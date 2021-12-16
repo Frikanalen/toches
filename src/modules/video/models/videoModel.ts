@@ -4,6 +4,15 @@ import {
   organizationModel,
 } from "../../organization/models/organizationModel"
 
+export type VideoMediaAssetData = {
+  id: number
+
+  locator: string
+  type: string
+
+  metadata: object
+}
+
 export type VideoData = {
   id: number
 
@@ -11,6 +20,7 @@ export type VideoData = {
   description?: string
 
   organization: OrganizationData
+  assets: VideoMediaAssetData[]
 
   createdAt: Date
   updatedAt: Date
