@@ -10,8 +10,7 @@ The following guide assumes a recent-ish Node, yarn, docker and docker compose.
 
 ```bash
 # Use development database and trivial API key
-export DATABASE_URL=postgres://postgres:fk@localhost/fk
-export FK_API_KEY=1234
+cp dev-env .env
 # install dependencies
 yarn install
 # bring up dev database
