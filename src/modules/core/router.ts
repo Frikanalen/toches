@@ -5,11 +5,13 @@ import { proxyRouter } from "../proxy/router"
 import { scheduleRouter } from "../scheduling/router"
 import { userRouter } from "../user/router"
 import { videoRouter } from "../video/router"
+import { sendConfig } from "./middleware/sendConfig"
 import { sendOpenApiSpec } from "./middleware/sendOpenApiSpec"
 
 const router = new Router()
 
 router.get("/open-api-spec.json", sendOpenApiSpec())
+router.get("/config", sendConfig())
 router.use(proxyRouter.middleware())
 router.use(authRouter.middleware())
 router.use(userRouter.middleware())
