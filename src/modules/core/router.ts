@@ -31,7 +31,7 @@ router.get("/open-api-spec.json", sendOpenApiSpec())
  *     tags:
  *       - App
  *     summary: Get core data and config
- *     description: This endpoint returns such things as server hostnames, categories, and other mostly static data that changes very rarely.
+ *     description: This endpoint returns such things as server hostnames, categories, and other mostly static data.
  *     responses:
  *       200:
  *         description: The config result
