@@ -10,8 +10,38 @@ import { sendOpenApiSpec } from "./middleware/sendOpenApiSpec"
 
 const router = new Router()
 
+/**
+ * @openapi
+ * /open-api-spec.json:
+ *   get:
+ *     tags:
+ *       - App
+ *     summary: Get OpenAPI specification
+ *     responses:
+ *       200:
+ *         description: The specification, in JSON format.
+ *
+ */
 router.get("/open-api-spec.json", sendOpenApiSpec())
+
+/**
+ * @openapi
+ * /config:
+ *   get:
+ *     tags:
+ *       - App
+ *     summary: Get core data and config
+ *     description: This endpoint returns such things as server hostnames, categories, and other mostly static data that changes very rarely.
+ *     responses:
+ *       200:
+ *         description: The config result
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Config'
+ */
 router.get("/config", sendConfig())
+
 router.use(proxyRouter.middleware())
 router.use(authRouter.middleware())
 router.use(userRouter.middleware())

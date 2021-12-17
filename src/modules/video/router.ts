@@ -107,6 +107,12 @@ router.post(
 /**
  * @openapi
  * /videos/media/{id}/assets:
+ *   parameters:
+ *     - in: path
+ *       name: id
+ *       required: true
+ *       schema:
+ *         type: integer
  *   post:
  *     tags:
  *       - Video

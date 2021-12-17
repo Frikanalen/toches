@@ -4,18 +4,19 @@ import { validateMediaId } from "../helpers/validateMediaId"
 /**
  * @openapi
  * components:
- *   NewVideoForm:
- *     type: object
- *     properties:
- *       title:
- *         type: string
- *       description:
- *         type: string
- *       mediaId:
- *         type: number
- *     required:
- *       - title
- *       - mediaId
+ *   schemas:
+ *     NewVideoForm:
+ *       type: object
+ *       properties:
+ *         title:
+ *           type: string
+ *         description:
+ *           type: string
+ *         mediaId:
+ *           type: number
+ *       required:
+ *         - title
+ *         - mediaId
  */
 export const videoSchema = object({
   title: string().required().max(255),
