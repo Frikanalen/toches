@@ -15,7 +15,9 @@ export const validateCategoryIds = () => {
       .whereIn("id", unique)
       .first<{ count: number }>()
 
-    if (existing.count === unique.length && unique.length === value.length) {
+    const parsed = Number(existing.count)
+
+    if (parsed === unique.length && unique.length === value.length) {
       return true
     }
 
