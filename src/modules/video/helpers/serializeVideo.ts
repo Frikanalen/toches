@@ -17,6 +17,10 @@ import { serializeVideoMediaAsset } from "./serializeVideoMediaAsset"
  *           example: Frikanelen Infoplakat
  *         description:
  *           type: string
+ *         categories:
+ *           type: array
+ *           items:
+ *             type: number
  *         createdAt:
  *           type: string
  *           format: date-time
@@ -37,6 +41,7 @@ export const serializeVideo = (video: VideoData) => {
     createdAt,
     updatedAt,
     organization,
+    categories,
     assets,
     viewCount,
   } = video
@@ -45,6 +50,7 @@ export const serializeVideo = (video: VideoData) => {
     id,
     title,
     description,
+    categories: categories.map((c) => c.id),
     createdAt,
     updatedAt,
     organization: serializeOrganization(organization),

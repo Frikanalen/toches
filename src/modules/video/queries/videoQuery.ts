@@ -28,6 +28,13 @@ export const videoQuery = new QueryTemplate<DefaultQueryOptions & VideoQueryPara
         .whereRaw("video_media_assets.media_id = videos.media_id")
 
       query.select(getArrayFromSubquery(assetSubquery, "video__assets"))
+
+      const categorySubquery = db
+        .select("id")
+        .from("video_category_map")
+        .whereRaw("video_category_map.video_id = videos.id")
+
+      query.select(getArrayFromSubquery(categorySubquery, "video__categories"))
     }
   },
   prepare: () => {

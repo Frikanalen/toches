@@ -20,7 +20,9 @@ export type VideoData = {
   description?: string
 
   organization: OrganizationData
+
   assets: VideoMediaAssetData[]
+  categories: { id: number }[]
 
   createdAt: Date
   updatedAt: Date
