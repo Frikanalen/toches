@@ -1,6 +1,7 @@
 import { db } from "../../db/db"
 import { videoModel } from "../models/videoModel"
 import { ValidatedVideo } from "../schemas/videoSchema"
+import { assignVideoCategories } from "./assignVideoCategories"
 import { getVideo } from "./getVideo"
 
 export const createVideo = async (
@@ -18,6 +19,8 @@ export const createVideo = async (
     })
     .into(videoModel.tableName)
     .returning<number[]>("id")
+
+  await assignVideoCategories(id, data.categories)
 
   return getVideo(id)
 }

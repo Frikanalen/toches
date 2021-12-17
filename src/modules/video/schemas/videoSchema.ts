@@ -1,4 +1,5 @@
 import { InferType, number, object, string } from "yup"
+import { validateCategoryIds } from "../../category/helpers/validateCategoryIds"
 import { validateMediaId } from "../helpers/validateMediaId"
 
 /**
@@ -21,6 +22,7 @@ import { validateMediaId } from "../helpers/validateMediaId"
 export const videoSchema = object({
   title: string().required().max(255),
   description: string(),
+  categories: validateCategoryIds().required(),
   mediaId: validateMediaId(number().required()),
 })
 
