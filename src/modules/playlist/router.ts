@@ -19,6 +19,12 @@ export const router = new Router({
  *     parameters:
  *       - $ref: '#/components/parameters/offset'
  *       - $ref: '#/components/parameters/limit'
+ *       - in: query
+ *         name: organization
+ *         description: An id of the organization to filter by
+ *         required: false
+ *         schema:
+ *           type: integer
  *     responses:
  *       200:
  *         description: A list of playlists

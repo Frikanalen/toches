@@ -3,11 +3,19 @@ import { db } from "../../db/db"
 import { getAliasedColumns } from "../../db/helpers/getAliasedColumns"
 import { playlistModel } from "../models/playlistModel"
 
-export type PlaylistQueryParams = {}
+export type PlaylistQueryParams = {
+  organization?: number
+}
 
 export const playlistQuery = new QueryTemplate<DefaultQueryOptions & PlaylistQueryParams>(
   {
-    build: async (context) => {},
+    build: async (context) => {
+      const { query, options } = context
+
+      if (options.organization) {
+        query.where("playlists.organization_id", options.organization)
+      }
+    },
     prepare: () => {
       const query = db.select(
         getAliasedColumns({
