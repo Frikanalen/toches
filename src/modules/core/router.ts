@@ -1,6 +1,7 @@
 import Router from "@koa/router"
 import { authRouter } from "../auth/router"
 import { organizationRouter } from "../organization/router"
+import { playlistRouter } from "../playlist/router"
 import { proxyRouter } from "../proxy/router"
 import { scheduleRouter } from "../scheduling/router"
 import { userRouter } from "../user/router"
@@ -48,5 +49,6 @@ router.use(userRouter.middleware())
 router.use(organizationRouter.middleware())
 router.use(videoRouter.middleware())
 router.use(scheduleRouter.middleware())
+router.use(playlistRouter.middleware())
 
 export { router }

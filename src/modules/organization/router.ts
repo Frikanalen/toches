@@ -4,6 +4,9 @@ import { authenticate } from "../auth/middleware/authenticate"
 import { createResource } from "../core/middleware/createResource"
 import { getResource } from "../core/middleware/getResource"
 import { sendResource } from "../core/middleware/sendResource"
+import { createPlaylist } from "../playlist/helpers/createPlaylist"
+import { serializePlaylist } from "../playlist/helpers/serializePlaylist"
+import { playlistSchema } from "../playlist/schemas/playlistSchema"
 import { validateSchema } from "../validation/middleware/validateSchema"
 import { createVideo } from "../video/helpers/createVideo"
 import { serializeVideo } from "../video/helpers/serializeVideo"
@@ -155,6 +158,46 @@ router.post(
     createVideo(data, context.params.id, context.state.user.id),
   ),
   sendResource(serializeVideo),
+)
+
+/**
+ * @openapi
+ * /organizations/{id}/playlists:
+ *   parameters:
+ *     - in: path
+ *       name: id
+ *       required: true
+ *       schema:
+ *         type: integer
+ *   post:
+ *     tags:
+ *       - Organization
+ *       - Playlist
+ *     summary: Create a new playlist for an organization
+ *     security:
+ *       - cookie: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/NewPlaylistForm'
+ *     responses:
+ *       200:
+ *         description: Playlist was created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Playlist'
+ */
+router.post(
+  "/:id/playlists",
+  authenticate({ required: true }),
+  organizationGetterMiddleware,
+  checkPermissions([isOrganizationEditor]),
+  validateSchema(playlistSchema),
+  createResource((data, context) => createPlaylist(data, context.params.id)),
+  sendResource(serializePlaylist),
 )
 
 // Member management

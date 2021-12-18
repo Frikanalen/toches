@@ -26,6 +26,12 @@ const router = new Router({
  *     parameters:
  *       - $ref: '#/components/parameters/offset'
  *       - $ref: '#/components/parameters/limit'
+ *       - in: query
+ *         name: inPlaylist
+ *         description: An id of a playlist to filter by. Orders by playlist entry indices.
+ *         required: false
+ *         schema:
+ *           type: integer
  *     responses:
  *       200:
  *         description: A list of videos

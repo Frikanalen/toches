@@ -13,11 +13,23 @@ const organization = new Relationship({
   template: organizationQuery,
 })
 
-export type VideoQueryParams = {}
+export type VideoQueryParams = {
+  inPlaylist?: number
+}
 
 export const videoQuery = new QueryTemplate<DefaultQueryOptions & VideoQueryParams>({
   build: async (context) => {
     const { query, options } = context
+
+    if (options.inPlaylist) {
+      query
+        .join("playlist_entries", "playlist_entries.video_id", "videos.id")
+        .where("playlist_entries.playlist_id", options.inPlaylist)
+
+      if (!options.count) {
+        query.orderBy("playlist_entries.index")
+      }
+    }
 
     if (!options.count) {
       organization.apply(query, {})
