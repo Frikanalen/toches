@@ -1,26 +1,9 @@
-import { array, number, ValidationError } from "yup"
-import { RequiredNumberSchema } from "yup/lib/number"
-import { db } from "../../db/db"
+import { createResourceListValidator } from "../../validation/helpers/createResourceListValidator"
+import { categoryModel } from "../models/categoryModel"
 
-export const validateCategoryIds = () => {
-  const id = number().required() as RequiredNumberSchema<number>
-
-  return array(id).test(async (value) => {
-    if (!value) return true
-
-    const unique = [...new Set(value)]
-    const existing = await db
-      .count()
-      .from("categories")
-      .whereIn("id", unique)
-      .first<{ count: number }>()
-
-    const parsed = Number(existing.count)
-
-    if (parsed === unique.length && unique.length === value.length) {
-      return true
-    }
-
-    throw new ValidationError("Invalid category list")
+export const validateCategoryIds = () =>
+  createResourceListValidator({
+    tableName: categoryModel.tableName,
+    resourceName: categoryModel.structure.property,
+    requireUnique: true,
   })
-}
