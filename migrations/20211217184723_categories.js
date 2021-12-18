@@ -53,7 +53,7 @@ const starterCategories = [
   },
   {
     key: "other",
-    name: "Andre",
+    name: "Annet",
     description: "",
   },
 ]
