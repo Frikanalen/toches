@@ -1,3 +1,4 @@
+import { serializeVideo } from "../../video/helpers/serializeVideo"
 import { PlaylistData } from "../models/playlistModel"
 
 /**
@@ -15,7 +16,8 @@ import { PlaylistData } from "../models/playlistModel"
  *           type: string
  */
 export const serializePlaylist = (data: PlaylistData) => {
-  const { id, title, description } = data
+  const { id, title, description, videos } = data
+  const [firstVideo] = videos
 
-  return { id, title, description }
+  return { id, title, description, firstVideo: serializeVideo(firstVideo) }
 }
