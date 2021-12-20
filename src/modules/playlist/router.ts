@@ -11,7 +11,7 @@ export const router = new Router({
 
 /**
  * @openapi
- * /playlist:
+ * /playlists:
  *   get:
  *     tags:
  *       - Playlist
