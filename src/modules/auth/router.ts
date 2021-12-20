@@ -118,6 +118,8 @@ router.post("/logout", logout())
  *                 hasPermission:
  *                   type: boolean
  *
+ */
+
 /**
  * @openapi
  * /auth/user:
