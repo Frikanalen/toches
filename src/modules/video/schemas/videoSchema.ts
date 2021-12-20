@@ -16,6 +16,8 @@ import { validateMediaId } from "../helpers/validateMediaId"
  *           type: string
  *         mediaId:
  *           type: number
+ *         jukeboxable:
+ *           type: boolean
  *       required:
  *         - title
  *         - mediaId
