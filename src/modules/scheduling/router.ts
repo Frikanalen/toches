@@ -39,7 +39,9 @@ const router = new Router({
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ScheduleEntry'
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/ScheduleEntry'
  */
 router.get("/entries", sendSchedule())
 
