@@ -18,6 +18,7 @@ export type VideoData = {
 
   title: string
   description?: string
+  duration: number
 
   organization: OrganizationData
 

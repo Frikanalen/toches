@@ -47,6 +47,10 @@ export const videoQuery = new QueryTemplate<DefaultQueryOptions & VideoQueryPara
         .whereRaw("video_category_map.video_id = videos.id")
 
       query.select(getArrayFromSubquery(categorySubquery, "video__categories"))
+
+      query
+        .select("video_media.duration AS video__duration")
+        .join("video_media", "video_media.id", "videos.media_id")
     }
   },
   prepare: () => {

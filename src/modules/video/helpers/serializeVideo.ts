@@ -17,6 +17,8 @@ import { serializeVideoMediaAsset } from "./serializeVideoMediaAsset"
  *           example: Frikanelen Infoplakat
  *         description:
  *           type: string
+ *         duration:
+ *           type: number
  *         categories:
  *           type: array
  *           items:
@@ -31,6 +33,8 @@ import { serializeVideoMediaAsset } from "./serializeVideoMediaAsset"
  *           $ref: '#/components/schemas/Organization'
  *         viewCount:
  *           type: number
+ *         jukeboxable:
+ *           type: boolean
  *
  */
 export const serializeVideo = (video: VideoData) => {
@@ -38,6 +42,7 @@ export const serializeVideo = (video: VideoData) => {
     id,
     title,
     description,
+    duration,
     createdAt,
     updatedAt,
     organization,
@@ -51,6 +56,7 @@ export const serializeVideo = (video: VideoData) => {
     id,
     title,
     description,
+    duration,
     categories: categories.map((c) => c.id),
     createdAt,
     updatedAt,
