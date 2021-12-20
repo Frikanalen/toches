@@ -10,7 +10,7 @@ exports.up = async (knex) => {
     table.integer("video_id").notNullable()
     table.foreign("video_id").references("videos.id").onDelete("CASCADE")
 
-    table.timestamp("start_at").notNullable()
+    table.timestamp("starts_at").notNullable()
   })
 }
 
