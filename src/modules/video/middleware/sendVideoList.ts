@@ -10,6 +10,7 @@ export const sendVideoList = () =>
 
     const query = await object({
       inPlaylist: number(),
+      organization: number(),
     }).validate(context.query)
 
     return getVideoList({ offset, limit, ...query })

@@ -14,6 +14,7 @@ const organization = new Relationship({
 })
 
 export type VideoQueryParams = {
+  organization?: number
   inPlaylist?: number
 }
 
@@ -29,6 +30,10 @@ export const videoQuery = new QueryTemplate<DefaultQueryOptions & VideoQueryPara
       if (!options.count) {
         query.orderBy("playlist_entries.index")
       }
+    }
+
+    if (options.organization) {
+      query.where("videos.organization_id", options.organization)
     }
 
     if (!options.count) {
