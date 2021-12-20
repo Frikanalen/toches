@@ -1,1 +1,1 @@
-export const UPLOAD_RECEIVER_PROXY = "http://localhost:1080"
+export const UPLOAD_RECEIVER_PROXY = "http://localhost:8001"
