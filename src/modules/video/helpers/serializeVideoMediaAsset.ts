@@ -5,6 +5,20 @@ const getObjectURL = (locator: string) => {
   return `/${bucket}/${rest.join("")}`
 }
 
+/**
+ * @openapi
+ * components:
+ *   schemas:
+ *     VideoMediaAsset:
+ *       type: object
+ *       properties:
+ *         type:
+ *           type: string
+ *         url:
+ *           type: string
+ *         metadata:
+ *           type: object
+ */
 export const serializeVideoMediaAsset = (data: VideoMediaAssetData) => {
   const { type, locator, metadata } = data
 

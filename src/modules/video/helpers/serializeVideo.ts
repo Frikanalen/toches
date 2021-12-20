@@ -31,6 +31,10 @@ import { serializeVideoMediaAsset } from "./serializeVideoMediaAsset"
  *           format: date-time
  *         organization:
  *           $ref: '#/components/schemas/Organization'
+ *         assets:
+ *           type: array
+ *           items:
+ *             $ref: '#/components/schemas/VideoMediaAsset'
  *         viewCount:
  *           type: number
  *         jukeboxable:
