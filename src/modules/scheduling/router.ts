@@ -1,13 +1,15 @@
 import Router from "@koa/router"
+import { requireSecretKey } from "../auth/middleware/requireSecretKey"
+import { sendJukeboxableVideos } from "./middleware/sendJukeboxableVideos"
 
 const router = new Router({
-  prefix: "/schedule-entries",
+  prefix: "/scheduling",
 })
 
 router.get("/jukeboxable", requireSecretKey(), sendJukeboxableVideos())
 
 // Temporary mock route to get frontend working
-router.get("/", (context, next) => {
+router.get("/entries", (context, next) => {
   context.body = {
     rows: [],
     count: 0,
