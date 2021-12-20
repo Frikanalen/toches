@@ -4,6 +4,8 @@ const router = new Router({
   prefix: "/schedule-entries",
 })
 
+router.get("/jukeboxable", requireSecretKey(), sendJukeboxableVideos())
+
 // Temporary mock route to get frontend working
 router.get("/", (context, next) => {
   context.body = {
