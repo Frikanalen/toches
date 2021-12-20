@@ -120,14 +120,15 @@ router.get("/:id", organizationGetterMiddleware, sendResource(serializeOrganizat
 
 /**
  * @openapi
- * /organizations/{id}/videos:
+ * /organizations/{orgId}/videos:
  *   parameters:
  *     - in: path
- *       name: id
+ *       name: orgId
  *       required: true
  *       schema:
  *         type: integer
  *   post:
+ *     operationId: newVideo
  *     tags:
  *       - Organization
  *       - Video
@@ -141,7 +142,7 @@ router.get("/:id", organizationGetterMiddleware, sendResource(serializeOrganizat
  *           schema:
  *             $ref: '#/components/schemas/NewVideoForm'
  *     responses:
- *       200:
+ *       201:
  *         description: Video was created
  *         content:
  *           application/json:

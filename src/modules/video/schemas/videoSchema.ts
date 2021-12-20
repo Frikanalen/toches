@@ -15,9 +15,13 @@ import { validateMediaId } from "../helpers/validateMediaId"
  *         description:
  *           type: string
  *         mediaId:
- *           type: number
+ *           type: integer
  *         jukeboxable:
  *           type: boolean
+ *         categories:
+ *           type: array
+ *           items:
+ *             type: integer
  *       required:
  *         - title
  *         - mediaId

@@ -47,6 +47,7 @@ router.post("/register", register(), sendNewCSRFToken())
  * @openapi
  * /auth/login:
  *   post:
+ *     operationId: loginUser
  *     tags:
  *       - Authentication
  *     summary: Log in with existing user
@@ -95,13 +96,9 @@ router.post("/logout", logout())
 
 /**
  * @openapi
- * /auth/user:
+ * /auth/hasPermission:
  *   get:
- *     tags:
- *       - Authentication
- *     summary: Get information about the logged in user
- *     description:
- *       Returns the logged in user (omitted if anonymous). If the `hasPermission` query param is used, only a status code and message is returned instead.
+ *     operationId: checkPermission
  *     parameters:
  *       - in: query
  *         name: hasPermission
@@ -116,18 +113,33 @@ router.post("/logout", logout())
  *         content:
  *           application/json:
  *             schema:
- *               oneOf:
- *               - type: object
- *                 properties:
- *                   authenticated:
- *                     type: boolean
- *                   user:
- *                     $ref: '#/components/schemas/User'
- *               - type: object
- *                 properties:
- *                   message:
- *                     type: string
- *                     enum: ["Permission granted"]
+ *               type: object
+ *               properties:
+ *                 hasPermission:
+ *                   type: boolean
+ *
+/**
+ * @openapi
+ * /auth/user:
+ *   get:
+ *     operationId: userProfile
+ *     tags:
+ *       - Authentication
+ *     summary: Get information about the logged in user
+ *     description:
+ *       Returns the logged in user (omitted if anonymous). If the `hasPermission` query param is used, only a status code and message is returned instead.
+ *     responses:
+ *       200:
+ *         description: Successful request or permission granted
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 authenticated:
+ *                   type: boolean
+ *                 user:
+ *                   $ref: '#/components/schemas/User'
  *       401:
  *         description: Authentication required or permission denied (only for `hasPermission`)
  *       400:
