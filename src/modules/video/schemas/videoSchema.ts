@@ -1,3 +1,4 @@
+import { boolean } from "yup"
 import { InferType, number, object, string } from "yup"
 import { validateCategoryIds } from "../../category/helpers/validateCategoryIds"
 import { validateMediaId } from "../helpers/validateMediaId"
@@ -24,6 +25,7 @@ export const videoSchema = object({
   description: string(),
   categories: validateCategoryIds().required(),
   mediaId: validateMediaId(number().required()),
+  jukeboxable: boolean().default(false),
 })
 
 export type ValidatedVideo = InferType<typeof videoSchema>

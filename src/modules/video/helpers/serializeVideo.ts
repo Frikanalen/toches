@@ -44,6 +44,7 @@ export const serializeVideo = (video: VideoData) => {
     categories,
     assets,
     viewCount,
+    jukeboxable,
   } = video
 
   return {
@@ -56,5 +57,6 @@ export const serializeVideo = (video: VideoData) => {
     organization: serializeOrganization(organization),
     assets: assets.map((a) => serializeVideoMediaAsset(a)),
     viewCount,
+    jukeboxable,
   }
 }

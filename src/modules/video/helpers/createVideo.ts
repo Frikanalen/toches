@@ -16,6 +16,7 @@ export const createVideo = async (
       media_id: data.mediaId,
       title: data.title,
       description: data.description,
+      jukeboxable: data.jukeboxable,
     })
     .into(videoModel.tableName)
     .returning<number[]>("id")

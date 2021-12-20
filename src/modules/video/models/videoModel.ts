@@ -28,11 +28,21 @@ export type VideoData = {
   updatedAt: Date
 
   viewCount: number
+
+  jukeboxable: boolean
 }
 
 export const videoModel = new Model<VideoData>({
   tableName: "videos",
-  columns: ["id", "title", "description", "organization_id", "media_id", "view_count"],
+  columns: [
+    "id",
+    "title",
+    "description",
+    "organization_id",
+    "media_id",
+    "view_count",
+    "jukeboxable",
+  ],
   structure: {
     prefix: "video",
     property: "video",
