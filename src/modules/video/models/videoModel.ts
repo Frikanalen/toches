@@ -40,6 +40,8 @@ export const videoModel = new Model<VideoData>({
     "title",
     "description",
     "organization_id",
+    "created_at",
+    "updated_at",
     "media_id",
     "view_count",
     "jukeboxable",
