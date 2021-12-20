@@ -3,6 +3,7 @@ import { requireSecretKey } from "../auth/middleware/requireSecretKey"
 import { validateSchema } from "../validation/middleware/validateSchema"
 import { addJukeboxEntries } from "./helpers/addJukeboxEntries"
 import { sendJukeboxableVideos } from "./middleware/sendJukeboxableVideos"
+import { sendSchedule } from "./middleware/sendSchedule"
 import { jukeboxSchema } from "./schemas/jukeboxSchema"
 
 const router = new Router({
@@ -26,16 +27,6 @@ router.post(
   },
 )
 
-// Temporary mock route to get frontend working
-router.get("/entries", (context, next) => {
-  context.body = {
-    rows: [],
-    count: 0,
-    offset: 0,
-    limit: 5,
-  }
-
-  return next()
-})
+router.get("/entries", sendSchedule())
 
 export { router as scheduleRouter }
