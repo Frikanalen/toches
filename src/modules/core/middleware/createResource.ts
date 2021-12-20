@@ -6,9 +6,9 @@ export const createResource =
   <D>(action: CreateAction<D>): Middleware =>
   async (context, next) => {
     const resource = await action(context.state.validated, context)
-    
+
     context.state.resource = resource
-    context.state.status = 201
+    context.status = 201
 
     return next()
   }
