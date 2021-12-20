@@ -11,6 +11,11 @@ const methodToColorMap: Record<string, typeof chalk.Color> = {
   delete: "redBright",
 }
 
+const methodToShortenedMap: Record<string, string> = {
+  options: "opts",
+  delete: "del",
+}
+
 const leadingZero = (v: number, length = 2) => v.toString().padStart(length, "0")
 const padCenter = (str: string, length: number) =>
   str.padStart((str.length + length) / 2).padEnd(length)
@@ -22,6 +27,9 @@ export const logRequest = (): Middleware => async (context, next) => {
   const difference = Date.now() - start
 
   const { method, path, querystring } = context
+
+  const shortenedMethod =
+    methodToShortenedMap[method.toLowerCase()] ?? method.toLowerCase()
   const methodColor = methodToColorMap[method.toLowerCase()] ?? "white"
 
   const responseTime = chalk[difference > 500 ? "redBright" : "gray"](
@@ -35,7 +43,7 @@ export const logRequest = (): Middleware => async (context, next) => {
   )
 
   const separator = chalk.gray(" ◦ ")
-  const coloredMethod = chalk[methodColor](padCenter(method.toUpperCase(), 6))
+  const coloredMethod = chalk[methodColor](padCenter(shortenedMethod.toUpperCase(), 6))
   const coloredPath = chalk.white(path)
   const coloredQueryString = querystring ? chalk.magentaBright("?" + querystring) : ""
 
