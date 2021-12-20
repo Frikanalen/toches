@@ -1,4 +1,5 @@
 import { db } from "../../db/db"
+import { getAliasedColumns } from "../../db/helpers/getAliasedColumns"
 import { parseRowStructure } from "../../db/helpers/parseRowStructure"
 import { videoModel } from "../../video/models/videoModel"
 import { videoQuery } from "../../video/queries/videoQuery"
@@ -14,6 +15,13 @@ export const getJukeboxEntries = async (
     .where("j.starts_at", ">=", from)
     .andWhere("j.starts_at", "<", to)
     .join(videoModel.tableName, "videos.id", "j.video_id")
+    .select(
+      getAliasedColumns({
+        columns: videoModel.columns,
+        prefix: videoModel.structure.prefix,
+        table: videoModel.tableName,
+      }),
+    )
 
   await videoQuery.merge({
     options: { single: true },
