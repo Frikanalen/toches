@@ -1,11 +1,20 @@
+import { createColumnOrdering } from "../../core/helpers/createColumnOrdering"
 import { DefaultQueryOptions, QueryTemplate } from "../../db/classes/QueryTemplate"
 import { Relationship } from "../../db/classes/Relationship"
 import { db } from "../../db/db"
+import { applyOrdering } from "../../db/helpers/applyOrdering"
 import { getAliasedColumns } from "../../db/helpers/getAliasedColumns"
 import { getArrayFromSubquery } from "../../db/helpers/getArrayFromSubquery"
+import { InferOrderingParams } from "../../db/types/Ordering"
 import { organizationModel } from "../../organization/models/organizationModel"
 import { organizationQuery } from "../../organization/queries/organizationQuery"
 import { videoModel } from "../models/videoModel"
+
+export const videoOrdering = [
+  createColumnOrdering("date", "videos.created_at"),
+  createColumnOrdering("views", "videos.view_count"),
+  createColumnOrdering("length", "video__duration"),
+]
 
 const organization = new Relationship({
   key: "videos.organization_id",
@@ -13,7 +22,7 @@ const organization = new Relationship({
   template: organizationQuery,
 })
 
-export type VideoQueryParams = {
+export type VideoQueryParams = InferOrderingParams<typeof videoOrdering> & {
   organization?: number
   inPlaylist?: number
 }
@@ -22,21 +31,8 @@ export const videoQuery = new QueryTemplate<DefaultQueryOptions & VideoQueryPara
   build: async (context) => {
     const { query, options } = context
 
-    if (options.inPlaylist) {
-      query
-        .join("playlist_entries", "playlist_entries.video_id", "videos.id")
-        .where("playlist_entries.playlist_id", options.inPlaylist)
-
-      if (!options.count) {
-        query.orderBy("playlist_entries.index")
-      }
-    }
-
-    if (options.organization) {
-      query.where("videos.organization_id", options.organization)
-    }
-
     if (!options.count) {
+      applyOrdering(videoOrdering, query, options)
       organization.apply(query, {})
 
       const assetSubquery = db
@@ -56,6 +52,20 @@ export const videoQuery = new QueryTemplate<DefaultQueryOptions & VideoQueryPara
       query
         .select("video_media.duration AS video__duration")
         .join("video_media", "video_media.id", "videos.media_id")
+    }
+
+    if (options.inPlaylist) {
+      query
+        .join("playlist_entries", "playlist_entries.video_id", "videos.id")
+        .where("playlist_entries.playlist_id", options.inPlaylist)
+
+      if (!options.count) {
+        query.orderBy("playlist_entries.index")
+      }
+    }
+
+    if (options.organization) {
+      query.where("videos.organization_id", options.organization)
     }
   },
   prepare: () => {
