@@ -31,8 +31,11 @@ export const videoQuery = new QueryTemplate<DefaultQueryOptions & VideoQueryPara
   build: async (context) => {
     const { query, options } = context
 
-    if (!options.count) {
+    if (!options.count && !options.single) {
       applyOrdering(videoOrdering, query, options)
+    }
+
+    if (!options.count) {
       organization.apply(query, {})
 
       const assetSubquery = db

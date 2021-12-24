@@ -14,6 +14,7 @@ export const getJukeboxEntries = async (
     .from("jukebox_entries AS j")
     .where("j.starts_at", ">=", from)
     .andWhere("j.starts_at", "<", to)
+    .orderBy("j.starts_at")
     .join(videoModel.tableName, "videos.id", "j.video_id")
     .select(
       getAliasedColumns({
