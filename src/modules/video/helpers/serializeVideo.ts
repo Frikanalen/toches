@@ -34,14 +34,31 @@ import { serializeVideoMediaAsset } from "./serializeVideoMediaAsset"
  *         media:
  *           type: object
  *           properties:
+ *             id:
+ *               type: number
  *             assets:
- *              type: array
- *              items:
- *                $ref: '#/components/schemas/VideoMediaAsset'
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/VideoMediaAsset'
+ *           required:
+ *             - id
+ *             - assets
  *         viewCount:
  *           type: number
  *         jukeboxable:
  *           type: boolean
+ *       required:
+ *         - id
+ *         - title
+ *         - description
+ *         - duration
+ *         - categories
+ *         - createdAt
+ *         - updatedAt
+ *         - organization
+ *         - media
+ *         - viewCount
+ *         - jukeboxable
  *
  */
 export const serializeVideo = (video: VideoData) => {
