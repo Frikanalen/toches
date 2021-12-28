@@ -23,6 +23,11 @@ import { serializeJukeboxEntry } from "../helpers/serializeJukeboxEntry"
  *           format: date-time
  *         video:
  *           $ref: '#/components/schemas/Video'
+ *       required:
+ *         - type
+ *         - startsAt
+ *         - endsAt
+ *         - video
  */
 export const sendSchedule = (): Middleware => async (context, next) => {
   const { query } = context
