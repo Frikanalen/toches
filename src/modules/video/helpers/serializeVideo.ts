@@ -31,10 +31,13 @@ import { serializeVideoMediaAsset } from "./serializeVideoMediaAsset"
  *           format: date-time
  *         organization:
  *           $ref: '#/components/schemas/Organization'
- *         assets:
- *           type: array
- *           items:
- *             $ref: '#/components/schemas/VideoMediaAsset'
+ *         media:
+ *           type: object
+ *           properties:
+ *             assets:
+ *              type: array
+ *              items:
+ *                $ref: '#/components/schemas/VideoMediaAsset'
  *         viewCount:
  *           type: number
  *         jukeboxable:
@@ -50,6 +53,7 @@ export const serializeVideo = (video: VideoData) => {
     createdAt,
     updatedAt,
     organization,
+    mediaId,
     categories,
     assets,
     viewCount,
@@ -65,7 +69,10 @@ export const serializeVideo = (video: VideoData) => {
     createdAt,
     updatedAt,
     organization: serializeOrganization(organization),
-    assets: assets.map((a) => serializeVideoMediaAsset(a)),
+    media: {
+      id: mediaId,
+      assets: assets.map((a) => serializeVideoMediaAsset(a)),
+    },
     viewCount,
     jukeboxable,
   }

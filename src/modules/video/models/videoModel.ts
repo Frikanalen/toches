@@ -23,6 +23,7 @@ export type VideoData = {
   organization: OrganizationData
 
   assets: VideoMediaAssetData[]
+  mediaId: number
   categories: { id: number }[]
 
   createdAt: Date
