@@ -36,7 +36,11 @@ export const useSession = (app: Koa) =>
       maxAge: 604800000, // a week
       httpOnly: true,
       signed: false,
-      secure: IS_PROD,
+      secure: false, //IS_PROD,
     },
     app,
   )
+
+console.warn(
+  "Secure cookies is currently hardcoded to false. Fix this before production!",
+)
