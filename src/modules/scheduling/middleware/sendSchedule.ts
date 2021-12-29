@@ -1,4 +1,4 @@
-import { startOfToday, endOfWeek, add } from "date-fns"
+import { startOfToday, add } from "date-fns"
 import { Middleware } from "koa"
 import { date } from "yup"
 import { object } from "yup"
@@ -37,7 +37,7 @@ export const sendSchedule = (): Middleware => async (context, next) => {
     to: date().when("from", (from: Date) => {
       return date()
         .default(add(from, { hours: 24 }))
-        .max(endOfWeek(from))
+        .max(add(from, { days: 7 }))
     }),
   }).validate(query)
 
