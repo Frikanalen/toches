@@ -2,6 +2,7 @@ import Koa from "koa"
 import bodyParser from "koa-bodyparser"
 import { useCSRFProtection } from "../auth/middleware/useCSRFProtection"
 import { useSession } from "../auth/middleware/useSession"
+import { IS_PROD } from "./constants"
 import { handleError } from "./middleware/handleError"
 import { logRequest } from "./middleware/logRequest"
 import { sendCORSHeaders } from "./middleware/sendCORSHeaders"
@@ -9,6 +10,8 @@ import { sendCORSHeaders } from "./middleware/sendCORSHeaders"
 import { router } from "./router"
 
 const app = new Koa()
+
+app.proxy = IS_PROD
 
 app.use(logRequest())
 app.use(handleError())
