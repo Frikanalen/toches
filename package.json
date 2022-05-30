@@ -14,7 +14,8 @@
     "start": "node build/index.js",
     "dev": "ts-node-dev src/index.ts",
     "build-cli": "tsc --project ./cli/tsconfig.json",
-    "cli": "node ./cli/build/index.js"
+    "cli": "node ./cli/build/index.js",
+    "makeMockData": "yarn build-cli && yarn knex migrate:latest && yarn cli ctu admin && yarn cli cmd users 10 && yarn cli cmd orgs 10"
   },
   "dependencies": {
     "@koa/router": "^10.1.1",
