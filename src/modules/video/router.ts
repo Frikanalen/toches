@@ -83,7 +83,7 @@ router.get(
  * /videos/media:
  *   post:
  *     tags:
- *       - Internal
+ *       - Media
  *     summary: (Used by media-processor) Register an uploaded file in the database
  *     parameters:
  *       - in: header
@@ -134,7 +134,7 @@ router.post(
  *       required: true
  *   post:
  *     tags:
- *       - Internal
+ *       - Media
  *     summary: (Used by media-processor) Register a new video media asset
  *     requestBody:
  *       required: true

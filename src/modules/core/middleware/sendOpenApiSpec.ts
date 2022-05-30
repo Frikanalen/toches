@@ -29,6 +29,10 @@ export const openApiSpec = swagger({
         url: "https://beta.frikanalen.no/api/v2",
         description: "Staging server",
       },
+      {
+        url: "http://localhost:8000",
+        description: "Local development",
+      },
     ],
     components: {
       securitySchemes: {
