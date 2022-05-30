@@ -99,6 +99,8 @@ router.post("/logout", logout())
  * /auth/hasPermission:
  *   get:
  *     operationId: checkPermission
+ *     tags:
+ *       - Authentication
  *     parameters:
  *       - in: query
  *         name: hasPermission

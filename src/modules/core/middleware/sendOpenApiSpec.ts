@@ -16,7 +16,7 @@ const createMessage = (message: string) => ({
   },
 })
 
-const spec = swagger({
+export const openApiSpec = swagger({
   definition: {
     openapi: "3.0.0",
     info: {
@@ -26,8 +26,8 @@ const spec = swagger({
     },
     servers: [
       {
-        url: "https://frikanalen.no/api/v2",
-        description: "Production server",
+        url: "https://beta.frikanalen.no/api/v2",
+        description: "Staging server",
       },
     ],
     components: {
@@ -98,6 +98,6 @@ console.timeEnd("Generated successfully")
 console.info("")
 
 export const sendOpenApiSpec = (): Middleware => (context, next) => {
-  context.body = spec
+  context.body = openApiSpec
   return next()
 }

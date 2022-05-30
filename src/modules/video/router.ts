@@ -83,8 +83,14 @@ router.get(
  * /videos/media:
  *   post:
  *     tags:
- *       - Video
- *     summary: Internally create a video media entry
+ *       - Internal
+ *     summary: (Used by media-processor) Register an uploaded file in the database
+ *     parameters:
+ *       - in: header
+ *         name: X-Api-Key
+ *         schema:
+ *           type: string
+ *         required: true
  *     requestBody:
  *       required: true
  *       content:
@@ -101,6 +107,8 @@ router.get(
  *               properties:
  *                 id:
  *                   type: number
+ *               required:
+ *                 - id
  */
 router.post(
   "/media",
@@ -119,10 +127,15 @@ router.post(
  *       required: true
  *       schema:
  *         type: integer
+ *     - in: header
+ *       name: X-Api-Key
+ *       schema:
+ *         type: string
+ *       required: true
  *   post:
  *     tags:
- *       - Video
- *     summary: Internally create a video media asset entry
+ *       - Internal
+ *     summary: (Used by media-processor) Register a new video media asset
  *     requestBody:
  *       required: true
  *       content:
@@ -139,6 +152,8 @@ router.post(
  *               properties:
  *                 id:
  *                   type: number
+ *               required:
+ *                 - id
  */
 router.post(
   "/media/:id/assets",
