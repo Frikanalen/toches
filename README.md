@@ -28,6 +28,7 @@ yarn cli create-mock-data orgs 20
 yarn run dev
 ```
 
+### Proxy
 In dev mode, toches will proxy requests coming in on /api/videos/upload to localhost:1080.
 In production mode, this is handled by our traefik ingress controller.
 

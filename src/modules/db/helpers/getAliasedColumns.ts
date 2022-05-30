@@ -7,7 +7,7 @@ export type Options = {
 export const getAliasedColumns = (options: Options) => {
   const { columns, prefix, table } = options
 
-  return columns.map(column => {
+  return columns.map((column) => {
     return `${table}.${column} as ${prefix}__${column}`
   })
 }

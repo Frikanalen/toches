@@ -1,4 +1,6 @@
 // This should be increased when CPUs catch up
+import { log } from "../core/log"
+
 export const BCRYPT_COST_FACTOR = 12
 
 export const SESSION_COOKIE = "fk-session"
@@ -10,7 +12,7 @@ export const SECRET_KEY_HEADER = "X-Api-Key"
 export const SECRET_KEY = process.env.FK_API_KEY
 
 if (!SECRET_KEY) {
-  console.warn(
+  log.warn(
     "Warning: FK_API_KEY is not set, this means internal endpoints will be unreachable",
   )
 }

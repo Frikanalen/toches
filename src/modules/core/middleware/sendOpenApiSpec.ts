@@ -1,105 +1,109 @@
 import { Middleware } from "koa"
 import swagger from "swagger-jsdoc"
 import { SESSION_COOKIE } from "../../auth/constants"
+import { log } from "../log"
 
-console.info("Generating Open API spec...")
-console.time("Generated successfully")
+const buildOAPI = () => {
+  log.info("Generating OpenAPI spec")
 
-const createMessage = (message: string) => ({
-  type: "object",
-  properties: {
-    message: {
-      type: "string",
-      default: message,
-      example: message,
-    },
-  },
-})
-
-export const openApiSpec = swagger({
-  definition: {
-    openapi: "3.0.0",
-    info: {
-      title: "Frikanalen API",
-      description: "RESTful API for consuming and interacting with Frikanalen",
-      version: "2.0.0",
-    },
-    servers: [
-      {
-        url: "https://beta.frikanalen.no/api/v2",
-        description: "Staging server",
+  const createMessage = (message: string) => ({
+    type: "object",
+    properties: {
+      message: {
+        type: "string",
+        default: message,
+        example: message,
       },
-      {
-        url: "http://localhost:8000",
-        description: "Local development",
+    },
+  })
+
+  const newOpenApiSpec = swagger({
+    definition: {
+      openapi: "3.0.0",
+      info: {
+        title: "Frikanalen API",
+        description: "RESTful API for consuming and interacting with Frikanalen",
+        version: "2.0.0",
       },
-    ],
-    components: {
-      securitySchemes: {
-        cookie: {
-          type: "apiKey",
-          in: "cookie",
-          name: SESSION_COOKIE,
+      servers: [
+        {
+          url: "https://beta.frikanalen.no/api/v2",
+          description: "Staging server",
         },
-      },
-      parameters: {},
-      responses: {
-        PermissionDenied: {
-          description: "You don't have the required permissions to perform this action",
-          content: {
-            "application/json": {
-              schema: {
-                type: "object",
-                properties: {
-                  message: {
-                    type: "string",
-                    default: "Permission denied",
-                    example: "Permission denied",
-                  },
-                  details: {
-                    type: "array",
-                    example: [
-                      "You must be the organization editor to do that",
-                      "You need the ATEM_CONTROL role permission",
-                    ],
-                    items: {
+        {
+          url: "http://localhost:8000",
+          description: "Local development",
+        },
+      ],
+      components: {
+        securitySchemes: {
+          cookie: {
+            type: "apiKey",
+            in: "cookie",
+            name: SESSION_COOKIE,
+          },
+        },
+        parameters: {},
+        responses: {
+          PermissionDenied: {
+            description: "You don't have the required permissions to perform this action",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    message: {
                       type: "string",
+                      default: "Permission denied",
+                      example: "Permission denied",
+                    },
+                    details: {
+                      type: "array",
+                      example: [
+                        "You must be the organization editor to do that",
+                        "You need the ATEM_CONTROL role permission",
+                      ],
+                      items: {
+                        type: "string",
+                      },
                     },
                   },
                 },
               },
             },
           },
-        },
-        AuthenticationRequired: {
-          description: "Authentication is required for this request",
-          content: {
-            "application/json": {
-              schema: createMessage("Authentication required"),
+          AuthenticationRequired: {
+            description: "Authentication is required for this request",
+            content: {
+              "application/json": {
+                schema: createMessage("Authentication required"),
+              },
             },
           },
-        },
-        ResourceNotFound: {
-          description: "The requested resource was not found",
-          content: {
-            "application/json": {
-              schema: createMessage("Not found"),
+          ResourceNotFound: {
+            description: "The requested resource was not found",
+            content: {
+              "application/json": {
+                schema: createMessage("Not found"),
+              },
             },
           },
         },
       },
+      tags: [
+        {
+          name: "Authentication",
+        },
+      ],
     },
-    tags: [
-      {
-        name: "Authentication",
-      },
-    ],
-  },
-  apis: ["./src/**/*.ts"],
-})
+    apis: ["./src/**/*.ts"],
+  })
 
-console.timeEnd("Generated successfully")
-console.info("")
+  log.info("OpenAPI generation complete")
+  return newOpenApiSpec
+}
+
+export const openApiSpec = buildOAPI()
 
 export const sendOpenApiSpec = (): Middleware => (context, next) => {
   context.body = openApiSpec

@@ -9,7 +9,8 @@ import { sendCORSHeaders } from "./middleware/sendCORSHeaders"
 
 import { router } from "./router"
 import { openApiSpec } from "./middleware/sendOpenApiSpec"
-const { ui } = require("swagger2-koa");
+import { apolloServer } from "../graphql/server"
+const { ui } = require("swagger2-koa")
 
 const app = new Koa()
 
@@ -24,4 +25,8 @@ app.use(useCSRFProtection())
 app.use(sendCORSHeaders())
 app.use(router.middleware())
 
+apolloServer.start().then(() => {
+  router.post("/graphql", apolloServer.getMiddleware())
+  router.get("/graphql", apolloServer.getMiddleware())
+})
 export { app }

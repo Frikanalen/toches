@@ -1,6 +1,5 @@
 import { Middleware } from "koa"
 import chalk from "chalk"
-import { number } from "yup/lib/locale"
 
 const methodToColorMap: Record<string, typeof chalk.Color> = {
   options: "greenBright",
