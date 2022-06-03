@@ -11,6 +11,7 @@ FROM node:16-alpine as runner
 
 COPY --from=deps /home/node/app/node_modules node_modules
 COPY . .
+COPY src/modules/graphql/schema/video.graphql build/modules/graphql/schema/video.graphql
 RUN yarn build
 
 ENV PORT 80
