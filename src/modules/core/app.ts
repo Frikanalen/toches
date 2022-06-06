@@ -16,7 +16,7 @@ const app = new Koa()
 
 app.proxy = IS_PROD
 
-app.use(ui(openApiSpec, IS_PROD ? "/api/v2/swagger" : "/swagger"))
+app.use(ui(openApiSpec, "/swagger"))
 app.use(logRequest())
 app.use(handleError())
 app.use(bodyParser())
