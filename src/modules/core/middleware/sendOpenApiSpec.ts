@@ -2,7 +2,7 @@ import { Middleware } from "koa"
 import swagger from "swagger-jsdoc"
 import { SESSION_COOKIE } from "../../auth/constants"
 import { log } from "../log"
-import {IS_PROD} from "../constants";
+import { IS_PROD } from "../constants"
 
 const buildOAPI = () => {
   log.info("Generating OpenAPI spec")
@@ -26,14 +26,13 @@ const buildOAPI = () => {
         description: "RESTful API for consuming and interacting with Frikanalen",
         version: "2.0.0",
       },
-      basePath: IS_PROD? '/api/v2/': '/',
       servers: [
         {
           url: "https://beta.frikanalen.no/api/v2",
           description: "Staging server",
         },
         {
-          url: "http://localhost:8000",
+          url: "http://localhost:8080",
           description: "Local development",
         },
       ],
