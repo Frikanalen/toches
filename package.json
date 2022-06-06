@@ -39,9 +39,9 @@
     "yup": "^0.32.11"
   },
   "devDependencies": {
+    "@faker-js/faker": "^7.2.0",
     "@types/bcrypt": "^5.0.0",
     "@types/dotenv": "^8.2.0",
-    "@types/faker": "^6.6.9",
     "@types/jest": "^27.5.1",
     "@types/koa": "^2.13.4",
     "@types/koa-bodyparser": "^4.3.7",
@@ -52,7 +52,6 @@
     "@types/yup": "^0.29.14",
     "commander": "^9.3.0",
     "eslint": "^8.16.0",
-    "faker": "^6.6.6",
     "jest": "^28.1.0",
     "prettier": "^2.6.2",
     "ts-jest": "^28.0.3",

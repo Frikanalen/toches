@@ -1,4 +1,4 @@
-import faker from "faker"
+import { faker } from "@faker-js/faker"
 import { sub } from "date-fns"
 import { Command } from "commander"
 import { db } from "../db"
