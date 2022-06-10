@@ -4,7 +4,6 @@ import { login } from "./middleware/login"
 import { logout } from "./middleware/logout"
 import { register } from "./middleware/register"
 import { sendAuthenticatedUser } from "./middleware/sendAuthenticatedUser"
-import { sendNewCSRFToken } from "./middleware/sendNewCSRFToken"
 import { sendUserPermissionState } from "./middleware/sendUserPermissionState"
 
 const router = new Router({
@@ -41,7 +40,7 @@ const router = new Router({
  *       409:
  *         description: Email is already in use
  */
-router.post("/register", register(), sendNewCSRFToken())
+router.post("/register", register())
 
 /**
  * @openapi
@@ -72,7 +71,7 @@ router.post("/register", register(), sendNewCSRFToken())
  *       401:
  *         description: Incorrect username or password
  */
-router.post("/login", login(), sendNewCSRFToken())
+router.post("/login", login())
 
 /**
  * @openapi
