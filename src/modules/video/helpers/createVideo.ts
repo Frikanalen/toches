@@ -9,7 +9,7 @@ export const createVideo = async (
   organization: number,
   user: number,
 ) => {
-  const [id] = await db
+  const [{ id }] = await db
     .insert({
       uploader_id: user,
       organization_id: organization,
@@ -19,7 +19,7 @@ export const createVideo = async (
       jukeboxable: data.jukeboxable,
     })
     .into(videoModel.tableName)
-    .returning<number[]>("id")
+    .returning<{ id: number }[]>("id")
 
   await assignVideoCategories(id, data.categories)
 
