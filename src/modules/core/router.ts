@@ -8,6 +8,7 @@ import { userRouter } from "../user/router"
 import { videoRouter } from "../video/router"
 import { sendConfig } from "./middleware/sendConfig"
 import { sendOpenApiSpec } from "./middleware/sendOpenApiSpec"
+import { bulletinRouter } from "../bulletins/router"
 
 const router = new Router()
 
@@ -49,6 +50,7 @@ router.use(userRouter.middleware())
 router.use(organizationRouter.middleware())
 router.use(videoRouter.middleware())
 router.use(scheduleRouter.middleware())
+router.use(bulletinRouter.middleware())
 router.use(playlistRouter.middleware())
 
 export { router }

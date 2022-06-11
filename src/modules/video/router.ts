@@ -32,6 +32,12 @@ const router = new Router({
  *         required: false
  *         schema:
  *           type: integer
+ *       - in: query
+ *         name: organization
+ *         description: An id of an organization to filter by
+ *         required: false
+ *         schema:
+ *           type: integer
  *     responses:
  *       200:
  *         description: A list of videos
