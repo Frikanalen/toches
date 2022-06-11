@@ -17,11 +17,11 @@ import { InferType, object, string } from "yup"
  *         text:
  *           type: string
  *           minLength: 3
- *           maxLength: 255
+ *           maxLength: 3000
  */
 export const bulletinSchema = object({
   title: string().required().min(3).max(255),
-  text: string().required().min(3).max(255),
+  text: string().required().min(3).max(3000),
 })
 
 export type ValidatedBulletin = InferType<typeof bulletinSchema>
