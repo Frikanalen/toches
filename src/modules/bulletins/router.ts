@@ -7,6 +7,12 @@ import { sendBulletinList } from "./middleware/sendBulletinList"
 import { bulletinSchema } from "./schema"
 import { createBulletin } from "./helpers/createBulletin"
 import { serializeBulletin } from "./helpers/serializeBulletin"
+import { getResource } from "../core/middleware/getResource"
+import { getBulletin } from "./helpers/getBulletin"
+import { checkPermissions } from "../access-control/middleware/checkPermission"
+import { isAdmin } from "../user/permissions"
+import { updateResource } from "../core/middleware/updateResource"
+import { updateBulletin } from "./helpers/updateBulletin"
 
 const router = new Router({
   prefix: "/bulletins",
@@ -19,15 +25,6 @@ const router = new Router({
  *     tags:
  *       - Bulletins
  *     summary: Get a list of bulletins
- *     parameters:
- *       - $ref: '#/components/parameters/offset'
- *       - $ref: '#/components/parameters/limit'
- *       - in: query
- *         name: editor
- *         description: An id of the editor (user) to filter by
- *         required: false
- *         schema:
- *           type: integer
  *     responses:
  *       200:
  *         description: A list of bulletins
@@ -41,9 +38,51 @@ const router = new Router({
  *                     rows:
  *                       type: array
  *                       items:
- *                         $ref: '#/components/schemas/Organization'
+ *                         $ref: '#/components/schemas/Bulletin'
  */
 router.get("/", sendBulletinList())
+
+/**
+ * @openapi
+ * /bulletins/{id}:
+ *   parameters:
+ *     - in: path
+ *       name: id
+ *       required: true
+ *       schema:
+ *         type: integer
+ *   get:
+ *     tags:
+ *       - Bulletins
+ *     summary: Get a specific news bulletin by id
+ *     responses:
+ *       200:
+ *         description: Bulletin
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Bulletin'
+ *       404:
+ *          $ref: '#/components/responses/ResourceNotFound'
+ */
+router.get(
+  "/:id",
+  getResource((context) => getBulletin(context.params.id)),
+  sendResource(serializeBulletin),
+)
+
+router.put(
+  "/:id",
+  authenticate({
+    required: true,
+  }),
+  getResource((context) => getBulletin(context.params.id)),
+  validateSchema(bulletinSchema),
+  checkPermissions([isAdmin]),
+  updateResource((data, context) => updateBulletin(context.params.id, data)),
+  sendResource(serializeBulletin),
+)
+
 
 /**
  * @openapi
