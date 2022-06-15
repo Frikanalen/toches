@@ -13,6 +13,7 @@ import { checkPermissions } from "../access-control/middleware/checkPermission"
 import { isAdmin } from "../user/permissions"
 import { updateResource } from "../core/middleware/updateResource"
 import { updateBulletin } from "./helpers/updateBulletin"
+import { deleteBulletin } from "./helpers/deleteBulletin"
 
 const router = new Router({
   prefix: "/bulletins",
@@ -71,6 +72,31 @@ router.get(
   sendResource(serializeBulletin),
 )
 
+/**
+ * @openapi
+ * /bulletins/{id}:
+ *   parameters:
+ *     - in: path
+ *       name: id
+ *       required: true
+ *       schema:
+ *         type: integer
+ *   put:
+ *     tags:
+ *       - Bulletins
+ *     summary: Update a bulletin
+ *     responses:
+ *       200:
+ *         description: Bulletin
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Bulletin'
+ *       404:
+ *          $ref: '#/components/responses/ResourceNotFound'
+ *       403:
+ *          $ref: '#/components/responses/PermissionDenied'
+ */
 router.put(
   "/:id",
   authenticate({
@@ -83,6 +109,29 @@ router.put(
   sendResource(serializeBulletin),
 )
 
+/**
+ * @openapi
+ * /bulletins/{id}:
+ *   parameters:
+ *     - in: path
+ *       name: id
+ *       required: true
+ *       schema:
+ *         type: integer
+ *   delete:
+ *     tags:
+ *       - Bulletins
+ *     summary: Deletes a bulletin
+ *     responses:
+ *       204:
+ *          description: The resource was deleted successfully.
+ *       404:
+ *          $ref: '#/components/responses/ResourceNotFound'
+ *       403:
+ *          $ref: '#/components/responses/PermissionDenied'
+ */
+
+router.delete("/:id", deleteBulletin())
 
 /**
  * @openapi
