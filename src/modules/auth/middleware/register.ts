@@ -1,5 +1,4 @@
 import { Middleware } from "koa"
-import { HttpError } from "../../core/classes/HttpError"
 import { db } from "../../db/db"
 import { createUser } from "../../user/helpers/createUser"
 import { serializeUser } from "../../user/helpers/serializeUser"
@@ -18,7 +17,7 @@ export const register = (): Middleware => async (context, next) => {
     .first()
 
   if (existing) {
-    throw new HttpError(409, "Email already in use", "email_in_use")
+    context.throw(409, "Email already in use")
   }
 
   const user = await createUser(validatedUser)

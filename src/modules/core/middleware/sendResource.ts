@@ -5,10 +5,9 @@ export const sendResource =
   (context, next) => {
     const { resource } = context.state
 
-    if (!resource) {
-      throw new Error("Resource missing from context state!")
-    }
+    if (!resource) context.throw(500, "Resource missing from context state!")
 
     context.body = serialize(resource)
+
     return next()
   }

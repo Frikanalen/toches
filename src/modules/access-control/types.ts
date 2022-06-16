@@ -6,5 +6,5 @@ export type RolePermission = typeof ROLE_PERMISSIONS[number]
 
 export type Permission = {
   name: string
-  check: (context: ParameterizedContext) => Promise<string | undefined>
+  check: (context: ParameterizedContext) => Promise<void>
 }

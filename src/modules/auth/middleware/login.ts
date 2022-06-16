@@ -1,5 +1,4 @@
 import { Middleware } from "koa"
-import { HttpError } from "../../core/classes/HttpError"
 import { db } from "../../db/db"
 import { userModel } from "../../user/models/userModel"
 import { loginSchema } from "../schemas/loginSchema"
@@ -12,10 +11,9 @@ import { hashPassword } from "../helpers/hashPassword"
 
 const hashPbkdf2 = promisify(pbkdf2)
 
-const throwInvalid = async () => {
-  // Random delay to mitigate timing attacks
+// Random delay to mitigate timing attacks
+const randomDelay = async () => {
   await wait(Math.floor(Math.random() * 500))
-  throw new HttpError(401, "Incorrect username or password", "invalid_credentials")
 }
 
 export const login = (): Middleware => async (context, next) => {
@@ -37,7 +35,8 @@ export const login = (): Middleware => async (context, next) => {
 
   if (!user) {
     // Always return 401 so it's not clear if the email is in use or not
-    await throwInvalid()
+    await randomDelay()
+    context.throw(401, "Incorrect username or password")
   }
 
   const [algorithm, iterations, salt, hash] = user.password.split("$")
@@ -55,7 +54,8 @@ export const login = (): Middleware => async (context, next) => {
     const newHash = buffer.toString("base64")
 
     if (hash !== newHash) {
-      await throwInvalid()
+      await randomDelay()
+      context.throw(401, "Incorrect username or password")
     }
 
     console.info(`Re-hashing password for ${user.email}`)
@@ -68,7 +68,8 @@ export const login = (): Middleware => async (context, next) => {
 
   const valid = await comparePassword(validatedLogin.password, user.password)
   if (!valid) {
-    await throwInvalid()
+    await randomDelay()
+    context.throw(401, "Incorrect username or password")
   }
 
   return setSuccess()

@@ -5,8 +5,7 @@ export const isOrganizationEditor: Permission = {
   check: async (context) => {
     const { user, resource } = context.state
 
-    if (user.id !== resource.editor.id) {
-      return "You must be the organization editor to do that"
-    }
+    if (user.id !== resource.editor.id)
+      context.throw(403, "You must be the organization editor to do that")
   },
 }

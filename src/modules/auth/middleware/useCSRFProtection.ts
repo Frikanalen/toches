@@ -1,5 +1,4 @@
 import { Middleware } from "koa"
-import { HttpError } from "../../core/classes/HttpError"
 import { CSRF_COOKIE, CSRF_HEADER, CSRF_SAFE_METHODS } from "../constants"
 import { createCSRFToken } from "../helpers/createCSRFToken"
 import { log } from "../../core/log"
@@ -25,7 +24,7 @@ export const useCSRFProtection = (): Middleware => async (context, next) => {
 
   if (token !== cookie) {
     log.debug({ token, cookie })
-    throw new HttpError(403, "CSRF token missing or invalid")
+    context.throw(403, "CSRF token missing or invalid")
   }
 
   return next()

@@ -1,6 +1,5 @@
 import { Middleware } from "koa"
 import { object, string } from "yup"
-import { HttpError } from "../../core/classes/HttpError"
 import { db } from "../../db/db"
 import { UserData, userModel } from "../../user/models/userModel"
 import { OrganizationData } from "../models/organizationModel"
@@ -18,9 +17,7 @@ export const addOrganizationMember = (): Middleware => async (context, next) => 
     .from(userModel.tableName)
     .first<UserData>()
 
-  if (!user) {
-    throw new HttpError(404, "No user with that email exists", "email_invalid")
-  }
+  if (!user) context.throw(404, "No user with that email exists", "email_invalid")
 
   await db
     .insert({ user_id: user.id, organization_id: organization.id })

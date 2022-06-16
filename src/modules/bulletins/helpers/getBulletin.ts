@@ -7,5 +7,6 @@ export const getBulletin = async (id: number) => {
   query.from(bulletinModel.tableName).where("bulletins.id", id).first()
 
   const [bulletin] = await bulletinModel.parseFromQuery(query)
+
   return bulletin
 }

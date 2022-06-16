@@ -8,19 +8,26 @@ export const isSelf: Permission = {
     const { user, resource } = context.state
 
     if (user.id !== resource.id) {
-      return "You must be the user to do that"
+      context.throw(403, "You must be the owner to do that")
     }
   },
 }
 export const isAdmin: Permission = {
   name: "ADMIN_PANEL",
   check: async (context) => {
+    if (!context.state.user) context.throw(401)
+
     const { id } = context.state.user
 
-    const user = await getUser(id, {withRoles: true} )
+    const user = await getUser(id, { withRoles: true })
 
-    if (!hasPermission(user.roles!.map((r) => r.name), "ADMIN_PANEL")) {
-      return "You must be an administrator to do that"
+    if (
+      !hasPermission(
+        user.roles!.map((r) => r.name),
+        "ADMIN_PANEL",
+      )
+    ) {
+      context.throw(403)
     }
   },
 }

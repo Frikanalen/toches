@@ -1,5 +1,4 @@
 import { Middleware } from "koa"
-import { HttpError } from "../../core/classes/HttpError"
 import { getUser } from "../../user/helpers/getUser"
 import { UserQueryParams } from "../../user/queries/userQuery"
 
@@ -14,14 +13,9 @@ export const authenticate =
     const { required, ...rest } = options ?? {}
     const { user: id } = context.session!
 
-    if (!id && required) {
-      throw new HttpError(401, "Authentication required")
-    }
+    if (!id && required) context.throw(401)
 
-    if (id) {
-      const user = await getUser(id, rest)
-      context.state.user = user
-    }
+    if (id) context.state.user = await getUser(id, rest)
 
     return next()
   }

@@ -2,7 +2,6 @@ import { Middleware } from "koa"
 import { ROLE_PERMISSIONS } from "../../access-control/constants"
 import { hasPermission } from "../../access-control/helpers/hasPermission"
 import { RolePermission } from "../../access-control/types"
-import { HttpError } from "../../core/classes/HttpError"
 import { resolveToValue } from "../../lang/array"
 import { UserData } from "../../user/models/userModel"
 
@@ -20,20 +19,19 @@ export const sendUserPermissionState = (): Middleware<State> => (context, next) 
   if (!permissionParam) return next()
 
   if (!user) {
-    throw new HttpError(401, "Authentication required")
+    context.throw(401, "Authentication required")
+    return
   }
 
-  if (!user.roles) {
-    throw new Error("user.roles is undefined! Did you forget { withRoles: true }?")
-  }
+  if (!user.roles)
+    context.throw(500, "user.roles is undefined! Did you forget { withRoles: true }?")
 
-  const permission = resolveToValue(permissionParam)
+  const permission = resolveToValue(permissionParam) as RolePermission
 
-  if (!isPermission(permission)) {
-    throw new HttpError(400, `Permission ${permission} doesn't exist.`)
-  }
+  if (!isPermission(permission))
+    context.throw(500, `Permission ${permission} doesn't exist.`)
 
-  const roleNames = user.roles.map((x) => x.name)
+  const roleNames = user.roles?.map((x) => x.name) ?? []
 
   if (hasPermission(roleNames, permission)) {
     context.body = { message: "Permission granted" }

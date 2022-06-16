@@ -1,5 +1,5 @@
 import Router from "@koa/router"
-import { checkPermissions } from "../access-control/middleware/checkPermission"
+import { requirePermissions } from "../access-control/middleware/checkPermission"
 import { authenticate } from "../auth/middleware/authenticate"
 import { getResource } from "../core/middleware/getResource"
 import { sendResource } from "../core/middleware/sendResource"
@@ -22,7 +22,7 @@ router.put(
   }),
   getResource((context) => getUser(context.params.id)),
   validateSchema(updateUserSchema),
-  checkPermissions([isSelf]),
+  requirePermissions([isSelf]),
   updateResource((data, context) => updateUser(context.params.id, data)),
   sendResource(serializeUser()),
 )

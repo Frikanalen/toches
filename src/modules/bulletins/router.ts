@@ -1,5 +1,4 @@
 import Router from "@koa/router"
-import { authenticate } from "../auth/middleware/authenticate"
 import { createResource } from "../core/middleware/createResource"
 import { sendResource } from "../core/middleware/sendResource"
 import { validateSchema } from "../validation/middleware/validateSchema"
@@ -9,11 +8,12 @@ import { createBulletin } from "./helpers/createBulletin"
 import { serializeBulletin } from "./helpers/serializeBulletin"
 import { getResource } from "../core/middleware/getResource"
 import { getBulletin } from "./helpers/getBulletin"
-import { checkPermissions } from "../access-control/middleware/checkPermission"
+import { requirePermissions } from "../access-control/middleware/checkPermission"
 import { isAdmin } from "../user/permissions"
 import { updateResource } from "../core/middleware/updateResource"
 import { updateBulletin } from "./helpers/updateBulletin"
 import { deleteBulletin } from "./helpers/deleteBulletin"
+import { authenticate } from "../auth/middleware/authenticate"
 
 const router = new Router({
   prefix: "/bulletins",
@@ -99,12 +99,10 @@ router.get(
  */
 router.put(
   "/:id",
-  authenticate({
-    required: true,
-  }),
+  authenticate({ required: true }),
+  requirePermissions([isAdmin]),
   getResource((context) => getBulletin(context.params.id)),
   validateSchema(bulletinSchema),
-  checkPermissions([isAdmin]),
   updateResource((data, context) => updateBulletin(context.params.id, data)),
   sendResource(serializeBulletin),
 )
@@ -131,7 +129,12 @@ router.put(
  *          $ref: '#/components/responses/PermissionDenied'
  */
 
-router.delete("/:id", deleteBulletin())
+router.delete(
+  "/:id",
+  authenticate({ required: true }),
+  requirePermissions([isAdmin]),
+  deleteBulletin(),
+)
 
 /**
  * @openapi
@@ -159,8 +162,9 @@ router.delete("/:id", deleteBulletin())
 router.post(
   "/",
   authenticate({ required: true }),
+  requirePermissions([isAdmin]),
   validateSchema(bulletinSchema),
-  createResource((data, _context) => createBulletin(data)),
+  createResource((data) => createBulletin(data)),
   sendResource(serializeBulletin),
 )
 

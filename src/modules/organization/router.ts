@@ -1,5 +1,5 @@
 import Router from "@koa/router"
-import { checkPermissions } from "../access-control/middleware/checkPermission"
+import { requirePermissions } from "../access-control/middleware/checkPermission"
 import { authenticate } from "../auth/middleware/authenticate"
 import { createResource } from "../core/middleware/createResource"
 import { getResource } from "../core/middleware/getResource"
@@ -153,7 +153,7 @@ router.post(
   "/:id/videos",
   authenticate({ required: true }),
   organizationGetterMiddleware,
-  checkPermissions([isOrganizationEditor]),
+  requirePermissions([isOrganizationEditor]),
   validateSchema(videoSchema),
   createResource((data, context) =>
     createVideo(data, context.params.id, context.state.user.id),
@@ -195,7 +195,7 @@ router.post(
   "/:id/playlists",
   authenticate({ required: true }),
   organizationGetterMiddleware,
-  checkPermissions([isOrganizationEditor]),
+  requirePermissions([isOrganizationEditor]),
   validateSchema(playlistSchema),
   createResource((data, context) => createPlaylist(data, context.params.id)),
   sendResource(serializePlaylist),
@@ -206,7 +206,7 @@ router.use(
   "/:id/members",
   authenticate({ required: true }),
   organizationGetterMiddleware,
-  checkPermissions([isOrganizationEditor]),
+  requirePermissions([isOrganizationEditor]),
 )
 
 /**

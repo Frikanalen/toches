@@ -1,6 +1,5 @@
 import { Middleware } from "koa"
 import axios from "axios"
-import { HttpError } from "../../core/classes/HttpError"
 
 export const proxyRequest =
   (host: string, base: `/${string}`): Middleware =>
@@ -36,6 +35,6 @@ export const proxyRequest =
 
       return next()
     } catch {
-      throw new HttpError(500, "An error occurred sending the request")
+      context.throw(500, "An error occurred proxying the request")
     }
   }
