@@ -1,8 +1,14 @@
 # toches
 
-This is the new Frikanalen API which will finally replace Django.
+*toches* is a Yiddish word meaning back-end. This the new Frikanalen backend which will finally replace Django.
 
-It is not yet in production.
+There is no automated rollout yet, but a recent-ish version is accessible under https://beta.frikanalen.no/api/v2.
+
+There, we expose a GraphQL endpoint ([see playground](https://beta.frikanalen.no/graphql)) and an OpenAPI REST API ([see Swagger UI](https://beta.frikanalen.no/api/v2/swagger)).
+
+We use [Koa](https://koajs.com/) as our framework, and we try to comply with the [twelve factors](https://12factor.net/).
+
+Our database is PostgreSQL, which we query using the Knex builder.
 
 ## Dev environment
 
@@ -12,24 +18,31 @@ The following guide assumes a recent-ish Node, yarn, docker and docker compose.
 # Use development database and trivial API key
 cp dev-env .env
 # install dependencies
-yarn install
+yarn
 # bring up dev database
 docker-compose up -d
-# database migration
+# initialize database
 yarn knex migrate:latest
-# transpile the command-line utilities
+# run in development mode at :8080
+yarn run dev
+```
+
+### Generating test data
+
+```bash
+# build the command-line utilities
 yarn build-cli
 # create admin user (user: dev-admin@frikanalen.no password: dev-admin)
 yarn cli create-test-users admin
 # create mock data
 yarn cli create-mock-data users 20
 yarn cli create-mock-data orgs 20
-# run in development mode at :8080
-yarn run dev
 ```
 
 ### Proxy
+
 In dev mode, toches will proxy requests coming in on /api/videos/upload to localhost:1080.
+
 In production mode, this is handled by our traefik ingress controller.
 
 ## Unit tests
