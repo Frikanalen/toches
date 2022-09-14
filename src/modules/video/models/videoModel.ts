@@ -13,6 +13,18 @@ export type VideoMediaAssetData = {
   metadata: object
 }
 
+export type VideoTableRow = {
+  id: number
+  title: string
+  description: string
+  uploader_id: number
+  organization_id: number
+  media_id: number
+  created_at: string
+  updated_at: string
+  view_count: number
+}
+
 export type VideoData = {
   id: number
 

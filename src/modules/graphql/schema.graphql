@@ -1,0 +1,75 @@
+# This seems like an OK style guide and we should aspire to follow it: https://graphql-rules.com/
+
+scalar DateTime
+
+type Query {
+    videos(filter: VideoFilter, sort: [VideoSort!], page: Int! = 1, perPage: Int! = 20): VideoPagination
+    video(id: ID!): Video!
+}
+
+input VideoFilter {
+    query: String
+    organizationId: ID
+}
+
+enum VideoSort {
+    DATE_ASC,
+    DATE_DESC
+}
+
+type VideoPagination {
+    items: [Video]!
+    pageInfo: PaginationInfo!
+}
+
+type PaginationInfo {
+    # Total number of pages
+    totalPages: Int!
+
+    # Total number of items
+    totalItems: Int!
+
+    # Current page number
+    page: Int!
+
+    # Number of items per page
+    perPage: Int!
+
+    # When paginating forwards, are there more items?
+    hasNextPage: Boolean!
+
+    # When paginating backwards, are there more items?
+    hasPreviousPage: Boolean!
+}
+
+schema {
+    query: Query
+}
+
+type VideoAsset {
+    id: String
+    path: String
+    type: String
+}
+
+type Organization {
+    id: ID
+    name: String!
+}
+
+type Video {
+    id: ID
+    title: String
+    description: String
+
+    organization: Organization
+
+    assets: [VideoAsset]
+    mediaId: Int
+
+    createdAt: DateTime
+    updatedAt: DateTime
+
+    viewCount: Int
+}
+
