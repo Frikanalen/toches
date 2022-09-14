@@ -53,6 +53,7 @@ const resolvers = {
 export const apolloServer = new ApolloServer({
   typeDefs,
   resolvers,
+  introspection: true,
   csrfPrevention: true,
   plugins: [ApolloServerPluginLandingPageGraphQLPlayground()],
   formatError: errorHandler,
