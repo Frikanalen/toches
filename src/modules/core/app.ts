@@ -28,9 +28,6 @@ app.use(router.middleware())
 
 app.on("error", (err) => log.error(err))
 
-apolloServer.start().then(() => {
-  router.post("/graphql", apolloServer.getMiddleware())
-  router.get("/graphql", apolloServer.getMiddleware())
-})
+apolloServer.start().then(() => apolloServer.applyMiddleware({ app }))
 
 export { app }

@@ -3,6 +3,7 @@ import { readdirSync, readFileSync } from "fs"
 import { join as pathJoin } from "path"
 import { DateTimeResolver, DateTimeTypeDefinition } from "graphql-scalars"
 import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-core"
+
 const errorHandler = (err: Error) => {
   console.log("Error while running resolver", {
     error: err,
@@ -13,11 +14,12 @@ const errorHandler = (err: Error) => {
   return new Error("Internal server error")
 }
 
+// Read graphql files from schema subdirectory
 const schemaFiles = readdirSync(pathJoin(__dirname, "schema")).filter(
   (file) => file.indexOf(".graphql") > 0,
 )
 
-// Concatanate them to create our schema
+// Concatenate them to create our schema
 const schema = schemaFiles
   .map((file) => readFileSync(pathJoin(__dirname, `schema/${file}`)).toString())
   .join()
@@ -34,19 +36,24 @@ const queryResolvers = schemaFiles
     {},
   )
 
-export const apolloServer = new ApolloServer({
-  typeDefs: gql(`
+const typeDefs = gql(`
       ${DateTimeTypeDefinition}
       type Query
       schema {
         query: Query
       }
       ${schema}
-    `),
-  resolvers: {
-    DateTime: DateTimeResolver,
-    Query: queryResolvers,
-  },
+`)
+
+const resolvers = {
+  DateTime: DateTimeResolver,
+  Query: queryResolvers,
+}
+
+export const apolloServer = new ApolloServer({
+  typeDefs,
+  resolvers,
+  csrfPrevention: true,
   plugins: [ApolloServerPluginLandingPageGraphQLPlayground()],
   formatError: errorHandler,
 })
