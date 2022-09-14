@@ -4,13 +4,13 @@ import { useCSRFProtection } from "../auth/middleware/useCSRFProtection"
 import { useSession } from "../auth/middleware/useSession"
 import { IS_PROD } from "./constants"
 import { handleError } from "./middleware/handleError"
-import { logRequest } from "./middleware/logRequest"
 import { sendCORSHeaders } from "./middleware/sendCORSHeaders"
-
+import logger from "koa-logger"
 import { router } from "./router"
 import { openApiSpec } from "./middleware/sendOpenApiSpec"
 import { apolloServer } from "../graphql/server"
 import { log } from "./log"
+
 const { ui } = require("swagger2-koa")
 
 const app = new Koa()
@@ -18,7 +18,7 @@ const app = new Koa()
 app.proxy = IS_PROD
 
 app.use(ui(openApiSpec, "/swagger"))
-app.use(logRequest())
+app.use(logger())
 app.use(handleError())
 app.use(bodyParser())
 app.use(useSession(app))
