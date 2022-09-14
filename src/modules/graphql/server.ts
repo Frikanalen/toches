@@ -2,7 +2,7 @@ import { ApolloServer, gql } from "apollo-server-koa"
 import { readdirSync, readFileSync } from "fs"
 import { join as pathJoin } from "path"
 import { DateTimeResolver, DateTimeTypeDefinition } from "graphql-scalars"
-
+import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-core"
 const errorHandler = (err: Error) => {
   console.log("Error while running resolver", {
     error: err,
@@ -47,5 +47,6 @@ export const apolloServer = new ApolloServer({
     DateTime: DateTimeResolver,
     Query: queryResolvers,
   },
+  plugins: [ApolloServerPluginLandingPageGraphQLPlayground()],
   formatError: errorHandler,
 })
