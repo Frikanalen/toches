@@ -70,32 +70,25 @@ const resolvers: Resolvers = {
       if (page < 1) throw new UserInputError("page minimum value is 1.")
 
       const videos = await db<Videos>("videos")
-        .select("created_at")
         .select("title")
         .select("id")
         .select("description")
-        .select("updated_at")
-        .select("view_count")
         .select("media_id")
+        .select({ createdAt: "created_at" })
+        .select({ updatedAt: "updated_at" })
+        .select({ viewCount: "view_count" })
         .orderBy(getOrderBy(sort))
         .offset((page - 1) * perPage)
         .limit(perPage)
 
       const { videoCount } = (await db("videos").count({ videoCount: "*" }).first()) ?? {}
 
-      if (!videoCount) throw new Error("Video count failed!")
-      if (typeof videoCount !== "string") throw new Error("Video count returned string")
-
-      const videoCountParsed = parseInt(videoCount)
+      const videoCountParsed = parseInt(videoCount as string)
 
       const items = videos.map(
         (video): Video => ({
-          createdAt: video.created_at,
-          description: video.description,
+          ...video,
           id: video.id.toString(),
-          title: video.title,
-          updatedAt: video.updated_at,
-          viewCount: video.view_count,
         }),
       )
 
