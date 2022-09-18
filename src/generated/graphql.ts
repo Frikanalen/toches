@@ -15,6 +15,18 @@ export type Scalars = {
   DateTime: any;
 };
 
+export type Mutation = {
+  __typename?: 'Mutation';
+  login: Session;
+  logout?: Maybe<Scalars['Boolean']>;
+};
+
+
+export type MutationLoginArgs = {
+  email: Scalars['String'];
+  password: Scalars['String'];
+};
+
 export type Organization = {
   __typename?: 'Organization';
   id?: Maybe<Scalars['ID']>;
@@ -33,6 +45,7 @@ export type PaginationInfo = {
 
 export type Query = {
   __typename?: 'Query';
+  session: Session;
   video: Video;
   videos?: Maybe<VideoPagination>;
 };
@@ -48,6 +61,18 @@ export type QueryVideosArgs = {
   page?: Scalars['Int'];
   perPage?: Scalars['Int'];
   sort?: InputMaybe<Array<VideoSort>>;
+};
+
+export type Session = {
+  __typename?: 'Session';
+  authenticated: Scalars['Boolean'];
+  profileData?: Maybe<UserProfileData>;
+};
+
+export type UserProfileData = {
+  __typename?: 'UserProfileData';
+  email?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
 };
 
 export type Video = {
@@ -86,15 +111,12 @@ export enum VideoSort {
   DateDesc = 'DATE_DESC'
 }
 
-
+export type WithIndex<TObject> = TObject & Record<string, any>;
+export type ResolversObject<TObject> = WithIndex<TObject>;
 
 export type ResolverTypeWrapper<T> = Promise<T> | T;
 
-
-export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
-  resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
-};
-export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> = ResolverFn<TResult, TParent, TContext, TArgs> | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
+export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> = ResolverFn<TResult, TParent, TContext, TArgs>;
 
 export type ResolverFn<TResult, TParent, TContext, TArgs> = (
   parent: TParent,
@@ -154,49 +176,60 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 ) => TResult | Promise<TResult>;
 
 /** Mapping between all available schema types and the resolvers types */
-export type ResolversTypes = {
-  Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
-  DateTime: ResolverTypeWrapper<Scalars['DateTime']>;
-  ID: ResolverTypeWrapper<Scalars['ID']>;
-  Int: ResolverTypeWrapper<Scalars['Int']>;
-  Organization: ResolverTypeWrapper<Organization>;
-  PaginationInfo: ResolverTypeWrapper<PaginationInfo>;
+export type ResolversTypes = ResolversObject<{
+  Boolean: ResolverTypeWrapper<Partial<Scalars['Boolean']>>;
+  DateTime: ResolverTypeWrapper<Partial<Scalars['DateTime']>>;
+  ID: ResolverTypeWrapper<Partial<Scalars['ID']>>;
+  Int: ResolverTypeWrapper<Partial<Scalars['Int']>>;
+  Mutation: ResolverTypeWrapper<{}>;
+  Organization: ResolverTypeWrapper<Partial<Organization>>;
+  PaginationInfo: ResolverTypeWrapper<Partial<PaginationInfo>>;
   Query: ResolverTypeWrapper<{}>;
-  String: ResolverTypeWrapper<Scalars['String']>;
-  Video: ResolverTypeWrapper<Video>;
-  VideoAsset: ResolverTypeWrapper<VideoAsset>;
-  VideoFilter: VideoFilter;
-  VideoPagination: ResolverTypeWrapper<VideoPagination>;
-  VideoSort: VideoSort;
-};
+  Session: ResolverTypeWrapper<Partial<Session>>;
+  String: ResolverTypeWrapper<Partial<Scalars['String']>>;
+  UserProfileData: ResolverTypeWrapper<Partial<UserProfileData>>;
+  Video: ResolverTypeWrapper<Partial<Video>>;
+  VideoAsset: ResolverTypeWrapper<Partial<VideoAsset>>;
+  VideoFilter: ResolverTypeWrapper<Partial<VideoFilter>>;
+  VideoPagination: ResolverTypeWrapper<Partial<VideoPagination>>;
+  VideoSort: ResolverTypeWrapper<Partial<VideoSort>>;
+}>;
 
 /** Mapping between all available schema types and the resolvers parents */
-export type ResolversParentTypes = {
-  Boolean: Scalars['Boolean'];
-  DateTime: Scalars['DateTime'];
-  ID: Scalars['ID'];
-  Int: Scalars['Int'];
-  Organization: Organization;
-  PaginationInfo: PaginationInfo;
+export type ResolversParentTypes = ResolversObject<{
+  Boolean: Partial<Scalars['Boolean']>;
+  DateTime: Partial<Scalars['DateTime']>;
+  ID: Partial<Scalars['ID']>;
+  Int: Partial<Scalars['Int']>;
+  Mutation: {};
+  Organization: Partial<Organization>;
+  PaginationInfo: Partial<PaginationInfo>;
   Query: {};
-  String: Scalars['String'];
-  Video: Video;
-  VideoAsset: VideoAsset;
-  VideoFilter: VideoFilter;
-  VideoPagination: VideoPagination;
-};
+  Session: Partial<Session>;
+  String: Partial<Scalars['String']>;
+  UserProfileData: Partial<UserProfileData>;
+  Video: Partial<Video>;
+  VideoAsset: Partial<VideoAsset>;
+  VideoFilter: Partial<VideoFilter>;
+  VideoPagination: Partial<VideoPagination>;
+}>;
 
 export interface DateTimeScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['DateTime'], any> {
   name: 'DateTime';
 }
 
-export type OrganizationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Organization'] = ResolversParentTypes['Organization']> = {
+export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
+  login?: Resolver<ResolversTypes['Session'], ParentType, ContextType, RequireFields<MutationLoginArgs, 'email' | 'password'>>;
+  logout?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+}>;
+
+export type OrganizationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Organization'] = ResolversParentTypes['Organization']> = ResolversObject<{
   id?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
+}>;
 
-export type PaginationInfoResolvers<ContextType = any, ParentType extends ResolversParentTypes['PaginationInfo'] = ResolversParentTypes['PaginationInfo']> = {
+export type PaginationInfoResolvers<ContextType = any, ParentType extends ResolversParentTypes['PaginationInfo'] = ResolversParentTypes['PaginationInfo']> = ResolversObject<{
   hasNextPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   hasPreviousPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   page?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
@@ -204,14 +237,27 @@ export type PaginationInfoResolvers<ContextType = any, ParentType extends Resolv
   totalItems?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   totalPages?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
+}>;
 
-export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
+export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
+  session?: Resolver<ResolversTypes['Session'], ParentType, ContextType>;
   video?: Resolver<ResolversTypes['Video'], ParentType, ContextType, RequireFields<QueryVideoArgs, 'id'>>;
   videos?: Resolver<Maybe<ResolversTypes['VideoPagination']>, ParentType, ContextType, RequireFields<QueryVideosArgs, 'page' | 'perPage'>>;
-};
+}>;
 
-export type VideoResolvers<ContextType = any, ParentType extends ResolversParentTypes['Video'] = ResolversParentTypes['Video']> = {
+export type SessionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Session'] = ResolversParentTypes['Session']> = ResolversObject<{
+  authenticated?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  profileData?: Resolver<Maybe<ResolversTypes['UserProfileData']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type UserProfileDataResolvers<ContextType = any, ParentType extends ResolversParentTypes['UserProfileData'] = ResolversParentTypes['UserProfileData']> = ResolversObject<{
+  email?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type VideoResolvers<ContextType = any, ParentType extends ResolversParentTypes['Video'] = ResolversParentTypes['Video']> = ResolversObject<{
   assets?: Resolver<Maybe<Array<Maybe<ResolversTypes['VideoAsset']>>>, ParentType, ContextType>;
   createdAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
   description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -222,28 +268,31 @@ export type VideoResolvers<ContextType = any, ParentType extends ResolversParent
   updatedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
   viewCount?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
+}>;
 
-export type VideoAssetResolvers<ContextType = any, ParentType extends ResolversParentTypes['VideoAsset'] = ResolversParentTypes['VideoAsset']> = {
+export type VideoAssetResolvers<ContextType = any, ParentType extends ResolversParentTypes['VideoAsset'] = ResolversParentTypes['VideoAsset']> = ResolversObject<{
   id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   path?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   type?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
+}>;
 
-export type VideoPaginationResolvers<ContextType = any, ParentType extends ResolversParentTypes['VideoPagination'] = ResolversParentTypes['VideoPagination']> = {
+export type VideoPaginationResolvers<ContextType = any, ParentType extends ResolversParentTypes['VideoPagination'] = ResolversParentTypes['VideoPagination']> = ResolversObject<{
   items?: Resolver<Array<Maybe<ResolversTypes['Video']>>, ParentType, ContextType>;
   pageInfo?: Resolver<ResolversTypes['PaginationInfo'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
+}>;
 
-export type Resolvers<ContextType = any> = {
+export type Resolvers<ContextType = any> = ResolversObject<{
   DateTime?: GraphQLScalarType;
+  Mutation?: MutationResolvers<ContextType>;
   Organization?: OrganizationResolvers<ContextType>;
   PaginationInfo?: PaginationInfoResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
+  Session?: SessionResolvers<ContextType>;
+  UserProfileData?: UserProfileDataResolvers<ContextType>;
   Video?: VideoResolvers<ContextType>;
   VideoAsset?: VideoAssetResolvers<ContextType>;
   VideoPagination?: VideoPaginationResolvers<ContextType>;
-};
+}>;
 

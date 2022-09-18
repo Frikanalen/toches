@@ -1,8 +1,12 @@
 overwrite: true
 schema: "src/modules/graphql/schema.graphql"
-documents: null
 generates:
   src/generated/graphql.ts:
+    config:
+      useIndexSignature: true
+      defaultMapper: Partial<{T}>
+      makeResolverTypeCallable: true
+
     plugins:
       - "typescript"
       - "typescript-resolvers"

@@ -4,6 +4,9 @@ import { createCSRFToken } from "../helpers/createCSRFToken"
 import { log } from "../../core/log"
 
 export const useCSRFProtection = (): Middleware => async (context, next) => {
+  // GraphQL is exempt
+  if (context.request.path === "/graphql") return next()
+
   const { session, method, headers, cookies } = context
 
   const token = headers[CSRF_HEADER.toLowerCase()]

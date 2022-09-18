@@ -26,8 +26,8 @@ app.use(useCSRFProtection())
 app.use(sendCORSHeaders())
 app.use(router.middleware())
 
-app.on("error", (err) => log.error(err))
-
 apolloServer.start().then(() => apolloServer.applyMiddleware({ app }))
+
+app.on("error", (err) => log.error(err))
 
 export { app }

@@ -5,6 +5,17 @@ scalar DateTime
 type Query {
     videos(filter: VideoFilter, sort: [VideoSort!], page: Int! = 1, perPage: Int! = 20): VideoPagination
     video(id: ID!): Video!
+    session: Session!
+}
+
+type Mutation {
+    login(email: String!, password: String!): Session!
+    logout: Boolean
+}
+
+type UserProfileData {
+    id: ID!
+    email: String
 }
 
 input VideoFilter {
@@ -44,6 +55,7 @@ type PaginationInfo {
 
 schema {
     query: Query
+    mutation: Mutation
 }
 
 type VideoAsset {
@@ -73,3 +85,9 @@ type Video {
     viewCount: Int
 }
 
+# Session state object with login status
+type Session {
+    authenticated: Boolean!
+    # if authenticated
+    profileData: UserProfileData
+}
