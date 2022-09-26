@@ -7,7 +7,7 @@
     "target": "ESNext",
     "module": "commonjs",
     "strict": true,
-    "outDir": "build"
+    "outDir": "build",
   },
   "include": ["src", "typedefs"],
   "exclude": ["node_modules"]

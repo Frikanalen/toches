@@ -4,9 +4,11 @@ generates:
   src/generated/graphql.ts:
     config:
       useIndexSignature: true
-      defaultMapper: Partial<{T}>
+      defaultMapper: DeepPartial<{T}>
       makeResolverTypeCallable: true
 
     plugins:
       - "typescript"
       - "typescript-resolvers"
+      - add:
+          content: "import { DeepPartial } from 'utility-types';"

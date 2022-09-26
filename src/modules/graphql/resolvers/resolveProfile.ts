@@ -6,7 +6,7 @@ type KoaContext = {
   ctx: ParameterizedContext
 }
 
-export const getUserProfile: Resolver<UserProfileData, any, KoaContext> = async (
+export const resolveProfile: Resolver<UserProfileData, any, KoaContext> = async (
   parent,
   args,
   context,

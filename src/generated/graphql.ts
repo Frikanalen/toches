@@ -1,4 +1,5 @@
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
+import { DeepPartial } from 'utility-types';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -15,6 +16,21 @@ export type Scalars = {
   DateTime: any;
 };
 
+export type Bulletin = {
+  __typename?: 'Bulletin';
+  createdAt: Scalars['DateTime'];
+  id: Scalars['ID'];
+  text: Scalars['String'];
+  title: Scalars['String'];
+  updatedAt: Scalars['DateTime'];
+};
+
+export type BulletinPagination = {
+  __typename?: 'BulletinPagination';
+  items: Array<Bulletin>;
+  pageInfo: PaginationInfo;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   login: Session;
@@ -29,7 +45,23 @@ export type MutationLoginArgs = {
 
 export type Organization = {
   __typename?: 'Organization';
-  id?: Maybe<Scalars['ID']>;
+  brregId?: Maybe<Scalars['Int']>;
+  createdAt?: Maybe<Scalars['DateTime']>;
+  description?: Maybe<Scalars['String']>;
+  editor: OrganizationEditor;
+  homepage?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
+  latestVideos?: Maybe<Array<Video>>;
+  name: Scalars['String'];
+  postalAddress: Scalars['String'];
+  streetAddress: Scalars['String'];
+  updatedAt?: Maybe<Scalars['DateTime']>;
+};
+
+export type OrganizationEditor = {
+  __typename?: 'OrganizationEditor';
+  email: Scalars['String'];
+  id: Scalars['ID'];
   name: Scalars['String'];
 };
 
@@ -45,9 +77,30 @@ export type PaginationInfo = {
 
 export type Query = {
   __typename?: 'Query';
+  bulletins?: Maybe<BulletinPagination>;
+  organization: Organization;
+  schedule?: Maybe<SchedulePagination>;
   session: Session;
   video: Video;
   videos?: Maybe<VideoPagination>;
+};
+
+
+export type QueryBulletinsArgs = {
+  page?: Scalars['Int'];
+  perPage?: Scalars['Int'];
+};
+
+
+export type QueryOrganizationArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type QueryScheduleArgs = {
+  filter: ScheduleFilter;
+  page?: Scalars['Int'];
+  perPage?: Scalars['Int'];
 };
 
 
@@ -61,6 +114,24 @@ export type QueryVideosArgs = {
   page?: Scalars['Int'];
   perPage?: Scalars['Int'];
   sort?: InputMaybe<Array<VideoSort>>;
+};
+
+export type ScheduleFilter = {
+  from?: InputMaybe<Scalars['DateTime']>;
+  to?: InputMaybe<Scalars['DateTime']>;
+};
+
+export type ScheduleItem = {
+  __typename?: 'ScheduleItem';
+  id: Scalars['ID'];
+  startsAt?: Maybe<Scalars['DateTime']>;
+  video: Video;
+};
+
+export type SchedulePagination = {
+  __typename?: 'SchedulePagination';
+  items: Array<ScheduleItem>;
+  pageInfo: PaginationInfo;
 };
 
 export type Session = {
@@ -77,22 +148,21 @@ export type UserProfileData = {
 
 export type Video = {
   __typename?: 'Video';
-  assets?: Maybe<Array<Maybe<VideoAsset>>>;
-  createdAt?: Maybe<Scalars['DateTime']>;
-  description?: Maybe<Scalars['String']>;
-  id?: Maybe<Scalars['ID']>;
-  mediaId?: Maybe<Scalars['Int']>;
-  organization?: Maybe<Organization>;
-  title?: Maybe<Scalars['String']>;
-  updatedAt?: Maybe<Scalars['DateTime']>;
+  assets: Array<VideoAsset>;
+  createdAt: Scalars['DateTime'];
+  description: Scalars['String'];
+  id: Scalars['ID'];
+  organization: Organization;
+  title: Scalars['String'];
+  updatedAt: Scalars['DateTime'];
   viewCount?: Maybe<Scalars['Int']>;
 };
 
 export type VideoAsset = {
   __typename?: 'VideoAsset';
-  id?: Maybe<Scalars['String']>;
-  path?: Maybe<Scalars['String']>;
-  type?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
+  path: Scalars['String'];
+  type: Scalars['String'];
 };
 
 export type VideoFilter = {
@@ -177,41 +247,68 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = ResolversObject<{
-  Boolean: ResolverTypeWrapper<Partial<Scalars['Boolean']>>;
-  DateTime: ResolverTypeWrapper<Partial<Scalars['DateTime']>>;
-  ID: ResolverTypeWrapper<Partial<Scalars['ID']>>;
-  Int: ResolverTypeWrapper<Partial<Scalars['Int']>>;
+  Boolean: ResolverTypeWrapper<DeepPartial<Scalars['Boolean']>>;
+  Bulletin: ResolverTypeWrapper<DeepPartial<Bulletin>>;
+  BulletinPagination: ResolverTypeWrapper<DeepPartial<BulletinPagination>>;
+  DateTime: ResolverTypeWrapper<DeepPartial<Scalars['DateTime']>>;
+  ID: ResolverTypeWrapper<DeepPartial<Scalars['ID']>>;
+  Int: ResolverTypeWrapper<DeepPartial<Scalars['Int']>>;
   Mutation: ResolverTypeWrapper<{}>;
-  Organization: ResolverTypeWrapper<Partial<Organization>>;
-  PaginationInfo: ResolverTypeWrapper<Partial<PaginationInfo>>;
+  Organization: ResolverTypeWrapper<DeepPartial<Organization>>;
+  OrganizationEditor: ResolverTypeWrapper<DeepPartial<OrganizationEditor>>;
+  PaginationInfo: ResolverTypeWrapper<DeepPartial<PaginationInfo>>;
   Query: ResolverTypeWrapper<{}>;
-  Session: ResolverTypeWrapper<Partial<Session>>;
-  String: ResolverTypeWrapper<Partial<Scalars['String']>>;
-  UserProfileData: ResolverTypeWrapper<Partial<UserProfileData>>;
-  Video: ResolverTypeWrapper<Partial<Video>>;
-  VideoAsset: ResolverTypeWrapper<Partial<VideoAsset>>;
-  VideoFilter: ResolverTypeWrapper<Partial<VideoFilter>>;
-  VideoPagination: ResolverTypeWrapper<Partial<VideoPagination>>;
-  VideoSort: ResolverTypeWrapper<Partial<VideoSort>>;
+  ScheduleFilter: ResolverTypeWrapper<DeepPartial<ScheduleFilter>>;
+  ScheduleItem: ResolverTypeWrapper<DeepPartial<ScheduleItem>>;
+  SchedulePagination: ResolverTypeWrapper<DeepPartial<SchedulePagination>>;
+  Session: ResolverTypeWrapper<DeepPartial<Session>>;
+  String: ResolverTypeWrapper<DeepPartial<Scalars['String']>>;
+  UserProfileData: ResolverTypeWrapper<DeepPartial<UserProfileData>>;
+  Video: ResolverTypeWrapper<DeepPartial<Video>>;
+  VideoAsset: ResolverTypeWrapper<DeepPartial<VideoAsset>>;
+  VideoFilter: ResolverTypeWrapper<DeepPartial<VideoFilter>>;
+  VideoPagination: ResolverTypeWrapper<DeepPartial<VideoPagination>>;
+  VideoSort: ResolverTypeWrapper<DeepPartial<VideoSort>>;
 }>;
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = ResolversObject<{
-  Boolean: Partial<Scalars['Boolean']>;
-  DateTime: Partial<Scalars['DateTime']>;
-  ID: Partial<Scalars['ID']>;
-  Int: Partial<Scalars['Int']>;
+  Boolean: DeepPartial<Scalars['Boolean']>;
+  Bulletin: DeepPartial<Bulletin>;
+  BulletinPagination: DeepPartial<BulletinPagination>;
+  DateTime: DeepPartial<Scalars['DateTime']>;
+  ID: DeepPartial<Scalars['ID']>;
+  Int: DeepPartial<Scalars['Int']>;
   Mutation: {};
-  Organization: Partial<Organization>;
-  PaginationInfo: Partial<PaginationInfo>;
+  Organization: DeepPartial<Organization>;
+  OrganizationEditor: DeepPartial<OrganizationEditor>;
+  PaginationInfo: DeepPartial<PaginationInfo>;
   Query: {};
-  Session: Partial<Session>;
-  String: Partial<Scalars['String']>;
-  UserProfileData: Partial<UserProfileData>;
-  Video: Partial<Video>;
-  VideoAsset: Partial<VideoAsset>;
-  VideoFilter: Partial<VideoFilter>;
-  VideoPagination: Partial<VideoPagination>;
+  ScheduleFilter: DeepPartial<ScheduleFilter>;
+  ScheduleItem: DeepPartial<ScheduleItem>;
+  SchedulePagination: DeepPartial<SchedulePagination>;
+  Session: DeepPartial<Session>;
+  String: DeepPartial<Scalars['String']>;
+  UserProfileData: DeepPartial<UserProfileData>;
+  Video: DeepPartial<Video>;
+  VideoAsset: DeepPartial<VideoAsset>;
+  VideoFilter: DeepPartial<VideoFilter>;
+  VideoPagination: DeepPartial<VideoPagination>;
+}>;
+
+export type BulletinResolvers<ContextType = any, ParentType extends ResolversParentTypes['Bulletin'] = ResolversParentTypes['Bulletin']> = ResolversObject<{
+  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  text?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type BulletinPaginationResolvers<ContextType = any, ParentType extends ResolversParentTypes['BulletinPagination'] = ResolversParentTypes['BulletinPagination']> = ResolversObject<{
+  items?: Resolver<Array<ResolversTypes['Bulletin']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PaginationInfo'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
 export interface DateTimeScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['DateTime'], any> {
@@ -224,7 +321,23 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
 }>;
 
 export type OrganizationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Organization'] = ResolversParentTypes['Organization']> = ResolversObject<{
-  id?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  brregId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  createdAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  editor?: Resolver<ResolversTypes['OrganizationEditor'], ParentType, ContextType>;
+  homepage?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  latestVideos?: Resolver<Maybe<Array<ResolversTypes['Video']>>, ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  postalAddress?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  streetAddress?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  updatedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type OrganizationEditorResolvers<ContextType = any, ParentType extends ResolversParentTypes['OrganizationEditor'] = ResolversParentTypes['OrganizationEditor']> = ResolversObject<{
+  email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
@@ -240,9 +353,25 @@ export type PaginationInfoResolvers<ContextType = any, ParentType extends Resolv
 }>;
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
+  bulletins?: Resolver<Maybe<ResolversTypes['BulletinPagination']>, ParentType, ContextType, RequireFields<QueryBulletinsArgs, 'page' | 'perPage'>>;
+  organization?: Resolver<ResolversTypes['Organization'], ParentType, ContextType, RequireFields<QueryOrganizationArgs, 'id'>>;
+  schedule?: Resolver<Maybe<ResolversTypes['SchedulePagination']>, ParentType, ContextType, RequireFields<QueryScheduleArgs, 'filter' | 'page' | 'perPage'>>;
   session?: Resolver<ResolversTypes['Session'], ParentType, ContextType>;
   video?: Resolver<ResolversTypes['Video'], ParentType, ContextType, RequireFields<QueryVideoArgs, 'id'>>;
   videos?: Resolver<Maybe<ResolversTypes['VideoPagination']>, ParentType, ContextType, RequireFields<QueryVideosArgs, 'page' | 'perPage'>>;
+}>;
+
+export type ScheduleItemResolvers<ContextType = any, ParentType extends ResolversParentTypes['ScheduleItem'] = ResolversParentTypes['ScheduleItem']> = ResolversObject<{
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  startsAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  video?: Resolver<ResolversTypes['Video'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type SchedulePaginationResolvers<ContextType = any, ParentType extends ResolversParentTypes['SchedulePagination'] = ResolversParentTypes['SchedulePagination']> = ResolversObject<{
+  items?: Resolver<Array<ResolversTypes['ScheduleItem']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PaginationInfo'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
 export type SessionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Session'] = ResolversParentTypes['Session']> = ResolversObject<{
@@ -258,22 +387,21 @@ export type UserProfileDataResolvers<ContextType = any, ParentType extends Resol
 }>;
 
 export type VideoResolvers<ContextType = any, ParentType extends ResolversParentTypes['Video'] = ResolversParentTypes['Video']> = ResolversObject<{
-  assets?: Resolver<Maybe<Array<Maybe<ResolversTypes['VideoAsset']>>>, ParentType, ContextType>;
-  createdAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
-  description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  id?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
-  mediaId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  organization?: Resolver<Maybe<ResolversTypes['Organization']>, ParentType, ContextType>;
-  title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  updatedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  assets?: Resolver<Array<ResolversTypes['VideoAsset']>, ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  organization?: Resolver<ResolversTypes['Organization'], ParentType, ContextType>;
+  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   viewCount?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
 export type VideoAssetResolvers<ContextType = any, ParentType extends ResolversParentTypes['VideoAsset'] = ResolversParentTypes['VideoAsset']> = ResolversObject<{
-  id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  path?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  type?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  path?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  type?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -284,11 +412,16 @@ export type VideoPaginationResolvers<ContextType = any, ParentType extends Resol
 }>;
 
 export type Resolvers<ContextType = any> = ResolversObject<{
+  Bulletin?: BulletinResolvers<ContextType>;
+  BulletinPagination?: BulletinPaginationResolvers<ContextType>;
   DateTime?: GraphQLScalarType;
   Mutation?: MutationResolvers<ContextType>;
   Organization?: OrganizationResolvers<ContextType>;
+  OrganizationEditor?: OrganizationEditorResolvers<ContextType>;
   PaginationInfo?: PaginationInfoResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
+  ScheduleItem?: ScheduleItemResolvers<ContextType>;
+  SchedulePagination?: SchedulePaginationResolvers<ContextType>;
   Session?: SessionResolvers<ContextType>;
   UserProfileData?: UserProfileDataResolvers<ContextType>;
   Video?: VideoResolvers<ContextType>;

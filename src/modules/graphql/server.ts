@@ -2,23 +2,23 @@ import { ApolloServer } from "apollo-server-koa"
 import { readFileSync } from "fs"
 import { DateTimeResolver } from "graphql-scalars"
 import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-core"
-import { getVideoAsset } from "./resolvers/getVideoAsset"
-import { Resolver, Resolvers, Session } from "../../generated/graphql"
-import { getUserProfile } from "./resolvers/getUserProfile"
-import { resolveVideosQuery, resolveVideoQuery } from "./resolvers/getVideo"
-import { resolveOrganizationQuery } from "./resolvers/organization"
+import { resolveVideoAssets } from "./resolvers/resolveVideoAssets"
+import { Resolvers } from "../../generated/graphql"
+import { resolveProfile } from "./resolvers/resolveProfile"
+import { resolveVideoQuery, resolveVideosQuery } from "./resolvers/getVideo"
+import {
+  resolveOrganization,
+  resolveOrganizationEditor,
+  resolveOrganizationLatestVideos,
+  resolveOrganizationQuery,
+} from "./resolvers/resolveOrganization"
 import { logoutMutation } from "./resolvers/logoutMutation"
 import { loginMutation } from "./resolvers/loginMutation"
+import { resolveScheduleQuery, resolveVideo } from "./resolvers/resolveScheduleQuery"
+import { resolveSessionQuery } from "./resolvers/resolveSessionQuery"
+import { resolveBulletinQuery } from "./resolvers/resolveBulletinQuery"
 
 const typeDefs = readFileSync(`src/modules/graphql/schema.graphql`).toString()
-
-const resolveSessionQuery: Resolver<Session, any, any> = async (
-  parent,
-  args,
-  context,
-) => ({
-  authenticated: !!context.ctx.session?.user,
-})
 
 const resolvers: Resolvers = {
   DateTime: DateTimeResolver,
@@ -30,13 +30,22 @@ const resolvers: Resolvers = {
     video: resolveVideoQuery,
     videos: resolveVideosQuery,
     session: resolveSessionQuery,
+    organization: resolveOrganizationQuery,
+    schedule: resolveScheduleQuery,
+    bulletins: resolveBulletinQuery,
+  },
+  ScheduleItem: {
+    video: resolveVideo,
   },
   Video: {
-    assets: getVideoAsset,
-    organization: resolveOrganizationQuery,
+    assets: resolveVideoAssets,
+    organization: resolveOrganization,
   },
-  Session: { profileData: getUserProfile },
-  Organization: {},
+  Session: { profileData: resolveProfile },
+  Organization: {
+    latestVideos: resolveOrganizationLatestVideos,
+    editor: resolveOrganizationEditor,
+  },
 }
 
 export const apolloServer = new ApolloServer({

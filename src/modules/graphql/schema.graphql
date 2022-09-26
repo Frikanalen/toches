@@ -5,6 +5,9 @@ scalar DateTime
 type Query {
     videos(filter: VideoFilter, sort: [VideoSort!], page: Int! = 1, perPage: Int! = 20): VideoPagination
     video(id: ID!): Video!
+    organization(id: ID!): Organization!
+    schedule(filter: ScheduleFilter!, page: Int! = 1, perPage: Int! = 20): SchedulePagination
+    bulletins(page: Int! = 1, perPage: Int! = 20): BulletinPagination
     session: Session!
 }
 
@@ -18,6 +21,11 @@ type UserProfileData {
     email: String
 }
 
+input ScheduleFilter {
+    from: DateTime
+    to: DateTime
+}
+
 input VideoFilter {
     query: String
     organizationId: ID
@@ -26,6 +34,17 @@ input VideoFilter {
 enum VideoSort {
     DATE_ASC,
     DATE_DESC
+}
+
+type ScheduleItem {
+    id: ID!
+    startsAt: DateTime
+    video: Video!
+}
+
+type SchedulePagination {
+    items: [ScheduleItem!]!
+    pageInfo: PaginationInfo!
 }
 
 type VideoPagination {
@@ -59,30 +78,61 @@ schema {
 }
 
 type VideoAsset {
-    id: String
-    path: String
-    type: String
+    id: ID!
+    path: String!
+    type: String!
 }
 
 type Organization {
-    id: ID
+    id: ID!
     name: String!
-}
 
-type Video {
-    id: ID
-    title: String
+    brregId: Int
     description: String
+    homepage: String
+    postalAddress: String!
+    streetAddress: String!
 
-    organization: Organization
-
-    assets: [VideoAsset]
-    mediaId: Int
+    editor: OrganizationEditor!
 
     createdAt: DateTime
     updatedAt: DateTime
 
+    latestVideos: [Video!],
+}
+
+type OrganizationEditor {
+    id: ID!
+    name: String!
+    email: String!
+}
+
+type Video {
+    id: ID!
+    title: String!
+    description: String!
+
+    organization: Organization!
+
+    assets: [VideoAsset!]!
+
+    createdAt: DateTime!
+    updatedAt: DateTime!
+
     viewCount: Int
+}
+
+type Bulletin {
+    id: ID!
+    title: String!
+    text: String!
+    createdAt: DateTime!
+    updatedAt: DateTime!
+}
+
+type BulletinPagination {
+    items: [Bulletin!]!
+    pageInfo: PaginationInfo!
 }
 
 # Session state object with login status
