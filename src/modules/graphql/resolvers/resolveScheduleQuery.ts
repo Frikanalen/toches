@@ -65,6 +65,7 @@ export const resolveVideo: Resolver<Video, { id: string; videoId: string }> = as
       createdAt: "created_at",
       updatedAt: "updated_at",
       viewCount: "view_count",
+      organizationId: "organization_id",
     })
     .where("id", parent.videoId)
     .first()

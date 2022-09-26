@@ -1,11 +1,9 @@
 import { db } from "../../db/db"
-import { getOrganization } from "../../organization/helpers/getOrganization"
 import {
   Organization,
   QueryOrganizationArgs,
   Resolver,
   ResolversTypes,
-  Video,
 } from "../../../generated/graphql"
 import { DeepPartial } from "utility-types"
 import { Organizations } from "../../../generated/tableTypes"
@@ -22,6 +20,7 @@ export const resolveOrganizationQuery: Resolver<
     .select({
       createdAt: "created_at",
       updatedAt: "updated_at",
+      orgId: "organization_id",
       brregId: "brreg_number",
       postalAddress: "postal_address",
       streetAddress: "street_address",
@@ -41,20 +40,12 @@ export const resolveOrganizationQuery: Resolver<
 
 export const resolveOrganization: Resolver<
   DeepPartial<Organization>,
-  DeepPartial<Video>
-> = async (parent) => {
-  const { organization_id } = await db<number>("videos")
-    .select("organization_id")
-    .where("id", parent.id)
+  { organizationId: string }
+> = async (parent) =>
+  await db("organizations")
+    .select({ id: db.raw("id::text") }, "name")
+    .where("id", parent.organizationId)
     .first()
-
-  const { id, name } = await getOrganization(organization_id)
-
-  return {
-    id: id.toString(),
-    name,
-  }
-}
 
 export const resolveOrganizationEditor: Resolver<
   ResolversTypes["OrganizationEditor"],
@@ -84,5 +75,6 @@ export const resolveOrganizationLatestVideos: Resolver<
       viewCount: "view_count",
     })
     .where("organization_id", parent.id)
+    .orderBy("created_at")
     .limit(5)
 }

@@ -7,7 +7,6 @@ import {
   Video,
   VideoPagination,
 } from "../../../generated/graphql"
-import { getVideo } from "../../video/helpers/getVideo"
 import { getPageInfo } from "../utils/getPageInfo"
 import { getOrderBy } from "../utils/getOrderBy"
 import { DeepPartial } from "utility-types"
@@ -20,19 +19,23 @@ export const resolveVideoQuery: Resolver<
 > = async (parent, args) => {
   const id = parseInt(args.id)
 
-  const video = await getVideo(id)
+  const query = db<Videos>("videos")
+    .select("media_id", "title", {
+      description: db.raw("COALESCE(description, '')"),
+      id: db.raw("id::STRING"),
+      createdAt: "created_at",
+      updatedAt: "updated_at",
+      viewCount: "view_count",
+      organizationId: "organization_id",
+    })
+    .where("id", id)
+    .first()
+
+  const video = await query
 
   if (!video) throw new UserInputError(`Video ${id} does not exist`, { id })
 
-  const { title, updatedAt, createdAt, description } = video
-
-  return {
-    title,
-    updatedAt,
-    createdAt,
-    description,
-    id: args.id,
-  }
+  return video
 }
 
 // Count the rows of a given table
@@ -60,6 +63,7 @@ export const resolveVideosQuery: Resolver<
       createdAt: "created_at",
       updatedAt: "updated_at",
       viewCount: "view_count",
+      organizationId: "organization_id",
     })
     .orderBy(getOrderBy(sort))
     .offset((page - 1) * perPage)
