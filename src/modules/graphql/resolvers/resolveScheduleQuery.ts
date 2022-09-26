@@ -9,7 +9,6 @@ import {
 import { date, object } from "yup"
 import { UserInputError } from "apollo-server-koa"
 import { db } from "../../db/db"
-import { JukeboxEntries } from "../../../generated/tableTypes"
 import { getPageInfo } from "../utils/getPageInfo"
 import { DeepPartial } from "utility-types"
 
@@ -39,20 +38,15 @@ export const resolveScheduleQuery: Resolver<
   const { from, to } = await parseFilterArg(args.filter)
   const { page = 0, perPage = 25 } = args
 
-  const itemsFromDb = await db
-    .select({ id: "j.id", startsAt: "j.starts_at", duration: "vm.duration" })
+  const items = await db
+    .select({ id: "j.id", startsAt: "j.starts_at", videoId: "j.video_id" })
+    .select({ endsAt: db.raw("(starts_at + duration * INTERVAL '1 second')") })
     .fromRaw("jukebox_entries as j, videos as v, video_media as vm")
     .whereRaw("v.id = j.video_id")
     .andWhereRaw("vm.id = v.media_id")
     .andWhere("starts_at", ">=", from.toISOString())
     .andWhere("starts_at", "<", to!.toISOString())
     .orderBy("starts_at")
-
-  const items = itemsFromDb.map((item) => ({
-    ...item,
-    duration: undefined,
-    endsAt: add(item.startsAt, { seconds: item.duration }),
-  }))
 
   const pageInfo = getPageInfo(200, page, perPage)
 
@@ -62,30 +56,23 @@ export const resolveScheduleQuery: Resolver<
   }
 }
 
-export const resolveVideo: Resolver<Video, { id?: string }> = async (parent) => {
-  if (!parent.id) throw new Error(`resolveVideo called with bogus parent ID ${parent.id}`)
-
-  const { videoId } =
-    (await db<JukeboxEntries>("jukebox_entries")
-      .select("id", { videoId: "video_id" })
-      .where("id", "=", parent.id)
-      .first()) || {}
-
-  if (!videoId)
-    throw new Error(`resolveVideo: Asked to get video for bogus parent id ${parent.id}`)
-
+export const resolveVideo: Resolver<Video, { id: string; videoId: string }> = async (
+  parent,
+) => {
   const video = await db("videos")
     .select("id")
-    .select("description", "media_id", "title", {
+    .select("description", "title", {
       createdAt: "created_at",
       updatedAt: "updated_at",
       viewCount: "view_count",
     })
-    .where("id", "=", videoId)
+    .where("id", parent.videoId)
     .first()
 
   if (!video?.id)
-    throw new Error(`resolveVideo: Parent ID ${parent.id} has bogus video ID ${videoId}!`)
+    throw new Error(
+      `resolveVideo: Parent ID ${parent.id} has bogus video ID ${parent.videoId}!`,
+    )
 
   video.id = video.id.toString()
 

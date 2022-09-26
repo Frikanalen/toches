@@ -141,6 +141,7 @@ export type ScheduleFilter = {
 
 export type ScheduleItem = {
   __typename?: 'ScheduleItem';
+  endsAt: Scalars['DateTime'];
   id: Scalars['ID'];
   startsAt: Scalars['DateTime'];
   video: Video;
@@ -384,6 +385,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
 }>;
 
 export type ScheduleItemResolvers<ContextType = any, ParentType extends ResolversParentTypes['ScheduleItem'] = ResolversParentTypes['ScheduleItem']> = ResolversObject<{
+  endsAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   startsAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   video?: Resolver<ResolversTypes['Video'], ParentType, ContextType>;
