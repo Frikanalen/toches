@@ -1,29 +1,18 @@
-import {
-  BulletinPagination,
-  QueryBulletinsArgs,
-  Resolver,
-} from "../../../generated/graphql"
+import { Bulletin, QueryBulletinArgs, Resolver } from "../../../generated/graphql"
 import { db } from "../../db/db"
-import { getPageInfo } from "../utils/getPageInfo"
 
 export const resolveBulletinQuery: Resolver<
-  BulletinPagination,
+  Bulletin,
   any,
   any,
-  QueryBulletinsArgs
+  QueryBulletinArgs
 > = async (parent, args) => {
-  const { page = 0, perPage = 25 } = args
-
-  const items = await db
+  const item = await db
     .select("id", "text", "title")
-    .select({ createdAt: "created_at" })
+    .select({ createdAt: "created_at", updatedAt: "updated_at" })
     .from("bulletins")
-    .limit(perPage)
+    .where("id", args.id)
+    .first()
 
-  const pageInfo = getPageInfo(items.length, page, perPage)
-
-  return {
-    items,
-    pageInfo,
-  }
+  return item
 }

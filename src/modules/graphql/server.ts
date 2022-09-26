@@ -16,6 +16,7 @@ import { logoutMutation } from "./resolvers/logoutMutation"
 import { loginMutation } from "./resolvers/loginMutation"
 import { resolveScheduleQuery, resolveVideo } from "./resolvers/resolveScheduleQuery"
 import { resolveSessionQuery } from "./resolvers/resolveSessionQuery"
+import { resolveBulletinsQuery } from "./resolvers/resolveBulletinsQuery"
 import { resolveBulletinQuery } from "./resolvers/resolveBulletinQuery"
 
 const typeDefs = readFileSync(`src/modules/graphql/schema.graphql`).toString()
@@ -32,7 +33,8 @@ const resolvers: Resolvers = {
     session: resolveSessionQuery,
     organization: resolveOrganizationQuery,
     schedule: resolveScheduleQuery,
-    bulletins: resolveBulletinQuery,
+    bulletins: resolveBulletinsQuery,
+    bulletin: resolveBulletinQuery,
   },
   ScheduleItem: {
     video: resolveVideo,

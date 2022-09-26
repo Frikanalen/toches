@@ -25,6 +25,11 @@ export type Bulletin = {
   updatedAt: Scalars['DateTime'];
 };
 
+export type BulletinInput = {
+  text?: InputMaybe<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']>;
+};
+
 export type BulletinPagination = {
   __typename?: 'BulletinPagination';
   items: Array<Bulletin>;
@@ -35,12 +40,19 @@ export type Mutation = {
   __typename?: 'Mutation';
   login: Session;
   logout?: Maybe<Scalars['Boolean']>;
+  updateBulletin?: Maybe<Bulletin>;
 };
 
 
 export type MutationLoginArgs = {
   email: Scalars['String'];
   password: Scalars['String'];
+};
+
+
+export type MutationUpdateBulletinArgs = {
+  bulletin: BulletinInput;
+  id?: InputMaybe<Scalars['ID']>;
 };
 
 export type Organization = {
@@ -77,12 +89,18 @@ export type PaginationInfo = {
 
 export type Query = {
   __typename?: 'Query';
+  bulletin: Bulletin;
   bulletins?: Maybe<BulletinPagination>;
   organization: Organization;
   schedule?: Maybe<SchedulePagination>;
   session: Session;
   video: Video;
   videos?: Maybe<VideoPagination>;
+};
+
+
+export type QueryBulletinArgs = {
+  id: Scalars['ID'];
 };
 
 
@@ -124,7 +142,7 @@ export type ScheduleFilter = {
 export type ScheduleItem = {
   __typename?: 'ScheduleItem';
   id: Scalars['ID'];
-  startsAt?: Maybe<Scalars['DateTime']>;
+  startsAt: Scalars['DateTime'];
   video: Video;
 };
 
@@ -249,6 +267,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 export type ResolversTypes = ResolversObject<{
   Boolean: ResolverTypeWrapper<DeepPartial<Scalars['Boolean']>>;
   Bulletin: ResolverTypeWrapper<DeepPartial<Bulletin>>;
+  BulletinInput: ResolverTypeWrapper<DeepPartial<BulletinInput>>;
   BulletinPagination: ResolverTypeWrapper<DeepPartial<BulletinPagination>>;
   DateTime: ResolverTypeWrapper<DeepPartial<Scalars['DateTime']>>;
   ID: ResolverTypeWrapper<DeepPartial<Scalars['ID']>>;
@@ -275,6 +294,7 @@ export type ResolversTypes = ResolversObject<{
 export type ResolversParentTypes = ResolversObject<{
   Boolean: DeepPartial<Scalars['Boolean']>;
   Bulletin: DeepPartial<Bulletin>;
+  BulletinInput: DeepPartial<BulletinInput>;
   BulletinPagination: DeepPartial<BulletinPagination>;
   DateTime: DeepPartial<Scalars['DateTime']>;
   ID: DeepPartial<Scalars['ID']>;
@@ -318,6 +338,7 @@ export interface DateTimeScalarConfig extends GraphQLScalarTypeConfig<ResolversT
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
   login?: Resolver<ResolversTypes['Session'], ParentType, ContextType, RequireFields<MutationLoginArgs, 'email' | 'password'>>;
   logout?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  updateBulletin?: Resolver<Maybe<ResolversTypes['Bulletin']>, ParentType, ContextType, RequireFields<MutationUpdateBulletinArgs, 'bulletin'>>;
 }>;
 
 export type OrganizationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Organization'] = ResolversParentTypes['Organization']> = ResolversObject<{
@@ -353,6 +374,7 @@ export type PaginationInfoResolvers<ContextType = any, ParentType extends Resolv
 }>;
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
+  bulletin?: Resolver<ResolversTypes['Bulletin'], ParentType, ContextType, RequireFields<QueryBulletinArgs, 'id'>>;
   bulletins?: Resolver<Maybe<ResolversTypes['BulletinPagination']>, ParentType, ContextType, RequireFields<QueryBulletinsArgs, 'page' | 'perPage'>>;
   organization?: Resolver<ResolversTypes['Organization'], ParentType, ContextType, RequireFields<QueryOrganizationArgs, 'id'>>;
   schedule?: Resolver<Maybe<ResolversTypes['SchedulePagination']>, ParentType, ContextType, RequireFields<QueryScheduleArgs, 'filter' | 'page' | 'perPage'>>;
@@ -363,7 +385,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
 
 export type ScheduleItemResolvers<ContextType = any, ParentType extends ResolversParentTypes['ScheduleItem'] = ResolversParentTypes['ScheduleItem']> = ResolversObject<{
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  startsAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  startsAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   video?: Resolver<ResolversTypes['Video'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;

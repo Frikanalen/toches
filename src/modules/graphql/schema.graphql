@@ -8,12 +8,19 @@ type Query {
     organization(id: ID!): Organization!
     schedule(filter: ScheduleFilter!, page: Int! = 1, perPage: Int! = 20): SchedulePagination
     bulletins(page: Int! = 1, perPage: Int! = 20): BulletinPagination
+    bulletin(id: ID!): Bulletin!
     session: Session!
 }
 
 type Mutation {
     login(email: String!, password: String!): Session!
     logout: Boolean
+    updateBulletin(bulletin: BulletinInput!, id: ID): Bulletin
+}
+
+input BulletinInput {
+    text: String
+    title: String
 }
 
 type UserProfileData {
@@ -38,7 +45,7 @@ enum VideoSort {
 
 type ScheduleItem {
     id: ID!
-    startsAt: DateTime
+    startsAt: DateTime!
     video: Video!
 }
 
