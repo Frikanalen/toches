@@ -11,6 +11,7 @@ import { UserInputError } from "apollo-server-koa"
 import { db } from "../../db/db"
 import { JukeboxEntries } from "../../../generated/tableTypes"
 import { getPageInfo } from "../utils/getPageInfo"
+import { DeepPartial } from "utility-types"
 
 const ScheduleFilterSchema = object({
   from: date().default(startOfToday()),
@@ -30,20 +31,28 @@ const parseFilterArg = async (filter: ScheduleFilter) => {
 }
 
 export const resolveScheduleQuery: Resolver<
-  SchedulePagination,
+  DeepPartial<SchedulePagination>,
   any,
   any,
   QueryScheduleArgs
-> = async (parent, args, context, info) => {
+> = async (parent, args) => {
   const { from, to } = await parseFilterArg(args.filter)
   const { page = 0, perPage = 25 } = args
 
-  const items = await db
-    .select("id", { startsAt: "starts_at" })
-    .from("jukebox_entries")
-    .where("starts_at", ">=", from.toISOString())
+  const itemsFromDb = await db
+    .select({ id: "j.id", startsAt: "j.starts_at", duration: "vm.duration" })
+    .fromRaw("jukebox_entries as j, videos as v, video_media as vm")
+    .whereRaw("v.id = j.video_id")
+    .andWhereRaw("vm.id = v.media_id")
+    .andWhere("starts_at", ">=", from.toISOString())
     .andWhere("starts_at", "<", to!.toISOString())
     .orderBy("starts_at")
+
+  const items = itemsFromDb.map((item) => ({
+    ...item,
+    duration: undefined,
+    endsAt: add(item.startsAt, { seconds: item.duration }),
+  }))
 
   const pageInfo = getPageInfo(200, page, perPage)
 
@@ -53,12 +62,7 @@ export const resolveScheduleQuery: Resolver<
   }
 }
 
-export const resolveVideo: Resolver<Video, { id?: string }> = async (
-  parent,
-  args,
-  context,
-  info,
-) => {
+export const resolveVideo: Resolver<Video, { id?: string }> = async (parent) => {
   if (!parent.id) throw new Error(`resolveVideo called with bogus parent ID ${parent.id}`)
 
   const { videoId } =

@@ -46,6 +46,7 @@ enum VideoSort {
 type ScheduleItem {
     id: ID!
     startsAt: DateTime!
+    endsAt: DateTime!
     video: Video!
 }
 
