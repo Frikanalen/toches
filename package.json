@@ -2,6 +2,7 @@
   "name": "toches",
   "version": "1.0.0",
   "main": "./cli/build/index.js",
+  "license": "GPL-3.0-only",
   "repository": "git@github.com:Frikanalen/toches.git",
   "bin": {
     "toches": "./cli/build/index.js"
