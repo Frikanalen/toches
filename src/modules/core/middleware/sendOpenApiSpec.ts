@@ -3,7 +3,7 @@ import swagger from "swagger-jsdoc"
 import { SESSION_COOKIE } from "../../auth/constants"
 import { log } from "../log"
 
-const buildOAPI = () => {
+const buildOAPI = (): Record<string, any> => {
   log.info("Generating OpenAPI spec")
 
   const createMessage = (message: string) => ({

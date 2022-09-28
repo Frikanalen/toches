@@ -9,6 +9,7 @@ import { videoRouter } from "../video/router"
 import { sendConfig } from "./middleware/sendConfig"
 import { sendOpenApiSpec } from "./middleware/sendOpenApiSpec"
 import { bulletinRouter } from "../bulletins/router"
+import { koaSwagger } from "koa2-swagger-ui"
 
 const router = new Router()
 
@@ -52,5 +53,20 @@ router.use(videoRouter.middleware())
 router.use(scheduleRouter.middleware())
 router.use(bulletinRouter.middleware())
 router.use(playlistRouter.middleware())
+import { openApiSpec } from "./middleware/sendOpenApiSpec"
+
+const spec = openApiSpec
+router.get(
+  "/swagger",
+  koaSwagger({
+    routePrefix: false,
+    hideTopbar: true,
+    exposeSpec: true,
+    swaggerOptions: { url: "swagger.json" },
+  }),
+)
+router.get("/swagger.json", async (context) => {
+  context.body = spec
+})
 
 export { router }
