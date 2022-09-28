@@ -30,16 +30,13 @@ export const playlistQuery = new QueryTemplate<DefaultQueryOptions & PlaylistQue
         query.select(getArrayFromSubquery(videoSubquery, "playlist__videos"))
       }
     },
-    prepare: () => {
-      const query = db.select(
+    prepare: () =>
+      db.select(
         getAliasedColumns({
           columns: playlistModel.columns,
           table: playlistModel.tableName,
           prefix: playlistModel.structure.prefix,
         }),
-      )
-
-      return query
-    },
+      ),
   },
 )

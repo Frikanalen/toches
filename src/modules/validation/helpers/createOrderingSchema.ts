@@ -7,10 +7,9 @@ export const createOrderingSchema = <O extends Ordering[], N extends O[number]["
   const names = orderings.map((o) => o.name)
 
   const base = object({
-    orderBy: array(string().oneOf(names)).transform((v, o: string) => {
-      const values = o.replace(/[\[\]\"]/g, "").split(",")
-      return values
-    }) as ArraySchema<StringSchema<N>>,
+    orderBy: array(string().oneOf(names)).transform((v, o: string) =>
+      o.replace(/[\[\]"]/g, "").split(","),
+    ) as ArraySchema<StringSchema<N>>,
   })
 
   return base.when("orderBy", (orderBy: N[]) => {
@@ -18,8 +17,6 @@ export const createOrderingSchema = <O extends Ordering[], N extends O[number]["
       (orderBy ?? orderings[0].name).includes(o.name),
     )
 
-    const test = rest.reduce((a, b) => a.concat(b.schema), base.concat(first.schema))
-
-    return test
+    return rest.reduce((a, b) => a.concat(b.schema), base.concat(first.schema))
   })
 }

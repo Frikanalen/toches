@@ -38,15 +38,12 @@ export const organizationQuery = new QueryTemplate<
       editor.apply(query, {})
     }
   },
-  prepare: () => {
-    const query = db.select(
+  prepare: () =>
+    db.select(
       getAliasedColumns({
         columns: organizationModel.columns,
         table: organizationModel.tableName,
         prefix: "organization",
       }),
-    )
-
-    return query
-  },
+    ),
 })

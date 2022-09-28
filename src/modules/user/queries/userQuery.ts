@@ -30,15 +30,12 @@ export const userQuery = new QueryTemplate<DefaultQueryOptions & UserQueryParams
       query.select(getArrayFromSubquery(subquery, "user__roles"))
     }
   },
-  prepare: () => {
-    const query = db.select(
+  prepare: () =>
+    db.select(
       getAliasedColumns({
         columns: userModel.columns,
         table: userModel.tableName,
         prefix: "user",
       }),
-    )
-
-    return query
-  },
+    ),
 })

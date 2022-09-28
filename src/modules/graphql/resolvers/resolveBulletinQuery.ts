@@ -6,13 +6,10 @@ export const resolveBulletinQuery: Resolver<
   any,
   any,
   QueryBulletinArgs
-> = async (parent, args) => {
-  const item = await db
+> = async (parent, args) =>
+  db
     .select("id", "text", "title")
     .select({ createdAt: "created_at", updatedAt: "updated_at" })
     .from("bulletins")
     .where("id", args.id)
     .first()
-
-  return item
-}

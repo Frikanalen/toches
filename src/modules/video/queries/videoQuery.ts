@@ -71,15 +71,12 @@ export const videoQuery = new QueryTemplate<DefaultQueryOptions & VideoQueryPara
       query.where("videos.organization_id", options.organization)
     }
   },
-  prepare: () => {
-    const query = db.select(
+  prepare: () =>
+    db.select(
       getAliasedColumns({
         columns: videoModel.columns,
         table: videoModel.tableName,
         prefix: "video",
       }),
-    )
-
-    return query
-  },
+    ),
 })
