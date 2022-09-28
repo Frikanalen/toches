@@ -7,6 +7,9 @@ import {
   VideoPagination,
 } from "../../generated/graphql"
 import { DeepPartial } from "utility-types"
+import { app } from "../core/app"
+
+export type TochesContext = typeof app.context
 
 export type VideoWithDescendants = DeepPartial<Video> & {
   id: Scalars["ID"]

@@ -6,6 +6,7 @@ generates:
       useIndexSignature: true
       defaultMapper: DeepPartial<{T}>
       makeResolverTypeCallable: true
+      contextType: ../modules/graphql/types#TochesContext
       mappers:
         Video: ../modules/graphql/types#VideoWithDescendants
         VideoPagination: ../modules/graphql/types#VideoPaginationWithDescendants

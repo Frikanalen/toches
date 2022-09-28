@@ -1,12 +1,8 @@
 import { UserProfileData, Resolver } from "../../../generated/graphql"
 import { getUser } from "../../user/helpers/getUser"
-import { ParameterizedContext } from "koa"
+import { TochesContext } from "../types"
 
-type KoaContext = {
-  ctx: ParameterizedContext
-}
-
-export const resolveProfile: Resolver<UserProfileData, any, KoaContext> = async (
+export const resolveProfile: Resolver<UserProfileData, any, TochesContext> = async (
   parent,
   args,
   context,
@@ -14,7 +10,7 @@ export const resolveProfile: Resolver<UserProfileData, any, KoaContext> = async 
   // BOOKMARK: First shaky concept of user profile.
   // Now needs test-driven implementation of login & logout mutations,
   // and getUser needs review.
-  const userId = context.ctx.session?.user
+  const userId = context.session?.user
 
   const { id, email } = await getUser(userId)
 

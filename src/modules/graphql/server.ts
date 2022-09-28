@@ -12,20 +12,23 @@ import {
   resolveOrganizationLatestVideos,
   resolveOrganizationQuery,
 } from "./resolvers/resolveOrganization"
-import { logoutMutation } from "./resolvers/logoutMutation"
-import { loginMutation } from "./resolvers/loginMutation"
+
 import { resolveScheduleQuery, resolveVideo } from "./resolvers/resolveScheduleQuery"
 import { resolveSessionQuery } from "./resolvers/resolveSessionQuery"
 import { resolveBulletinsQuery } from "./resolvers/resolveBulletinsQuery"
 import { resolveBulletinQuery } from "./resolvers/resolveBulletinQuery"
+import { mutationUpdateBulletin } from "./resolvers/mutationUpdateBulletin"
+import { mutationLogout } from "./resolvers/mutationLogout"
+import { mutationLogin } from "./resolvers/mutationLogin"
 
 const typeDefs = readFileSync(`src/modules/graphql/schema.graphql`).toString()
 
 const resolvers: Resolvers = {
   DateTime: DateTimeResolver,
   Mutation: {
-    logout: logoutMutation,
-    login: loginMutation,
+    logout: mutationLogout,
+    login: mutationLogin,
+    updateBulletin: mutationUpdateBulletin,
   },
   Query: {
     video: resolveVideoQuery,
@@ -55,6 +58,6 @@ export const apolloServer = new ApolloServer({
   resolvers,
   introspection: true,
   csrfPrevention: true,
-  context: ({ ctx }) => ({ ctx }),
+  context: ({ ctx }) => ctx,
   plugins: [ApolloServerPluginLandingPageGraphQLPlayground()],
 })

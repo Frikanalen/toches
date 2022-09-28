@@ -1,7 +1,7 @@
 import { Resolver, Session } from "../../../generated/graphql"
 import { authenticateUser } from "../../auth/helpers/authenticateUser"
 
-export const loginMutation: Resolver<
+export const mutationLogin: Resolver<
   Session,
   any,
   any,

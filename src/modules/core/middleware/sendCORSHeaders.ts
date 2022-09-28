@@ -7,8 +7,7 @@ export const sendCORSHeaders = (): Middleware => (context, next) => {
 
   if (IS_PROD) return next()
 
-  if (context.path === "/graphql") context.set("Access-Control-Allow-Origin", "*")
-  else context.set("Access-Control-Allow-Origin", "http://localhost:3000")
+  context.set("Access-Control-Allow-Origin", "http://localhost:3000")
   context.set("Access-Control-Allow-Credentials", "true")
   context.set("Access-Control-Allow-Methods", "GET,PUT,POST,PATCH,DELETE,OPTIONS,HEAD")
   context.set("Access-Control-Allow-Headers", [CSRF_HEADER, "Content-Type"].join(", "))

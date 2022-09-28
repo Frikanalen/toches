@@ -17,7 +17,7 @@ export const resolveVideoQuery: Resolver<
   const query = db<Videos>("videos")
     .select("title", {
       description: db.raw("COALESCE(description, '')"),
-      id: db.raw("id::STRING"),
+      id: db.raw("id::text"),
       createdAt: "created_at",
       updatedAt: "updated_at",
       viewCount: "view_count",

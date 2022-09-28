@@ -21,7 +21,7 @@ app.use(useCSRFProtection())
 app.use(sendCORSHeaders())
 app.use(router.middleware())
 
-apolloServer.start().then(() => apolloServer.applyMiddleware({ app }))
+apolloServer.start().then(() => apolloServer.applyMiddleware({ app, cors: false }))
 
 app.on("error", (err) => log.error(err))
 

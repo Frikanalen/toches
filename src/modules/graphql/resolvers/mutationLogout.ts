@@ -1,6 +1,6 @@
 import { Maybe, Resolver, Scalars } from "../../../generated/graphql"
 
-export const logoutMutation: Resolver<Maybe<Scalars["Boolean"]>, any, any> = async (
+export const mutationLogout: Resolver<Maybe<Scalars["Boolean"]>, any, any> = async (
   parent,
   args,
   context,
