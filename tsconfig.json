@@ -1,4 +1,5 @@
 {
+  "extends": "@tsconfig/node18/tsconfig.json",
   "compilerOptions": {
     "resolveJsonModule": true,
     "moduleResolution": "node",
@@ -9,6 +10,6 @@
     "strict": true,
     "outDir": "build",
   },
-  "include": ["src", "typedefs"],
+  "include": ["src"],
   "exclude": ["node_modules"]
 }
