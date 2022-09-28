@@ -1,16 +1,16 @@
 import { db } from "../../db/db"
 import {
   Organization,
+  OrganizationEditor,
   QueryOrganizationArgs,
   Resolver,
-  ResolversTypes,
 } from "../../../generated/graphql"
-import { DeepPartial } from "utility-types"
 import { Organizations } from "../../../generated/tableTypes"
 import { UserInputError } from "apollo-server-koa"
+import { OrganizationWithDescendants, VideoWithDescendants } from "../types"
 
 export const resolveOrganizationQuery: Resolver<
-  DeepPartial<Organization>,
+  OrganizationWithDescendants,
   any,
   any,
   QueryOrganizationArgs
@@ -20,6 +20,7 @@ export const resolveOrganizationQuery: Resolver<
       id: db.raw("id::text"),
       createdAt: "created_at",
       updatedAt: "updated_at",
+      editorId: "editor_id",
       brregId: "brreg_number",
       postalAddress: "postal_address",
       streetAddress: "street_address",
@@ -32,17 +33,17 @@ export const resolveOrganizationQuery: Resolver<
 }
 
 export const resolveOrganization: Resolver<
-  DeepPartial<Organization>,
-  { organizationId: string }
+  OrganizationWithDescendants,
+  VideoWithDescendants
 > = async (parent) =>
   await db("organizations")
-    .select({ id: db.raw("id::text") }, "name")
+    .select({ id: db.raw("id::text"), editorId: "editor_id" }, "name")
     .where("id", parent.organizationId)
     .first()
 
 export const resolveOrganizationEditor: Resolver<
-  ResolversTypes["OrganizationEditor"],
-  DeepPartial<Organization>
+  OrganizationEditor,
+  OrganizationWithDescendants
 > = async (parent) =>
   await db("users")
     .select("id", "email")
@@ -51,19 +52,21 @@ export const resolveOrganizationEditor: Resolver<
       lastName: "last_name",
       name: db.raw("first_name || ' ' || last_name"),
     })
-    .where("id", db("organizations").select("editor_id").where("id", parent.id))
+    .where("id", parent.editorId)
     .first()
 
 export const resolveOrganizationLatestVideos: Resolver<
-  Array<ResolversTypes["Video"]>,
-  DeepPartial<Organization>
+  Array<VideoWithDescendants>,
+  Pick<Organization, "id">
 > = async (parent) =>
   await db("videos")
-    .select("id")
-    .select("description", "media_id", "title", {
+    .select("description", "title", {
+      id: db.raw<string>("id::text"),
       createdAt: "created_at",
       updatedAt: "updated_at",
       viewCount: "view_count",
+      mediaId: "media_id",
+      organizationId: "organization_id",
     })
     .where("organization_id", parent.id)
     .orderBy("created_at")

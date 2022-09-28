@@ -1,18 +1,13 @@
 import { UserInputError } from "apollo-server-koa"
 import { db } from "../../db/db"
 import { Videos } from "../../../generated/tableTypes"
-import {
-  QueryVideosArgs,
-  Resolver,
-  Video,
-  VideoPagination,
-} from "../../../generated/graphql"
+import { QueryVideosArgs, Resolver } from "../../../generated/graphql"
 import { getPageInfo } from "../utils/getPageInfo"
 import { getOrderBy } from "../utils/getOrderBy"
-import { DeepPartial } from "utility-types"
+import { VideoPaginationWithDescendants, VideoWithDescendants } from "../types"
 
 export const resolveVideoQuery: Resolver<
-  DeepPartial<Video>,
+  VideoWithDescendants,
   any,
   any,
   { id: string }
@@ -20,13 +15,14 @@ export const resolveVideoQuery: Resolver<
   const id = parseInt(args.id)
 
   const query = db<Videos>("videos")
-    .select("media_id", "title", {
+    .select("title", {
       description: db.raw("COALESCE(description, '')"),
       id: db.raw("id::STRING"),
       createdAt: "created_at",
       updatedAt: "updated_at",
       viewCount: "view_count",
       organizationId: "organization_id",
+      mediaId: "media_id",
     })
     .where("id", id)
     .first()
@@ -47,7 +43,7 @@ const countRows = async (tableName: string): Promise<number> => {
 }
 
 export const resolveVideosQuery: Resolver<
-  DeepPartial<VideoPagination>,
+  VideoPaginationWithDescendants,
   any,
   any,
   QueryVideosArgs
@@ -59,29 +55,24 @@ export const resolveVideosQuery: Resolver<
   if (page < 1) throw new UserInputError("page minimum value is 1.")
 
   const query = db<Videos>("videos")
-    .select("id", "description", "media_id", "title", {
+    .select("title", {
+      description: db.raw<string>("COALESCE(description, '')"),
+      id: db.raw<string>("id::text"),
       createdAt: "created_at",
       updatedAt: "updated_at",
       viewCount: "view_count",
       organizationId: "organization_id",
+      mediaId: "media_id",
     })
     .orderBy(getOrderBy(sort))
     .offset((page - 1) * perPage)
     .limit(perPage)
 
-  let videos
+  let items
 
   if (filter) {
-    videos = await query.where("organization_id", filter.organizationId)
-  } else videos = await query
-
-  const items = videos.map(
-    (v): DeepPartial<Video> => ({
-      ...v,
-      description: v.description ?? undefined,
-      id: v.id.toString(),
-    }),
-  )
+    items = await query.where("organization_id", filter.organizationId)
+  } else items = await query
 
   const pageInfo = getPageInfo(await countRows("videos"), page, perPage)
 

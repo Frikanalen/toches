@@ -6,7 +6,12 @@ generates:
       useIndexSignature: true
       defaultMapper: DeepPartial<{T}>
       makeResolverTypeCallable: true
-
+      mappers:
+        Video: ../modules/graphql/types#VideoWithDescendants
+        VideoPagination: ../modules/graphql/types#VideoPaginationWithDescendants
+        ScheduleItem: ../modules/graphql/types#ScheduleItemWithDescendants
+        SchedulePagination: ../modules/graphql/types#SchedulePaginationWithDescendants
+        Organization: ../modules/graphql/types#OrganizationWithDescendants
     plugins:
       - "typescript"
       - "typescript-resolvers"

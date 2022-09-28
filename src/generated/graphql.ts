@@ -1,4 +1,5 @@
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
+import { VideoWithDescendants, VideoPaginationWithDescendants, ScheduleItemWithDescendants, SchedulePaginationWithDescendants, OrganizationWithDescendants } from '../modules/graphql/types';
 import { DeepPartial } from 'utility-types';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
@@ -274,20 +275,20 @@ export type ResolversTypes = ResolversObject<{
   ID: ResolverTypeWrapper<DeepPartial<Scalars['ID']>>;
   Int: ResolverTypeWrapper<DeepPartial<Scalars['Int']>>;
   Mutation: ResolverTypeWrapper<{}>;
-  Organization: ResolverTypeWrapper<DeepPartial<Organization>>;
+  Organization: ResolverTypeWrapper<OrganizationWithDescendants>;
   OrganizationEditor: ResolverTypeWrapper<DeepPartial<OrganizationEditor>>;
   PaginationInfo: ResolverTypeWrapper<DeepPartial<PaginationInfo>>;
   Query: ResolverTypeWrapper<{}>;
   ScheduleFilter: ResolverTypeWrapper<DeepPartial<ScheduleFilter>>;
-  ScheduleItem: ResolverTypeWrapper<DeepPartial<ScheduleItem>>;
-  SchedulePagination: ResolverTypeWrapper<DeepPartial<SchedulePagination>>;
+  ScheduleItem: ResolverTypeWrapper<ScheduleItemWithDescendants>;
+  SchedulePagination: ResolverTypeWrapper<SchedulePaginationWithDescendants>;
   Session: ResolverTypeWrapper<DeepPartial<Session>>;
   String: ResolverTypeWrapper<DeepPartial<Scalars['String']>>;
   UserProfileData: ResolverTypeWrapper<DeepPartial<UserProfileData>>;
-  Video: ResolverTypeWrapper<DeepPartial<Video>>;
+  Video: ResolverTypeWrapper<VideoWithDescendants>;
   VideoAsset: ResolverTypeWrapper<DeepPartial<VideoAsset>>;
   VideoFilter: ResolverTypeWrapper<DeepPartial<VideoFilter>>;
-  VideoPagination: ResolverTypeWrapper<DeepPartial<VideoPagination>>;
+  VideoPagination: ResolverTypeWrapper<VideoPaginationWithDescendants>;
   VideoSort: ResolverTypeWrapper<DeepPartial<VideoSort>>;
 }>;
 
@@ -301,20 +302,20 @@ export type ResolversParentTypes = ResolversObject<{
   ID: DeepPartial<Scalars['ID']>;
   Int: DeepPartial<Scalars['Int']>;
   Mutation: {};
-  Organization: DeepPartial<Organization>;
+  Organization: OrganizationWithDescendants;
   OrganizationEditor: DeepPartial<OrganizationEditor>;
   PaginationInfo: DeepPartial<PaginationInfo>;
   Query: {};
   ScheduleFilter: DeepPartial<ScheduleFilter>;
-  ScheduleItem: DeepPartial<ScheduleItem>;
-  SchedulePagination: DeepPartial<SchedulePagination>;
+  ScheduleItem: ScheduleItemWithDescendants;
+  SchedulePagination: SchedulePaginationWithDescendants;
   Session: DeepPartial<Session>;
   String: DeepPartial<Scalars['String']>;
   UserProfileData: DeepPartial<UserProfileData>;
-  Video: DeepPartial<Video>;
+  Video: VideoWithDescendants;
   VideoAsset: DeepPartial<VideoAsset>;
   VideoFilter: DeepPartial<VideoFilter>;
-  VideoPagination: DeepPartial<VideoPagination>;
+  VideoPagination: VideoPaginationWithDescendants;
 }>;
 
 export type BulletinResolvers<ContextType = any, ParentType extends ResolversParentTypes['Bulletin'] = ResolversParentTypes['Bulletin']> = ResolversObject<{
