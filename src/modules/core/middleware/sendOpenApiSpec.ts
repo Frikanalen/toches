@@ -2,7 +2,6 @@ import { Middleware } from "koa"
 import swagger from "swagger-jsdoc"
 import { SESSION_COOKIE } from "../../auth/constants"
 import { log } from "../log"
-import { IS_PROD } from "../constants"
 
 const buildOAPI = () => {
   log.info("Generating OpenAPI spec")

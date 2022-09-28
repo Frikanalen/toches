@@ -3,7 +3,6 @@
 import { program } from "commander"
 import { createMockDataCommand } from "./create-mock-data/command"
 import { createTestUsersCommand } from "./create-test-users/command"
-import { testDBConnection } from "./db"
 
 program.addCommand(createMockDataCommand)
 program.addCommand(createTestUsersCommand)

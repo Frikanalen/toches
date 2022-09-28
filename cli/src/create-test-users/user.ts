@@ -1,5 +1,4 @@
 import { Command } from "commander"
-import { faker } from "@faker-js/faker"
 import { db } from "../db"
 import bcrypt from "bcrypt"
 
