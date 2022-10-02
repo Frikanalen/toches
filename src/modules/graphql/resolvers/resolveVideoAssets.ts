@@ -1,12 +1,11 @@
 import { db } from "../../db/db"
 import { Resolver, VideoAsset } from "../../../generated/graphql"
 import { VideoMediaAssets } from "../../../generated/tableTypes"
-import { VideoWithDescendants } from "../types"
+import { VideoWithKeys } from "../types"
 
-export const resolveVideoAssets: Resolver<
-  Array<VideoAsset>,
-  VideoWithDescendants
-> = async (parent): Promise<Array<VideoAsset>> =>
+export const resolveVideoAssets: Resolver<Array<VideoAsset>, VideoWithKeys> = async (
+  parent,
+): Promise<Array<VideoAsset>> =>
   db<VideoMediaAssets>("video_media_assets")
     .select("locator", "type", {
       id: db.raw<string>("id::text"),

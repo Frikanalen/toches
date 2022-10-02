@@ -8,11 +8,13 @@ generates:
       makeResolverTypeCallable: true
       contextType: ../modules/graphql/types#TochesContext
       mappers:
-        Video: ../modules/graphql/types#VideoWithDescendants
-        VideoPagination: ../modules/graphql/types#VideoPaginationWithDescendants
-        ScheduleItem: ../modules/graphql/types#ScheduleItemWithDescendants
-        SchedulePagination: ../modules/graphql/types#SchedulePaginationWithDescendants
-        Organization: ../modules/graphql/types#OrganizationWithDescendants
+        User: ../modules/graphql/types#UserWithKeys
+        UserRole: ../modules/graphql/types#UserRoleWithKeys
+        Video: ../modules/graphql/types#VideoWithKeys
+        VideoPagination: ../modules/graphql/types#VideoPaginationWithKeys
+        ScheduleItem: ../modules/graphql/types#ScheduleItemWithKeys
+        SchedulePagination: ../modules/graphql/types#SchedulePaginationWithKeys
+        Organization: ../modules/graphql/types#OrganizationWithKeys
     plugins:
       - "typescript"
       - "typescript-resolvers"

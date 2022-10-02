@@ -9,11 +9,7 @@ import { date, object } from "yup"
 import { UserInputError } from "apollo-server-koa"
 import { db } from "../../db/db"
 import { getPageInfo } from "../utils/getPageInfo"
-import {
-  ScheduleItemWithDescendants,
-  SchedulePaginationWithDescendants,
-  VideoWithDescendants,
-} from "../types"
+import { ScheduleItemWithKeys, SchedulePaginationWithKeys, VideoWithKeys } from "../types"
 
 const ScheduleFilterSchema = object({
   from: date().default(startOfToday()),
@@ -33,7 +29,7 @@ const parseFilterArg = async (filter: ScheduleFilter) => {
 }
 
 export const resolveScheduleQuery: Resolver<
-  SchedulePaginationWithDescendants,
+  SchedulePaginationWithKeys,
   any,
   any,
   QueryScheduleArgs
@@ -53,7 +49,7 @@ export const resolveScheduleQuery: Resolver<
     .andWhereRaw("vm.id = v.media_id")
     .andWhere("starts_at", ">=", from.toISOString())
     .andWhere("starts_at", "<", to!.toISOString())
-    .orderBy("starts_at")) as ScheduleItemWithDescendants[]
+    .orderBy("starts_at")) as ScheduleItemWithKeys[]
 
   const pageInfo = getPageInfo(200, page, perPage)
 
@@ -63,10 +59,9 @@ export const resolveScheduleQuery: Resolver<
   }
 }
 
-export const resolveVideo: Resolver<
-  VideoWithDescendants,
-  ScheduleItemWithDescendants
-> = async (parent) => {
+export const resolveVideo: Resolver<VideoWithKeys, ScheduleItemWithKeys> = async (
+  parent,
+) => {
   const video = await db("videos")
     .select("id")
     .select("description", "title", {

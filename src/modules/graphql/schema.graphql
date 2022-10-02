@@ -3,29 +3,45 @@
 scalar DateTime
 
 type Query {
-    videos(filter: VideoFilter, sort: [VideoSort!], page: Int! = 1, perPage: Int! = 20): VideoPagination
+    videos(filter: VideoFilter, sort: [VideoSort!], page: Int! = 1, perPage: Int! = 20): VideoPagination!
     video(id: ID!): Video!
     organization(id: ID!): Organization!
-    schedule(filter: ScheduleFilter!, page: Int! = 1, perPage: Int! = 20): SchedulePagination
-    bulletins(page: Int! = 1, perPage: Int! = 20): BulletinPagination
+    schedule(filter: ScheduleFilter!, page: Int! = 1, perPage: Int! = 20): SchedulePagination!
+    bulletins(page: Int! = 1, perPage: Int! = 20): BulletinPagination!
     bulletin(id: ID!): Bulletin!
     session: Session!
 }
 
 type Mutation {
-    login(email: String!, password: String!): Session!
+    login(email: String!, password: String!): User
     logout: Boolean
-    updateBulletin(bulletin: BulletinInput!, id: ID): Bulletin
+
+    bulletin(bulletin: BulletinInput!): Bulletin!
+    organization(organization: OrganizationInput!): Organization!
 }
 
 input BulletinInput {
+    id: ID
     text: String
     title: String
 }
 
-type UserProfileData {
+type User {
     id: ID!
-    email: String
+    email: String!
+    firstName: String
+    lastName: String
+    roles: [UserRole!]!
+}
+
+type UserRole {
+    organization: Organization!
+    role: RoleType!
+}
+
+enum RoleType {
+    EDITOR
+    MEMBER
 }
 
 input ScheduleFilter {
@@ -109,6 +125,16 @@ type Organization {
     latestVideos: [Video!],
 }
 
+input OrganizationInput {
+    id: ID
+    name: String
+    brregId: String
+    postalAddress: String
+    streetAddress: String
+    description: String
+    homepage: String
+}
+
 type OrganizationEditor {
     id: ID!
     name: String!
@@ -147,5 +173,5 @@ type BulletinPagination {
 type Session {
     authenticated: Boolean!
     # if authenticated
-    profileData: UserProfileData
+    user: User
 }

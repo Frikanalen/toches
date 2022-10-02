@@ -4,7 +4,7 @@ import { DateTimeResolver } from "graphql-scalars"
 import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-core"
 import { resolveVideoAssets } from "./resolvers/resolveVideoAssets"
 import { Resolvers } from "../../generated/graphql"
-import { resolveProfile } from "./resolvers/resolveProfile"
+import { resolveUser } from "./resolvers/resolveUser"
 import { resolveVideoQuery, resolveVideosQuery } from "./resolvers/getVideo"
 import {
   resolveOrganization,
@@ -17,18 +17,21 @@ import { resolveScheduleQuery, resolveVideo } from "./resolvers/resolveScheduleQ
 import { resolveSessionQuery } from "./resolvers/resolveSessionQuery"
 import { resolveBulletinsQuery } from "./resolvers/resolveBulletinsQuery"
 import { resolveBulletinQuery } from "./resolvers/resolveBulletinQuery"
-import { mutationUpdateBulletin } from "./resolvers/mutationUpdateBulletin"
+import { mutateBulletin } from "./resolvers/mutateBulletin"
 import { mutationLogout } from "./resolvers/mutationLogout"
 import { mutationLogin } from "./resolvers/mutationLogin"
+import { resolveUserRoles } from "./resolvers/resolveUserRoles"
+import { mutateOrganization } from "./resolvers/mutateOrganization"
 
 const typeDefs = readFileSync(`src/modules/graphql/schema.graphql`).toString()
 
 const resolvers: Resolvers = {
   DateTime: DateTimeResolver,
   Mutation: {
+    organization: mutateOrganization,
     logout: mutationLogout,
     login: mutationLogin,
-    updateBulletin: mutationUpdateBulletin,
+    bulletin: mutateBulletin,
   },
   Query: {
     video: resolveVideoQuery,
@@ -46,7 +49,11 @@ const resolvers: Resolvers = {
     assets: resolveVideoAssets,
     organization: resolveOrganization,
   },
-  Session: { profileData: resolveProfile },
+  UserRole: {
+    organization: resolveOrganization,
+  },
+  User: { roles: resolveUserRoles },
+  Session: { user: resolveUser },
   Organization: {
     latestVideos: resolveOrganizationLatestVideos,
     editor: resolveOrganizationEditor,
@@ -58,6 +65,6 @@ export const apolloServer = new ApolloServer({
   resolvers,
   introspection: true,
   csrfPrevention: true,
-  context: ({ ctx }) => ctx,
+  context: ({ ctx }) => ctx, // pass Koa framework context to Apollo resolvers
   plugins: [ApolloServerPluginLandingPageGraphQLPlayground()],
 })

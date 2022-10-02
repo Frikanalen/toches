@@ -16,7 +16,7 @@ export const resolveBulletinsQuery: Resolver<
 
   const items = await db
     .select("id", "text", "title")
-    .select({ createdAt: "created_at" })
+    .select({ createdAt: "created_at", updatedAt: "updated_at" })
     .from("bulletins")
     .limit(perPage)
 

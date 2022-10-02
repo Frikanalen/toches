@@ -3,6 +3,8 @@ import {
   Scalars,
   ScheduleItem,
   SchedulePagination,
+  User,
+  UserRole,
   Video,
   VideoPagination,
 } from "../../generated/graphql"
@@ -11,26 +13,30 @@ import { app } from "../core/app"
 
 export type TochesContext = typeof app.context
 
-export type VideoWithDescendants = DeepPartial<Video> & {
+export type VideoWithKeys = DeepPartial<Video> & {
   id: Scalars["ID"]
-  organizationId: Scalars["ID"]
+  organizationId: number
   mediaId: Scalars["ID"]
 }
 
-export type OrganizationWithDescendants = DeepPartial<Organization> & {
+export type OrganizationWithKeys = DeepPartial<Organization> & {
   id: Scalars["ID"]
   editorId: Scalars["ID"]
 }
 
-export type ScheduleItemWithDescendants = DeepPartial<ScheduleItem> & {
+export type ScheduleItemWithKeys = DeepPartial<ScheduleItem> & {
   id: Scalars["ID"]
   videoId: Scalars["ID"]
 }
 
-export type SchedulePaginationWithDescendants = DeepPartial<SchedulePagination> & {
-  items: ScheduleItemWithDescendants[]
+export type SchedulePaginationWithKeys = DeepPartial<SchedulePagination> & {
+  items: ScheduleItemWithKeys[]
 }
 
-export type VideoPaginationWithDescendants = DeepPartial<VideoPagination> & {
-  items: VideoWithDescendants[]
+export type VideoPaginationWithKeys = DeepPartial<VideoPagination> & {
+  items: VideoWithKeys[]
 }
+
+export type UserWithKeys = DeepPartial<User> & Pick<User, "id">
+
+export type UserRoleWithKeys = DeepPartial<UserRole> & { organizationId: number }

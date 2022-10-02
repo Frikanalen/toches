@@ -5,17 +5,12 @@ import {
   QueryOrganizationArgs,
   Resolver,
 } from "../../../generated/graphql"
-import { Organizations } from "../../../generated/tableTypes"
-import { UserInputError } from "apollo-server-koa"
-import { OrganizationWithDescendants, VideoWithDescendants } from "../types"
+import { OrganizationWithKeys, VideoWithKeys } from "../types"
 
-export const resolveOrganizationQuery: Resolver<
-  OrganizationWithDescendants,
-  any,
-  any,
-  QueryOrganizationArgs
-> = async (parent, args) => {
-  const org = await db<Organizations>("organizations")
+export const getOrganization = async (
+  organizationId: number | string,
+): Promise<OrganizationWithKeys> =>
+  db("organizations")
     .select("name", "description", "homepage", {
       id: db.raw("id::text"),
       createdAt: "created_at",
@@ -25,25 +20,24 @@ export const resolveOrganizationQuery: Resolver<
       postalAddress: "postal_address",
       streetAddress: "street_address",
     })
-    .where("id", args.id)
+    .where("id", organizationId)
     .first()
 
-  if (!org) throw new UserInputError(`Organization ${args.id} doesn't exist`)
-  return org
-}
+export const resolveOrganizationQuery: Resolver<
+  OrganizationWithKeys,
+  any,
+  any,
+  QueryOrganizationArgs
+> = async (parent, { id }) => getOrganization(id)
 
 export const resolveOrganization: Resolver<
-  OrganizationWithDescendants,
-  VideoWithDescendants
-> = async (parent) =>
-  await db("organizations")
-    .select({ id: db.raw("id::text"), editorId: "editor_id" }, "name")
-    .where("id", parent.organizationId)
-    .first()
+  OrganizationWithKeys,
+  { organizationId: number }
+> = async ({ organizationId }) => getOrganization(organizationId)
 
 export const resolveOrganizationEditor: Resolver<
   OrganizationEditor,
-  OrganizationWithDescendants
+  OrganizationWithKeys
 > = async (parent) =>
   await db("users")
     .select("id", "email")
@@ -56,7 +50,7 @@ export const resolveOrganizationEditor: Resolver<
     .first()
 
 export const resolveOrganizationLatestVideos: Resolver<
-  Array<VideoWithDescendants>,
+  Array<VideoWithKeys>,
   Pick<Organization, "id">
 > = async (parent) =>
   await db("videos")

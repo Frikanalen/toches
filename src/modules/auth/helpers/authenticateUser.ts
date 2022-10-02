@@ -15,7 +15,7 @@ const timingAttackMitigationDelay = async () => {
 }
 
 const checkWithLegacyHashAlgorithm = async (password: string, hashFromDb: string) => {
-  const [_, iterations, salt, hash] = hashFromDb.split("$")
+  const [source, iterations, salt, hash] = hashFromDb.split("$")
 
   const buffer = await hashPbkdf2(password, salt, Number(iterations), 32, "SHA256")
 
@@ -36,6 +36,7 @@ export const authenticateUser = async (
   const user = await db<Users>(userModel.tableName)
     .select("id", "email", "password")
     .where("email", email)
+    .andWhere("banned", false)
     .first()
 
   if (!user) {

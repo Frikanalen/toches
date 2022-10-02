@@ -4,10 +4,10 @@ import { Videos } from "../../../generated/tableTypes"
 import { QueryVideosArgs, Resolver } from "../../../generated/graphql"
 import { getPageInfo } from "../utils/getPageInfo"
 import { getOrderBy } from "../utils/getOrderBy"
-import { VideoPaginationWithDescendants, VideoWithDescendants } from "../types"
+import { VideoPaginationWithKeys, VideoWithKeys } from "../types"
 
 export const resolveVideoQuery: Resolver<
-  VideoWithDescendants,
+  VideoWithKeys,
   any,
   any,
   { id: string }
@@ -43,7 +43,7 @@ const countRows = async (tableName: string): Promise<number> => {
 }
 
 export const resolveVideosQuery: Resolver<
-  VideoPaginationWithDescendants,
+  VideoPaginationWithKeys,
   any,
   any,
   QueryVideosArgs
