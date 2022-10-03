@@ -14,7 +14,7 @@ const updateBulletin = async ({
   id,
   title,
   text,
-}: BulletinInput & Pick<BulletinInput, "id">): Promise<any> =>
+}: BulletinInput & Pick<BulletinInput, "id">): Promise<string> =>
   db<Bulletins>("bulletins")
     .where("id", id)
     .update({
