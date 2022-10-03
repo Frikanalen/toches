@@ -48,6 +48,5 @@ export const mutateBulletin: Resolver<
     ? await updateBulletin(bulletin)
     : await createBulletin(bulletin)
 
-  console.log(updatedId)
   return getBulletin(updatedId)
 }
