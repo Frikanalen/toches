@@ -154,6 +154,14 @@ type Video {
     updatedAt: DateTime!
 
     viewCount: Int
+
+    images: VideoImages!
+}
+
+type VideoImages {
+    thumbLarge: String!
+    thumbMedium: String!
+    thumbSmall: String!
 }
 
 type Bulletin {

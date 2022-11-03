@@ -203,6 +203,7 @@ export type Video = {
   createdAt: Scalars['DateTime'];
   description: Scalars['String'];
   id: Scalars['ID'];
+  images: VideoImages;
   organization: Organization;
   title: Scalars['String'];
   updatedAt: Scalars['DateTime'];
@@ -219,6 +220,13 @@ export type VideoAsset = {
 export type VideoFilter = {
   organizationId?: InputMaybe<Scalars['ID']>;
   query?: InputMaybe<Scalars['String']>;
+};
+
+export type VideoImages = {
+  __typename?: 'VideoImages';
+  thumbLarge: Scalars['String'];
+  thumbMedium: Scalars['String'];
+  thumbSmall: Scalars['String'];
 };
 
 export type VideoPagination = {
@@ -322,6 +330,7 @@ export type ResolversTypes = ResolversObject<{
   Video: ResolverTypeWrapper<VideoWithKeys>;
   VideoAsset: ResolverTypeWrapper<DeepPartial<VideoAsset>>;
   VideoFilter: ResolverTypeWrapper<DeepPartial<VideoFilter>>;
+  VideoImages: ResolverTypeWrapper<DeepPartial<VideoImages>>;
   VideoPagination: ResolverTypeWrapper<VideoPaginationWithKeys>;
   VideoSort: ResolverTypeWrapper<DeepPartial<VideoSort>>;
 }>;
@@ -351,6 +360,7 @@ export type ResolversParentTypes = ResolversObject<{
   Video: VideoWithKeys;
   VideoAsset: DeepPartial<VideoAsset>;
   VideoFilter: DeepPartial<VideoFilter>;
+  VideoImages: DeepPartial<VideoImages>;
   VideoPagination: VideoPaginationWithKeys;
 }>;
 
@@ -462,6 +472,7 @@ export type VideoResolvers<ContextType = TochesContext, ParentType extends Resol
   createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  images?: Resolver<ResolversTypes['VideoImages'], ParentType, ContextType>;
   organization?: Resolver<ResolversTypes['Organization'], ParentType, ContextType>;
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
@@ -473,6 +484,13 @@ export type VideoAssetResolvers<ContextType = TochesContext, ParentType extends 
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   path?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   type?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type VideoImagesResolvers<ContextType = TochesContext, ParentType extends ResolversParentTypes['VideoImages'] = ResolversParentTypes['VideoImages']> = ResolversObject<{
+  thumbLarge?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  thumbMedium?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  thumbSmall?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -498,6 +516,7 @@ export type Resolvers<ContextType = TochesContext> = ResolversObject<{
   UserRole?: UserRoleResolvers<ContextType>;
   Video?: VideoResolvers<ContextType>;
   VideoAsset?: VideoAssetResolvers<ContextType>;
+  VideoImages?: VideoImagesResolvers<ContextType>;
   VideoPagination?: VideoPaginationResolvers<ContextType>;
 }>;
 
