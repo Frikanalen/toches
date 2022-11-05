@@ -12,12 +12,46 @@ type Query {
     session: Session!
 }
 
+# Todo: as per https://graphql-rules.com/rules/mutation-business-operations
+# Our mutations are too general. At least for video, we should differentiate slightly
 type Mutation {
     login(email: String!, password: String!): User
     logout: Boolean
 
+    video: VideoMutations
     bulletin(bulletin: BulletinInput!): Bulletin!
     organization(organization: OrganizationInput!): Organization!
+}
+
+type VideoMutations {
+    create(input: VideoInput!): VideoMutationPayload!
+    update(input: VideoInput!): VideoMutationPayload!
+    publish(videoId: ID!): VideoMutationPayload!
+    unpublish(videoId: ID!): VideoMutationPayload!
+}
+
+input VideoInput {
+    id: ID
+    mediaId: ID
+    title: String
+    description: String
+    organizationId: ID
+}
+
+type VideoMutationPayload {
+    videoId: ID
+    video: Video
+    status: MutationStatus!
+    error: VideoMutationError
+}
+
+interface VideoMutationError {
+    message: String!
+}
+
+enum MutationStatus {
+    SUCCESS
+    ERROR
 }
 
 input BulletinInput {

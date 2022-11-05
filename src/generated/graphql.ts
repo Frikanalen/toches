@@ -45,6 +45,7 @@ export type Mutation = {
   login?: Maybe<User>;
   logout?: Maybe<Scalars['Boolean']>;
   organization: Organization;
+  video?: Maybe<VideoMutations>;
 };
 
 
@@ -62,6 +63,11 @@ export type MutationLoginArgs = {
 export type MutationOrganizationArgs = {
   organization: OrganizationInput;
 };
+
+export enum MutationStatus {
+  Error = 'ERROR',
+  Success = 'SUCCESS'
+}
 
 export type Organization = {
   __typename?: 'Organization';
@@ -229,6 +235,54 @@ export type VideoImages = {
   thumbSmall: Scalars['String'];
 };
 
+export type VideoInput = {
+  description?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['ID']>;
+  mediaId?: InputMaybe<Scalars['ID']>;
+  organizationId?: InputMaybe<Scalars['ID']>;
+  title?: InputMaybe<Scalars['String']>;
+};
+
+export type VideoMutationError = {
+  message: Scalars['String'];
+};
+
+export type VideoMutationPayload = {
+  __typename?: 'VideoMutationPayload';
+  error?: Maybe<VideoMutationError>;
+  status: MutationStatus;
+  video?: Maybe<Video>;
+  videoId?: Maybe<Scalars['ID']>;
+};
+
+export type VideoMutations = {
+  __typename?: 'VideoMutations';
+  create: VideoMutationPayload;
+  publish: VideoMutationPayload;
+  unpublish: VideoMutationPayload;
+  update: VideoMutationPayload;
+};
+
+
+export type VideoMutationsCreateArgs = {
+  input: VideoInput;
+};
+
+
+export type VideoMutationsPublishArgs = {
+  videoId: Scalars['ID'];
+};
+
+
+export type VideoMutationsUnpublishArgs = {
+  videoId: Scalars['ID'];
+};
+
+
+export type VideoMutationsUpdateArgs = {
+  input: VideoInput;
+};
+
 export type VideoPagination = {
   __typename?: 'VideoPagination';
   items: Array<Maybe<Video>>;
@@ -314,6 +368,7 @@ export type ResolversTypes = ResolversObject<{
   ID: ResolverTypeWrapper<DeepPartial<Scalars['ID']>>;
   Int: ResolverTypeWrapper<DeepPartial<Scalars['Int']>>;
   Mutation: ResolverTypeWrapper<{}>;
+  MutationStatus: ResolverTypeWrapper<DeepPartial<MutationStatus>>;
   Organization: ResolverTypeWrapper<OrganizationWithKeys>;
   OrganizationEditor: ResolverTypeWrapper<DeepPartial<OrganizationEditor>>;
   OrganizationInput: ResolverTypeWrapper<DeepPartial<OrganizationInput>>;
@@ -331,6 +386,10 @@ export type ResolversTypes = ResolversObject<{
   VideoAsset: ResolverTypeWrapper<DeepPartial<VideoAsset>>;
   VideoFilter: ResolverTypeWrapper<DeepPartial<VideoFilter>>;
   VideoImages: ResolverTypeWrapper<DeepPartial<VideoImages>>;
+  VideoInput: ResolverTypeWrapper<DeepPartial<VideoInput>>;
+  VideoMutationError: never;
+  VideoMutationPayload: ResolverTypeWrapper<DeepPartial<Omit<VideoMutationPayload, 'video'> & { video?: Maybe<ResolversTypes['Video']> }>>;
+  VideoMutations: ResolverTypeWrapper<DeepPartial<Omit<VideoMutations, 'create' | 'publish' | 'unpublish' | 'update'> & { create: ResolversTypes['VideoMutationPayload'], publish: ResolversTypes['VideoMutationPayload'], unpublish: ResolversTypes['VideoMutationPayload'], update: ResolversTypes['VideoMutationPayload'] }>>;
   VideoPagination: ResolverTypeWrapper<VideoPaginationWithKeys>;
   VideoSort: ResolverTypeWrapper<DeepPartial<VideoSort>>;
 }>;
@@ -361,6 +420,10 @@ export type ResolversParentTypes = ResolversObject<{
   VideoAsset: DeepPartial<VideoAsset>;
   VideoFilter: DeepPartial<VideoFilter>;
   VideoImages: DeepPartial<VideoImages>;
+  VideoInput: DeepPartial<VideoInput>;
+  VideoMutationError: never;
+  VideoMutationPayload: DeepPartial<Omit<VideoMutationPayload, 'video'> & { video?: Maybe<ResolversParentTypes['Video']> }>;
+  VideoMutations: DeepPartial<Omit<VideoMutations, 'create' | 'publish' | 'unpublish' | 'update'> & { create: ResolversParentTypes['VideoMutationPayload'], publish: ResolversParentTypes['VideoMutationPayload'], unpublish: ResolversParentTypes['VideoMutationPayload'], update: ResolversParentTypes['VideoMutationPayload'] }>;
   VideoPagination: VideoPaginationWithKeys;
 }>;
 
@@ -388,6 +451,7 @@ export type MutationResolvers<ContextType = TochesContext, ParentType extends Re
   login?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationLoginArgs, 'email' | 'password'>>;
   logout?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   organization?: Resolver<ResolversTypes['Organization'], ParentType, ContextType, RequireFields<MutationOrganizationArgs, 'organization'>>;
+  video?: Resolver<Maybe<ResolversTypes['VideoMutations']>, ParentType, ContextType>;
 }>;
 
 export type OrganizationResolvers<ContextType = TochesContext, ParentType extends ResolversParentTypes['Organization'] = ResolversParentTypes['Organization']> = ResolversObject<{
@@ -494,6 +558,27 @@ export type VideoImagesResolvers<ContextType = TochesContext, ParentType extends
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
+export type VideoMutationErrorResolvers<ContextType = TochesContext, ParentType extends ResolversParentTypes['VideoMutationError'] = ResolversParentTypes['VideoMutationError']> = ResolversObject<{
+  __resolveType: TypeResolveFn<null, ParentType, ContextType>;
+  message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+}>;
+
+export type VideoMutationPayloadResolvers<ContextType = TochesContext, ParentType extends ResolversParentTypes['VideoMutationPayload'] = ResolversParentTypes['VideoMutationPayload']> = ResolversObject<{
+  error?: Resolver<Maybe<ResolversTypes['VideoMutationError']>, ParentType, ContextType>;
+  status?: Resolver<ResolversTypes['MutationStatus'], ParentType, ContextType>;
+  video?: Resolver<Maybe<ResolversTypes['Video']>, ParentType, ContextType>;
+  videoId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type VideoMutationsResolvers<ContextType = TochesContext, ParentType extends ResolversParentTypes['VideoMutations'] = ResolversParentTypes['VideoMutations']> = ResolversObject<{
+  create?: Resolver<ResolversTypes['VideoMutationPayload'], ParentType, ContextType, RequireFields<VideoMutationsCreateArgs, 'input'>>;
+  publish?: Resolver<ResolversTypes['VideoMutationPayload'], ParentType, ContextType, RequireFields<VideoMutationsPublishArgs, 'videoId'>>;
+  unpublish?: Resolver<ResolversTypes['VideoMutationPayload'], ParentType, ContextType, RequireFields<VideoMutationsUnpublishArgs, 'videoId'>>;
+  update?: Resolver<ResolversTypes['VideoMutationPayload'], ParentType, ContextType, RequireFields<VideoMutationsUpdateArgs, 'input'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type VideoPaginationResolvers<ContextType = TochesContext, ParentType extends ResolversParentTypes['VideoPagination'] = ResolversParentTypes['VideoPagination']> = ResolversObject<{
   items?: Resolver<Array<Maybe<ResolversTypes['Video']>>, ParentType, ContextType>;
   pageInfo?: Resolver<ResolversTypes['PaginationInfo'], ParentType, ContextType>;
@@ -517,6 +602,9 @@ export type Resolvers<ContextType = TochesContext> = ResolversObject<{
   Video?: VideoResolvers<ContextType>;
   VideoAsset?: VideoAssetResolvers<ContextType>;
   VideoImages?: VideoImagesResolvers<ContextType>;
+  VideoMutationError?: VideoMutationErrorResolvers<ContextType>;
+  VideoMutationPayload?: VideoMutationPayloadResolvers<ContextType>;
+  VideoMutations?: VideoMutationsResolvers<ContextType>;
   VideoPagination?: VideoPaginationResolvers<ContextType>;
 }>;
 

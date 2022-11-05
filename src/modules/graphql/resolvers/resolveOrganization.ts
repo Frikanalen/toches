@@ -63,5 +63,5 @@ export const resolveOrganizationLatestVideos: Resolver<
       organizationId: "organization_id",
     })
     .where("organization_id", parent.id)
-    .orderBy("created_at")
+    .orderBy("created_at", "desc")
     .limit(5)

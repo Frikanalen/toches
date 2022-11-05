@@ -1,20 +1,13 @@
 import { UserInputError } from "apollo-server-koa"
 import { db } from "../../db/db"
 import { Videos } from "../../../generated/tableTypes"
-import { QueryVideosArgs, Resolver } from "../../../generated/graphql"
+import { QueryVideoArgs, QueryVideosArgs, Resolver } from "../../../generated/graphql"
 import { getPageInfo } from "../utils/getPageInfo"
 import { getOrderBy } from "../utils/getOrderBy"
 import { VideoPaginationWithKeys, VideoWithKeys } from "../types"
 
-export const resolveVideoQuery: Resolver<
-  VideoWithKeys,
-  any,
-  any,
-  { id: string }
-> = async (parent, args) => {
-  const id = parseInt(args.id)
-
-  const query = db<Videos>("videos")
+export const getVideo = (videoId: string) => {
+  return db<Videos>("videos")
     .select("title", {
       description: db.raw("COALESCE(description, '')"),
       id: db.raw("id::text"),
@@ -24,10 +17,17 @@ export const resolveVideoQuery: Resolver<
       organizationId: "organization_id",
       mediaId: "media_id",
     })
-    .where("id", id)
+    .where("id", videoId)
     .first()
+}
 
-  const video = await query
+export const resolveVideoQuery: Resolver<
+  VideoWithKeys,
+  any,
+  any,
+  QueryVideoArgs
+> = async (parent, { id }) => {
+  const video = await getVideo(id)
 
   if (!video) throw new UserInputError(`Video ${id} does not exist`, { id })
 
