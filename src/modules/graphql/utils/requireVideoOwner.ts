@@ -18,7 +18,7 @@ export const requireVideoOwner = async (context: TochesContext, videoId: string)
   if (!organizationId) throw new UserInputError("Unknown organization!")
 
   const editorId = (
-    await db("organizations").select("editor_id").where("id", organization_id).first()
+    await db("organizations").select("editor_id").where("id", organizationId).first()
   )?.editor_id
 
   console.log(editorId)
