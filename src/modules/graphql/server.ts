@@ -23,7 +23,11 @@ import { mutationLogin } from "./resolvers/mutationLogin"
 import { resolveUserRoles } from "./resolvers/resolveUserRoles"
 import { mutateOrganization } from "./resolvers/mutateOrganization"
 import { resolveVideoImages } from "./resolvers/resolveVideoImages"
-import { mutateVideo, mutateVideoPublish } from "./resolvers/mutateVideo"
+import {
+  mutateVideo,
+  mutateVideoDelete,
+  mutateVideoPublish,
+} from "./resolvers/mutateVideo"
 
 const typeDefs = readFileSync(`src/modules/graphql/schema.graphql`).toString()
 
@@ -61,6 +65,7 @@ const resolvers: Resolvers = {
     update: mutateVideo,
     publish: mutateVideoPublish,
     unpublish: mutateVideoPublish,
+    delete: mutateVideoDelete,
   },
   User: { roles: resolveUserRoles },
   Session: { user: resolveUser },

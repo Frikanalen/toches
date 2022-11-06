@@ -3,6 +3,7 @@ import {
   Resolver,
   VideoInput,
   VideoMutationPayload,
+  VideoMutationsDeleteArgs,
   VideoMutationsPublishArgs,
   VideoMutationsUpdateArgs,
 } from "../../../generated/graphql"
@@ -88,5 +89,20 @@ export const mutateVideoPublish: Resolver<
   return {
     status: MutationStatus.Success,
     video,
+  }
+}
+
+export const mutateVideoDelete: Resolver<
+  DeepPartial<VideoMutationPayload>,
+  any,
+  TochesContext,
+  VideoMutationsDeleteArgs
+> = async (_, { videoId }, context) => {
+  if (isNaN(parseInt(videoId || ""))) throw new GraphQLError("videoId is invalid")
+  await requireVideoOwner(context, videoId)
+  const rows = await db("videos").delete().where("id", parseInt(videoId))
+
+  return {
+    status: rows === 1 ? MutationStatus.Success : MutationStatus.Error,
   }
 }

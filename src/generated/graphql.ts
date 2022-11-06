@@ -258,6 +258,7 @@ export type VideoMutationPayload = {
 export type VideoMutations = {
   __typename?: 'VideoMutations';
   create: VideoMutationPayload;
+  delete: VideoMutationPayload;
   publish: VideoMutationPayload;
   unpublish: VideoMutationPayload;
   update: VideoMutationPayload;
@@ -266,6 +267,11 @@ export type VideoMutations = {
 
 export type VideoMutationsCreateArgs = {
   input: VideoInput;
+};
+
+
+export type VideoMutationsDeleteArgs = {
+  videoId: Scalars['ID'];
 };
 
 
@@ -389,7 +395,7 @@ export type ResolversTypes = ResolversObject<{
   VideoInput: ResolverTypeWrapper<DeepPartial<VideoInput>>;
   VideoMutationError: never;
   VideoMutationPayload: ResolverTypeWrapper<DeepPartial<Omit<VideoMutationPayload, 'video'> & { video?: Maybe<ResolversTypes['Video']> }>>;
-  VideoMutations: ResolverTypeWrapper<DeepPartial<Omit<VideoMutations, 'create' | 'publish' | 'unpublish' | 'update'> & { create: ResolversTypes['VideoMutationPayload'], publish: ResolversTypes['VideoMutationPayload'], unpublish: ResolversTypes['VideoMutationPayload'], update: ResolversTypes['VideoMutationPayload'] }>>;
+  VideoMutations: ResolverTypeWrapper<DeepPartial<Omit<VideoMutations, 'create' | 'delete' | 'publish' | 'unpublish' | 'update'> & { create: ResolversTypes['VideoMutationPayload'], delete: ResolversTypes['VideoMutationPayload'], publish: ResolversTypes['VideoMutationPayload'], unpublish: ResolversTypes['VideoMutationPayload'], update: ResolversTypes['VideoMutationPayload'] }>>;
   VideoPagination: ResolverTypeWrapper<VideoPaginationWithKeys>;
   VideoSort: ResolverTypeWrapper<DeepPartial<VideoSort>>;
 }>;
@@ -423,7 +429,7 @@ export type ResolversParentTypes = ResolversObject<{
   VideoInput: DeepPartial<VideoInput>;
   VideoMutationError: never;
   VideoMutationPayload: DeepPartial<Omit<VideoMutationPayload, 'video'> & { video?: Maybe<ResolversParentTypes['Video']> }>;
-  VideoMutations: DeepPartial<Omit<VideoMutations, 'create' | 'publish' | 'unpublish' | 'update'> & { create: ResolversParentTypes['VideoMutationPayload'], publish: ResolversParentTypes['VideoMutationPayload'], unpublish: ResolversParentTypes['VideoMutationPayload'], update: ResolversParentTypes['VideoMutationPayload'] }>;
+  VideoMutations: DeepPartial<Omit<VideoMutations, 'create' | 'delete' | 'publish' | 'unpublish' | 'update'> & { create: ResolversParentTypes['VideoMutationPayload'], delete: ResolversParentTypes['VideoMutationPayload'], publish: ResolversParentTypes['VideoMutationPayload'], unpublish: ResolversParentTypes['VideoMutationPayload'], update: ResolversParentTypes['VideoMutationPayload'] }>;
   VideoPagination: VideoPaginationWithKeys;
 }>;
 
@@ -573,6 +579,7 @@ export type VideoMutationPayloadResolvers<ContextType = TochesContext, ParentTyp
 
 export type VideoMutationsResolvers<ContextType = TochesContext, ParentType extends ResolversParentTypes['VideoMutations'] = ResolversParentTypes['VideoMutations']> = ResolversObject<{
   create?: Resolver<ResolversTypes['VideoMutationPayload'], ParentType, ContextType, RequireFields<VideoMutationsCreateArgs, 'input'>>;
+  delete?: Resolver<ResolversTypes['VideoMutationPayload'], ParentType, ContextType, RequireFields<VideoMutationsDeleteArgs, 'videoId'>>;
   publish?: Resolver<ResolversTypes['VideoMutationPayload'], ParentType, ContextType, RequireFields<VideoMutationsPublishArgs, 'videoId'>>;
   unpublish?: Resolver<ResolversTypes['VideoMutationPayload'], ParentType, ContextType, RequireFields<VideoMutationsUnpublishArgs, 'videoId'>>;
   update?: Resolver<ResolversTypes['VideoMutationPayload'], ParentType, ContextType, RequireFields<VideoMutationsUpdateArgs, 'input'>>;
