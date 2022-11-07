@@ -10,13 +10,13 @@ import { migrateSchedule } from "./migrateSchedule"
 export const migrateFkwebCommand = new Command("migrate-fkweb")
   .description("(DANGEROUS!) Fully migrate from legacy database")
   .action(async () => {
-    await migrateOrganizations()
-
+    await db("organizations").delete()
     await db("users").delete()
     await db("videos").delete()
     await db("video_media").delete()
 
     await migrateUsers()
+    await migrateOrganizations()
     await migrateVideoFiles()
     await migrateVideos()
     await migrateSchedule()
