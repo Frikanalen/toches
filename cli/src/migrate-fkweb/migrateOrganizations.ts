@@ -54,5 +54,6 @@ export const migrateOrganizations = async () => {
         },
       ),
     )
+    await trx.commit()
   })
 }
