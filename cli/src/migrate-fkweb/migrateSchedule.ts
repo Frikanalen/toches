@@ -23,7 +23,7 @@ export const migrateSchedule = async () => {
         return
       }
 
-      await db<JukeboxEntries>("jukebox_entries").insert({
+      return db<JukeboxEntries>("jukebox_entries").insert({
         id,
         video_id,
         starts_at: starttime,
