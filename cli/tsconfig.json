@@ -6,7 +6,8 @@
     "skipLibCheck": true,
     "module": "commonjs",
     "target": "ESNext",
-    "outDir": "build"
+    "outDir": "build",
+    "rootDir": "src"
   },
   "include": ["src"]
 }

@@ -34,13 +34,16 @@ export const authenticateUser = async (
   password: string,
 ): Promise<number | null> => {
   const user = await db<Users>(userModel.tableName)
-    .select("id", "email", "password")
+    .select("id", "email", "password", "banned")
     .where("email", email)
-    .andWhere("banned", false)
     .first()
 
   if (!user) {
     await timingAttackMitigationDelay()
+    return null
+  }
+
+  if (user.banned) {
     return null
   }
 

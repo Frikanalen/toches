@@ -1,8 +1,16 @@
 import { VideoMediaAssetData } from "../models/videoModel"
 
-const getObjectURL = (locator: string) => {
-  const [, bucket, ...rest] = locator.split(":")
-  return `/${bucket}/${rest.join("")}`
+export const getObjectURL = (locator: string) => {
+  if (!locator) console.log("eek")
+  const [scheme, ...rest] = locator.split(":")
+
+  if (scheme === "S3") {
+    const [bucket, ...path] = rest
+    return `/${bucket}/${path.join(":")}`
+  } else if (scheme === "legacy") {
+    return "https://upload.frikanalen.no/media/" + rest.join(":")
+  }
+  throw new Error(`don't know how to make url from scheme "${scheme}"`)
 }
 
 /**

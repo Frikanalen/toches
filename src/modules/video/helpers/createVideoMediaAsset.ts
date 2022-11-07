@@ -7,6 +7,8 @@ export const createVideoMediaAsset = async (
 ) => {
   const { locator, type, metadata } = data
 
+  // FIXME: Should probably check if the file is actually there
+
   const [id] = await db
     .insert({
       locator,
