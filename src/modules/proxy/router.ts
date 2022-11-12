@@ -8,7 +8,7 @@ const router = new Router()
 
 if (IS_DEV) {
   log.info("Dev mode: Creating proxies to graphics and media-processor")
-  createProxy("/upload/video", UPLOAD_RECEIVER_PROXY, router)
+  createProxy("/upload", UPLOAD_RECEIVER_PROXY, router)
   createProxy("/graphics", GRAPHICS_PROXY, router)
 }
 

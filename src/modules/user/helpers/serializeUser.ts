@@ -14,9 +14,7 @@ import { UserQueryParams } from "../queries/userQuery"
  *         email:
  *           type: string
  *           format: email
- *         firstName:
- *           type: string
- *         lastName:
+ *         name:
  *           type: string
  *         createdAt:
  *           type: string
@@ -26,10 +24,10 @@ import { UserQueryParams } from "../queries/userQuery"
  *             type: string
  */
 export const serializeUser = (options?: UserQueryParams) => (data: UserData) => {
-  const { id, firstName, lastName, email, createdAt } = data
+  const { id, name, email, createdAt } = data
 
   const roles = options?.withRoles ? data.roles!.map((r) => r.name) : undefined
   const permissions = roles ? getRolePermissions(roles) : undefined
 
-  return { id, firstName, lastName, email, createdAt, permissions }
+  return { id, name, email, createdAt, permissions }
 }

@@ -24,8 +24,7 @@ export const migrateUsers = async () => {
     id: 0,
     password: "",
     email: "RESERVED@USER.COM",
-    first_name: "RESERVED USER",
-    last_name: "FOR MIGRATIONS",
+    name: "RESERVED USER FOR MIGRATIONS",
   })
 
   await Promise.all(
@@ -50,8 +49,7 @@ export const migrateUsers = async () => {
           banned: !is_active,
           email,
           last_logged_in_at: last_login,
-          first_name,
-          last_name,
+          name: `${first_name} ${last_name}`,
           created_at: date_joined,
         })
         if (is_superuser)

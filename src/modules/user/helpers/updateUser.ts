@@ -6,8 +6,7 @@ import { getUser } from "./getUser"
 export const updateUser = async (id: number, data: ValidatedUpdatedUser) => {
   await db
     .update({
-      first_name: data.firstName,
-      last_name: data.lastName,
+      name: data.name,
     })
     .into(userModel.tableName)
     .where("id", id)

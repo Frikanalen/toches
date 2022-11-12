@@ -7,19 +7,14 @@ import { InferType, object, string } from "yup"
  *     UpdateUserForm:
  *       type: object
  *       properties:
- *         firstName:
- *           type: string
- *           maxLength: 255
- *         lastName:
+ *         name:
  *           type: string
  *           maxLength: 255
  *       required:
- *         - firstName
- *         - lastName
+ *         - name
  */
 export const updateUserSchema = object({
-  firstName: string().required().max(255),
-  lastName: string().required().max(255),
+  name: string().required().max(255),
 })
 
 export type ValidatedUpdatedUser = InferType<typeof updateUserSchema>

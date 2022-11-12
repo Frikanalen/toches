@@ -28,6 +28,7 @@ import {
   mutateVideoDelete,
   mutateVideoPublish,
 } from "./resolvers/mutateVideo"
+import { mutationRegister } from "./resolvers/mutationRegister"
 
 const typeDefs = readFileSync(`src/modules/graphql/schema.graphql`).toString()
 
@@ -62,6 +63,7 @@ const resolvers: Resolvers = {
   UserMutations: {
     logout: mutationLogout,
     login: mutationLogin,
+    register: mutationRegister,
   },
   VideoMutations: {
     create: mutateVideo,

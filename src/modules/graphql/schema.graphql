@@ -30,8 +30,6 @@ type UserMutations {
 input RegisterInput {
     email: String!
     password: String!
-    firstName: String!
-    lastName: String!
 }
 
 input LoginInput {
@@ -85,8 +83,7 @@ input BulletinInput {
 type User {
     id: ID!
     email: String!
-    firstName: String
-    lastName: String
+    name: String
     roles: [UserRole!]!
 }
 

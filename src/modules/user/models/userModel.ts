@@ -6,8 +6,7 @@ export type UserData = {
 
   email: string
   password: string
-  firstName: string
-  lastName: string
+  name: string
 
   createdAt: Date
   updatedAt: Date
@@ -23,8 +22,7 @@ export const userModel = new Model<UserData>({
     "id",
     "email",
     "password",
-    "first_name",
-    "last_name",
+    "name",
     "created_at",
     "updated_at",
     "last_logged_in_at",

@@ -13,8 +13,7 @@ export const resolveUser: Resolver<User, any, TochesContext> = async (
   return db("users")
     .where("id", session.user)
     .select("email", {
-      firstName: "first_name",
-      lastName: "last_name",
+      name: "name",
       id: db.raw<string>("id::text"),
     })
     .first()

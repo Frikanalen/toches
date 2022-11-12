@@ -15,7 +15,8 @@
         "build-cli": "tsc --project ./cli/tsconfig.json",
         "cli": "node ./cli/build/index.js",
         "makeMockData": "yarn build-cli && yarn knex migrate:latest && yarn cli ctu admin && yarn cli cmd users 10 && yarn cli cmd orgs 10",
-        "codegen": "graphql-codegen --config codegen.yml"
+        "codegen": "graphql-codegen --config codegen.yml",
+        "codegen-introspect-db": "ts-node src/fetchTypesFromDB.ts"
     },
     "dependencies": {
         "@koa/router": "^12.0.0",

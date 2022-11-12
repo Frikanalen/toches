@@ -2,23 +2,26 @@ import {
   MutationStatus,
   Resolver,
   UserMutationResult,
-  UserMutationsLoginArgs,
+  UserMutationsRegisterArgs,
 } from "../../../generated/graphql"
-import { authenticateUser } from "../../auth/helpers/authenticateUser"
 import { AuthenticationError } from "apollo-server-koa"
 import { db } from "../../db/db"
 import { DeepPartial } from "utility-types"
 import { TochesContext } from "../types"
 import { log } from "../../core/log"
 import { GraphQLError } from "graphql/error"
+import { hashPassword } from "../../auth/helpers/hashPassword"
 
-export const mutationLogin: Resolver<
+export const mutationRegister: Resolver<
   DeepPartial<UserMutationResult>,
   any,
   TochesContext,
-  UserMutationsLoginArgs
+  UserMutationsRegisterArgs
 > = async (parent, { input: { email, password } }, context) => {
-  const userId = await authenticateUser(email, password)
+  const [{ id: userId }] = await db("users").insert(
+    { email, password: hashPassword(password) },
+    ["id"],
+  )
 
   if (!context.session) {
     log.error(`Context session was null`)
@@ -41,6 +44,6 @@ export const mutationLogin: Resolver<
       user,
     }
   } else {
-    throw new AuthenticationError("Feil brukernavn eller passord")
+    throw new AuthenticationError("Feil")
   }
 }

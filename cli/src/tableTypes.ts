@@ -1,9 +1,7 @@
 // Manually copied in from the other source tree to prevent the root directory
 // from being... it's a whole thing.
-
-// The TypeScript definitions below are automatically generated.
-// Do not touch them, or risk, your modifications being lost.
 type PostgresInterval = string
+
 export enum Table {
   AuthGroup = "auth_group",
   AuthGroupPermissions = "auth_group_permissions",
@@ -342,12 +340,11 @@ export type Users = {
   id: number
   email: string
   password: string
-  first_name: string
-  last_name: string
   created_at: Date
   updated_at: Date
   last_logged_in_at: Date | null
   banned: boolean
+  name: string
 }
 
 export type VideoCategoryMap = {
@@ -384,5 +381,7 @@ export type Videos = {
   updated_at: Date
   view_count: number
   jukeboxable: boolean
+  first_name: string
+  last_name: string
   published: boolean
 }
