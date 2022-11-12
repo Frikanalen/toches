@@ -6,8 +6,11 @@ import { db } from "../../db/db"
 import { Users } from "../../../generated/tableTypes"
 import { comparePassword } from "./comparePassword"
 import { hashPassword } from "./hashPassword"
+import { log } from "../../core/log"
 
 const hashPbkdf2 = promisify(pbkdf2)
+
+const passwordIsLegacy = (password: string) => password.startsWith("pbkdf2_sha256$")
 
 // Random delay to mitigate timing attacks
 const timingAttackMitigationDelay = async () => {
@@ -49,11 +52,11 @@ export const authenticateUser = async (
 
   // Passwords set using Django are stored in this format, so we check against it,
   // and if successful re-hash the password with bcrypt and store it in the database.
-  if (user.password.startsWith("pbkdf2_sha256$")) {
+  if (passwordIsLegacy(user.password)) {
     const valid = await checkWithLegacyHashAlgorithm(password, user.password)
 
     if (valid) {
-      console.info(`Re-hashing password for ${user.email}`)
+      log.info(`Re-hashing password for ${user.email}`)
       await storeBcryptHash(user.id, password)
       return user.id
     } else {

@@ -2,6 +2,7 @@ import { fkweb } from "./fkwebDatabase"
 import { FkVideo, FkVideofile, VideoMedia, VideoMediaAssets } from "../tableTypes"
 import { db } from "../db"
 import path from "path"
+import { log } from "./log"
 
 enum LegacyVideoTypes {
   "large_thumb" = 1,
@@ -55,6 +56,11 @@ export const migrateVideoFiles = async () => {
   const originals = await getOriginalIds()
   const durations = await getDurations()
 
+  // Number of files skipped by migration due to invalid or unsupported format
+  // We probably won't copy over all files (eg. VC1 and DV(!)) from the original
+  // so we just count it and log it at the end for now.
+  var skippedFilesInvalidFormat = 0
+
   await Promise.all(
     query
       .filter(({ video_id, id }) => originals[video_id] === id)
@@ -99,7 +105,7 @@ export const migrateVideoFiles = async () => {
           video_id,
         }) => {
           if (!newVideoTypes[format_id]) {
-            console.log("Skipping videoFile with unsupported format ID")
+            skippedFilesInvalidFormat += 1
             return
           }
           if (!originals[video_id]) return
@@ -112,11 +118,13 @@ export const migrateVideoFiles = async () => {
               type: newVideoTypes[format_id],
             })
           } catch (e) {
-            console.log("skipping videofile")
+            log.error(`Database error while inserting video media asset:`)
             console.log(e)
             throw e
           }
         },
       ),
   )
+
+  log.warn(`Skipped ${skippedFilesInvalidFormat} videoFiles with unsupported format IDs`)
 }

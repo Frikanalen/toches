@@ -2,6 +2,7 @@ import { fkweb } from "./fkwebDatabase"
 import { db } from "../db"
 import { FkVideo, Organizations, Videos } from "../tableTypes"
 import { getOriginalIds } from "./migrateVideoFiles"
+import { log } from "./log"
 
 // TODO: Fix editorId and fkmember, resolve non-unique brregId
 // TODO: Resolve description issue, discontinuity between SQL schema and GraphQL schema
@@ -38,18 +39,26 @@ export const migrateVideos = async () => {
         upload_token,
         proper_import,
       }) => {
+        // Validation errors
         if (!organization_id) {
-          console.log(`Skipping video ${id} because organization_id is null`)
+          log.warn(`Skipping video ${id} because organization_id is null`)
           return
         }
         if (!knownOrganizations.find((id) => id === organization_id)) {
-          console.log(`Skipping video ${id} because organization ${id} is gone`)
+          log.warn(`Skipping video ${id} because organization ${id} is gone`)
           return
         }
         if (!originals[id]) {
-          console.log(`Skipping video ${id} because no media attached`)
+          log.warn(`Skipping video ${id} because no media attached`)
           return
         }
+        //
+        // Validation warnings
+        //
+        if (header === "") {
+          log.info(`Video #${id}: ${name} has empty header.`)
+        }
+
         try {
           return await db<Videos>("videos").insert({
             id,
@@ -57,14 +66,17 @@ export const migrateVideos = async () => {
             description: header || "",
             organization_id: organization_id!,
             jukeboxable: is_filler,
-            created_at: created_time || new Date(),
+            created_at: created_time || uploaded_time || updated_time || new Date(),
+            updated_at: updated_time || new Date(),
             media_id: originals[id],
           })
         } catch (e) {
-          console.log("skipping video")
+          log.warn(`Skipping video ${id} due to database error`)
           console.log(e)
         }
       },
     ),
   )
+
+  await db.raw("SELECT setval('videos_id_seq', (SELECT MAX(id) FROM videos));")
 }

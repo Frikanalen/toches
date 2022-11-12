@@ -1,8 +1,7 @@
 import { fkweb } from "./fkwebDatabase"
 import { db } from "../db"
-import { FkUser, Users } from "../tableTypes"
+import { FkUser, RoleUserMap, Users } from "../tableTypes"
 
-// TODO: Add "superuser" support
 // TODO: Add date of birth, phone number, identity confirmation
 
 export const migrateUsers = async () => {
@@ -45,7 +44,7 @@ export const migrateUsers = async () => {
         identity_confirmed,
         phone_number,
       }) => {
-        return await db<Users>("users").insert({
+        await db<Users>("users").insert({
           id,
           password,
           banned: !is_active,
@@ -55,6 +54,8 @@ export const migrateUsers = async () => {
           last_name,
           created_at: date_joined,
         })
+        if (is_superuser)
+          await db<RoleUserMap>("role_user_map").insert({ user_id: id, role_id: 1 })
       },
     ),
   )
