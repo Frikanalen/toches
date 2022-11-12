@@ -39,24 +39,22 @@ export type BulletinPagination = {
   pageInfo: PaginationInfo;
 };
 
+export type LoginInput = {
+  email: Scalars['String'];
+  password: Scalars['String'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   bulletin: Bulletin;
-  login?: Maybe<User>;
-  logout?: Maybe<Scalars['Boolean']>;
   organization: Organization;
-  video?: Maybe<VideoMutations>;
+  user: UserMutations;
+  video: VideoMutations;
 };
 
 
 export type MutationBulletinArgs = {
   bulletin: BulletinInput;
-};
-
-
-export type MutationLoginArgs = {
-  email: Scalars['String'];
-  password: Scalars['String'];
 };
 
 
@@ -158,6 +156,13 @@ export type QueryVideosArgs = {
   sort?: InputMaybe<Array<VideoSort>>;
 };
 
+export type RegisterInput = {
+  email: Scalars['String'];
+  firstName: Scalars['String'];
+  lastName: Scalars['String'];
+  password: Scalars['String'];
+};
+
 export enum RoleType {
   Editor = 'EDITOR',
   Member = 'MEMBER'
@@ -195,6 +200,29 @@ export type User = {
   id: Scalars['ID'];
   lastName?: Maybe<Scalars['String']>;
   roles: Array<UserRole>;
+};
+
+export type UserMutationResult = {
+  __typename?: 'UserMutationResult';
+  status: MutationStatus;
+  user?: Maybe<User>;
+};
+
+export type UserMutations = {
+  __typename?: 'UserMutations';
+  login: UserMutationResult;
+  logout: UserMutationResult;
+  register: UserMutationResult;
+};
+
+
+export type UserMutationsLoginArgs = {
+  input: LoginInput;
+};
+
+
+export type UserMutationsRegisterArgs = {
+  input: RegisterInput;
 };
 
 export type UserRole = {
@@ -373,6 +401,7 @@ export type ResolversTypes = ResolversObject<{
   DateTime: ResolverTypeWrapper<DeepPartial<Scalars['DateTime']>>;
   ID: ResolverTypeWrapper<DeepPartial<Scalars['ID']>>;
   Int: ResolverTypeWrapper<DeepPartial<Scalars['Int']>>;
+  LoginInput: ResolverTypeWrapper<DeepPartial<LoginInput>>;
   Mutation: ResolverTypeWrapper<{}>;
   MutationStatus: ResolverTypeWrapper<DeepPartial<MutationStatus>>;
   Organization: ResolverTypeWrapper<OrganizationWithKeys>;
@@ -380,6 +409,7 @@ export type ResolversTypes = ResolversObject<{
   OrganizationInput: ResolverTypeWrapper<DeepPartial<OrganizationInput>>;
   PaginationInfo: ResolverTypeWrapper<DeepPartial<PaginationInfo>>;
   Query: ResolverTypeWrapper<{}>;
+  RegisterInput: ResolverTypeWrapper<DeepPartial<RegisterInput>>;
   RoleType: ResolverTypeWrapper<DeepPartial<RoleType>>;
   ScheduleFilter: ResolverTypeWrapper<DeepPartial<ScheduleFilter>>;
   ScheduleItem: ResolverTypeWrapper<ScheduleItemWithKeys>;
@@ -387,6 +417,8 @@ export type ResolversTypes = ResolversObject<{
   Session: ResolverTypeWrapper<DeepPartial<Omit<Session, 'user'> & { user?: Maybe<ResolversTypes['User']> }>>;
   String: ResolverTypeWrapper<DeepPartial<Scalars['String']>>;
   User: ResolverTypeWrapper<UserWithKeys>;
+  UserMutationResult: ResolverTypeWrapper<DeepPartial<Omit<UserMutationResult, 'user'> & { user?: Maybe<ResolversTypes['User']> }>>;
+  UserMutations: ResolverTypeWrapper<DeepPartial<Omit<UserMutations, 'login' | 'logout' | 'register'> & { login: ResolversTypes['UserMutationResult'], logout: ResolversTypes['UserMutationResult'], register: ResolversTypes['UserMutationResult'] }>>;
   UserRole: ResolverTypeWrapper<UserRoleWithKeys>;
   Video: ResolverTypeWrapper<VideoWithKeys>;
   VideoAsset: ResolverTypeWrapper<DeepPartial<VideoAsset>>;
@@ -409,18 +441,22 @@ export type ResolversParentTypes = ResolversObject<{
   DateTime: DeepPartial<Scalars['DateTime']>;
   ID: DeepPartial<Scalars['ID']>;
   Int: DeepPartial<Scalars['Int']>;
+  LoginInput: DeepPartial<LoginInput>;
   Mutation: {};
   Organization: OrganizationWithKeys;
   OrganizationEditor: DeepPartial<OrganizationEditor>;
   OrganizationInput: DeepPartial<OrganizationInput>;
   PaginationInfo: DeepPartial<PaginationInfo>;
   Query: {};
+  RegisterInput: DeepPartial<RegisterInput>;
   ScheduleFilter: DeepPartial<ScheduleFilter>;
   ScheduleItem: ScheduleItemWithKeys;
   SchedulePagination: SchedulePaginationWithKeys;
   Session: DeepPartial<Omit<Session, 'user'> & { user?: Maybe<ResolversParentTypes['User']> }>;
   String: DeepPartial<Scalars['String']>;
   User: UserWithKeys;
+  UserMutationResult: DeepPartial<Omit<UserMutationResult, 'user'> & { user?: Maybe<ResolversParentTypes['User']> }>;
+  UserMutations: DeepPartial<Omit<UserMutations, 'login' | 'logout' | 'register'> & { login: ResolversParentTypes['UserMutationResult'], logout: ResolversParentTypes['UserMutationResult'], register: ResolversParentTypes['UserMutationResult'] }>;
   UserRole: UserRoleWithKeys;
   Video: VideoWithKeys;
   VideoAsset: DeepPartial<VideoAsset>;
@@ -454,10 +490,9 @@ export interface DateTimeScalarConfig extends GraphQLScalarTypeConfig<ResolversT
 
 export type MutationResolvers<ContextType = TochesContext, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
   bulletin?: Resolver<ResolversTypes['Bulletin'], ParentType, ContextType, RequireFields<MutationBulletinArgs, 'bulletin'>>;
-  login?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationLoginArgs, 'email' | 'password'>>;
-  logout?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   organization?: Resolver<ResolversTypes['Organization'], ParentType, ContextType, RequireFields<MutationOrganizationArgs, 'organization'>>;
-  video?: Resolver<Maybe<ResolversTypes['VideoMutations']>, ParentType, ContextType>;
+  user?: Resolver<ResolversTypes['UserMutations'], ParentType, ContextType>;
+  video?: Resolver<ResolversTypes['VideoMutations'], ParentType, ContextType>;
 }>;
 
 export type OrganizationResolvers<ContextType = TochesContext, ParentType extends ResolversParentTypes['Organization'] = ResolversParentTypes['Organization']> = ResolversObject<{
@@ -528,6 +563,19 @@ export type UserResolvers<ContextType = TochesContext, ParentType extends Resolv
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   lastName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   roles?: Resolver<Array<ResolversTypes['UserRole']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type UserMutationResultResolvers<ContextType = TochesContext, ParentType extends ResolversParentTypes['UserMutationResult'] = ResolversParentTypes['UserMutationResult']> = ResolversObject<{
+  status?: Resolver<ResolversTypes['MutationStatus'], ParentType, ContextType>;
+  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type UserMutationsResolvers<ContextType = TochesContext, ParentType extends ResolversParentTypes['UserMutations'] = ResolversParentTypes['UserMutations']> = ResolversObject<{
+  login?: Resolver<ResolversTypes['UserMutationResult'], ParentType, ContextType, RequireFields<UserMutationsLoginArgs, 'input'>>;
+  logout?: Resolver<ResolversTypes['UserMutationResult'], ParentType, ContextType>;
+  register?: Resolver<ResolversTypes['UserMutationResult'], ParentType, ContextType, RequireFields<UserMutationsRegisterArgs, 'input'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -605,6 +653,8 @@ export type Resolvers<ContextType = TochesContext> = ResolversObject<{
   SchedulePagination?: SchedulePaginationResolvers<ContextType>;
   Session?: SessionResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
+  UserMutationResult?: UserMutationResultResolvers<ContextType>;
+  UserMutations?: UserMutationsResolvers<ContextType>;
   UserRole?: UserRoleResolvers<ContextType>;
   Video?: VideoResolvers<ContextType>;
   VideoAsset?: VideoAssetResolvers<ContextType>;

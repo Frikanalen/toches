@@ -35,10 +35,9 @@ const resolvers: Resolvers = {
   DateTime: DateTimeResolver,
   Mutation: {
     organization: mutateOrganization,
-    logout: mutationLogout,
-    login: mutationLogin,
     bulletin: mutateBulletin,
     video: () => ({}),
+    user: () => ({}),
   },
   Query: {
     video: resolveVideoQuery,
@@ -59,6 +58,10 @@ const resolvers: Resolvers = {
   },
   UserRole: {
     organization: resolveOrganization,
+  },
+  UserMutations: {
+    logout: mutationLogout,
+    login: mutationLogin,
   },
   VideoMutations: {
     create: mutateVideo,

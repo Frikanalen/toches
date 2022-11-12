@@ -15,12 +15,33 @@ type Query {
 # Todo: as per https://graphql-rules.com/rules/mutation-business-operations
 # Our mutations are too general. At least for video, we should differentiate slightly
 type Mutation {
-    login(email: String!, password: String!): User
-    logout: Boolean
-
-    video: VideoMutations
+    video: VideoMutations!
+    user: UserMutations!
     bulletin(bulletin: BulletinInput!): Bulletin!
     organization(organization: OrganizationInput!): Organization!
+}
+
+type UserMutations {
+    register(input: RegisterInput!): UserMutationResult!
+    login(input: LoginInput!): UserMutationResult!
+    logout: UserMutationResult!
+}
+
+input RegisterInput {
+    email: String!
+    password: String!
+    firstName: String!
+    lastName: String!
+}
+
+input LoginInput {
+    email: String!
+    password: String!
+}
+
+type UserMutationResult {
+    status: MutationStatus!
+    user: User
 }
 
 type VideoMutations {
