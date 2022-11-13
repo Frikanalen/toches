@@ -39,15 +39,7 @@ export const resolveOrganizationEditor: Resolver<
   OrganizationEditor,
   OrganizationWithKeys
 > = async (parent) =>
-  await db("users")
-    .select("id", "email")
-    .select({
-      firstName: "first_name",
-      lastName: "last_name",
-      name: db.raw("first_name || ' ' || last_name"),
-    })
-    .where("id", parent.editorId)
-    .first()
+  await db("users").select("id", "email", "name").where("id", parent.editorId).first()
 
 export const resolveOrganizationLatestVideos: Resolver<
   Array<VideoWithKeys>,
