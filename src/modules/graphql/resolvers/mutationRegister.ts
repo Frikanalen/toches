@@ -4,7 +4,7 @@ import {
   UserMutationResult,
   UserMutationsRegisterArgs,
 } from "../../../generated/graphql"
-import { AuthenticationError } from "apollo-server-koa"
+import { AuthenticationError, UserInputError } from "apollo-server-koa"
 import { db } from "../../db/db"
 import { DeepPartial } from "utility-types"
 import { TochesContext } from "../types"
@@ -18,6 +18,10 @@ export const mutationRegister: Resolver<
   TochesContext,
   UserMutationsRegisterArgs
 > = async (parent, { input: { email, password } }, context) => {
+  if (await db("users").select("id").from("users").where("email", email)) {
+    throw new UserInputError("En bruker med denne epostadressen eksisterer allerede")
+  }
+
   const [{ id: userId }] = await db("users").insert(
     { email, password: hashPassword(password) },
     ["id"],
