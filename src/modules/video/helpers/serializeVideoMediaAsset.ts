@@ -1,7 +1,8 @@
 import { VideoMediaAssetData } from "../models/videoModel"
 
-export const getObjectURL = (locator: string) => {
-  if (!locator) console.log("eek")
+export const getObjectURL = (locator?: string) => {
+  if (typeof locator === "undefined") return undefined
+
   const [scheme, ...rest] = locator.split(":")
 
   if (scheme === "S3") {
