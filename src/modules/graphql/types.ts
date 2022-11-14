@@ -7,6 +7,7 @@ import {
   UserRole,
   Video,
   VideoPagination,
+  VideoSearchResults,
 } from "../../generated/graphql"
 import { DeepPartial } from "utility-types"
 import { app } from "../core/app"
@@ -34,6 +35,10 @@ export type SchedulePaginationWithKeys = DeepPartial<SchedulePagination> & {
 }
 
 export type VideoPaginationWithKeys = DeepPartial<VideoPagination> & {
+  items: VideoWithKeys[]
+}
+
+export type VideoSearchResultsWithKeys = DeepPartial<VideoSearchResults> & {
   items: VideoWithKeys[]
 }
 

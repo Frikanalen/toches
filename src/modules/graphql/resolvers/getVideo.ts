@@ -1,13 +1,19 @@
 import { UserInputError } from "apollo-server-koa"
 import { db } from "../../db/db"
 import { Videos } from "../../../generated/tableTypes"
-import { QueryVideoArgs, QueryVideosArgs, Resolver } from "../../../generated/graphql"
+import {
+  VideoQueriesGetArgs,
+  Resolver,
+  VideoQueriesListArgs,
+} from "../../../generated/graphql"
 import { getPageInfo } from "../utils/getPageInfo"
 import { getOrderBy } from "../utils/getOrderBy"
 import { VideoPaginationWithKeys, VideoWithKeys } from "../types"
 
-export const getVideo = (videoId: string) => {
-  return db<Videos>("videos")
+export const getVideo = async (videoId: string) => {
+  if (!videoId) throw new Error("getVideo called with nullish id")
+
+  return await db<Videos>("videos")
     .select("title", {
       description: db.raw("COALESCE(description, '')"),
       id: db.raw("id::text"),
@@ -25,7 +31,7 @@ export const resolveVideoQuery: Resolver<
   VideoWithKeys,
   any,
   any,
-  QueryVideoArgs
+  VideoQueriesGetArgs
 > = async (parent, { id }) => {
   const video = await getVideo(id)
 
@@ -42,13 +48,13 @@ const countRows = async (tableName: string): Promise<number> => {
   return parseInt(data[0]?.rowCount as string)
 }
 
-export const resolveVideosQuery: Resolver<
+export const resolveVideoList: Resolver<
   VideoPaginationWithKeys,
   any,
   any,
-  QueryVideosArgs
-> = async (parent, args) => {
-  const { filter, sort, page = 0, perPage = 25 } = args
+  VideoQueriesListArgs
+> = async (parent, { input }) => {
+  const { filter, sort, page = 0, perPage = 25 } = input
 
   if (perPage < 1) throw new UserInputError("perPage minimum value is 1.")
   if (perPage > 100) throw new UserInputError("perPage maximum value is 100.")

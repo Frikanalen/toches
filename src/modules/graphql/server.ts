@@ -5,7 +5,7 @@ import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-co
 import { resolveVideoAssets } from "./resolvers/resolveVideoAssets"
 import { Resolvers } from "../../generated/graphql"
 import { resolveUser } from "./resolvers/resolveUser"
-import { resolveVideoQuery, resolveVideosQuery } from "./resolvers/getVideo"
+import { resolveVideoQuery, resolveVideoList } from "./resolvers/getVideo"
 import {
   resolveOrganization,
   resolveOrganizationEditor,
@@ -29,6 +29,7 @@ import {
   mutateVideoPublish,
 } from "./resolvers/mutateVideo"
 import { mutationRegister } from "./resolvers/mutationRegister"
+import { resolveVideoSearch } from "./resolvers/resolveVideoSearch"
 
 const typeDefs = readFileSync(`src/modules/graphql/schema.graphql`).toString()
 
@@ -41,8 +42,7 @@ const resolvers: Resolvers = {
     user: () => ({}),
   },
   Query: {
-    video: resolveVideoQuery,
-    videos: resolveVideosQuery,
+    video: () => ({}),
     session: resolveSessionQuery,
     organization: resolveOrganizationQuery,
     schedule: resolveScheduleQuery,
@@ -51,6 +51,11 @@ const resolvers: Resolvers = {
   },
   ScheduleItem: {
     video: resolveVideo,
+  },
+  VideoQueries: {
+    get: resolveVideoQuery,
+    list: resolveVideoList,
+    search: resolveVideoSearch,
   },
   Video: {
     assets: resolveVideoAssets,

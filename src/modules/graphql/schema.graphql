@@ -3,13 +3,35 @@
 scalar DateTime
 
 type Query {
-    videos(filter: VideoFilter, sort: [VideoSort!], page: Int! = 1, perPage: Int! = 20): VideoPagination!
-    video(id: ID!): Video!
+    video: VideoQueries!
     organization(id: ID!): Organization!
     schedule(filter: ScheduleFilter!, page: Int! = 1, perPage: Int! = 20): SchedulePagination!
     bulletins(page: Int! = 1, perPage: Int! = 20): BulletinPagination!
     bulletin(id: ID!): Bulletin!
     session: Session!
+}
+
+type VideoQueries {
+    list(input: VideoList!): VideoPagination!
+    get(id: ID!): Video!
+    search(input: VideoSearch!): VideoSearchResults!
+}
+
+input VideoList {
+    filter: VideoFilter
+    sort: [VideoSort!]
+    page: Int! = 1
+    perPage: Int! = 20
+}
+
+input VideoSearch {
+    query: String!
+    limit: Int! = 10
+}
+
+type VideoSearchResults {
+    count: Int!
+    items: [Video!]!
 }
 
 # Todo: as per https://graphql-rules.com/rules/mutation-business-operations

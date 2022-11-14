@@ -13,5 +13,5 @@ export const resolveVideoAssets: Resolver<Array<VideoAsset>, VideoWithKeys> = as
     })
     .where("media_id", parent.mediaId)
 
-  return query.map((asset) => ({ ...asset, path: getObjectURL(asset.locator) }))
+  return query.map((asset) => ({ ...asset, path: getObjectURL(asset.locator)! }))
 }

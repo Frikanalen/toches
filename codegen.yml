@@ -12,6 +12,7 @@ generates:
         UserRole: ../modules/graphql/types#UserRoleWithKeys
         Video: ../modules/graphql/types#VideoWithKeys
         VideoPagination: ../modules/graphql/types#VideoPaginationWithKeys
+        VideoSearchResults: ../modules/graphql/types#VideoSearchResultsWithKeys
         ScheduleItem: ../modules/graphql/types#ScheduleItemWithKeys
         SchedulePagination: ../modules/graphql/types#SchedulePaginationWithKeys
         Organization: ../modules/graphql/types#OrganizationWithKeys
