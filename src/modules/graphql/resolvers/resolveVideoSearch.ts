@@ -20,7 +20,7 @@ export const resolveVideoSearch: Resolver<
       organizationId: "organization_id",
       mediaId: "media_id",
     })
-    .whereRaw("description @@ plainto_tsquery('norwegian', ?)", query)
+    .whereRaw("title || ' ' || description @@ plainto_tsquery('norwegian', ?)", query)
     .limit(Math.min(limit, 50))
 
   const videos = await dbQuery
