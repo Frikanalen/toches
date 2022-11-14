@@ -35,27 +35,35 @@ export const resolveScheduleQuery: Resolver<
   QueryScheduleArgs
 > = async (parent, args) => {
   const { from, to } = await parseFilterArg(args.filter)
-  const { page = 0, perPage = 25 } = args
 
-  const items = (await db<ScheduleItem>("jukebox_entries")
-    .select({
-      id: "j.id",
-      startsAt: "j.starts_at",
-      videoId: "j.video_id",
-      endsAt: db.raw("(starts_at + duration * INTERVAL '1 second')"),
-    })
-    .fromRaw("jukebox_entries as j, videos as v, video_media as vm")
-    .whereRaw("v.id = j.video_id")
-    .andWhereRaw("vm.id = v.media_id")
-    .andWhere("starts_at", ">=", from.toISOString())
-    .andWhere("starts_at", "<", to!.toISOString())
-    .orderBy("starts_at")) as ScheduleItemWithKeys[]
+  try {
+    const items = (await db<ScheduleItem>("jukebox_entries")
+      .select({
+        id: "j.id",
+        startsAt: "j.starts_at",
+        videoId: "j.video_id",
+        endsAt: db.raw("(starts_at + duration * INTERVAL '1 second')"),
+      })
+      .fromRaw("jukebox_entries as j, videos as v, video_media as vm")
+      .whereRaw("v.id = j.video_id")
+      .andWhereRaw("vm.id = v.media_id")
+      .andWhere("starts_at", "<=", to!.toISOString())
+      .groupBy(["j.id", "vm.duration"])
+      .havingRaw("(starts_at + duration * INTERVAL '1 second') >= ?", [
+        from.toISOString(),
+      ])
+      .orderBy("starts_at")) as ScheduleItemWithKeys[]
+    const { page = 1, perPage = items.length } = args
 
-  const pageInfo = getPageInfo(200, page, perPage)
+    const pageInfo = getPageInfo(items.length, page, perPage)
 
-  return {
-    items,
-    pageInfo,
+    return {
+      items,
+      pageInfo,
+    }
+  } catch (e: any) {
+    console.log(e)
+    throw e
   }
 }
 
