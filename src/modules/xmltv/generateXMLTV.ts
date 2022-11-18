@@ -11,10 +11,7 @@ import { db } from "../db/db"
 import { ScheduleItem } from "../../generated/graphql"
 import { Middleware } from "koa"
 
-const buildxml = async (startTime: Date, endTime: Date) => {
-  const doc = new libxml.Document()
-  const tv = doc.node("tv")
-
+const getSchedule = async (startTime: Date, endTime: Date) => {
   const jukeboxItems = await db<ScheduleItem>("jukebox_entries")
     .select({
       id: "j.id",
@@ -29,7 +26,10 @@ const buildxml = async (startTime: Date, endTime: Date) => {
     .whereRaw("v.id = j.video_id")
     .andWhereRaw("vm.id = v.media_id")
     .andWhere("starts_at", "<=", endTime.toISOString())
-    .andWhere("starts_at", ">=", startTime.toISOString())
+    .groupBy(["j.id", "vm.duration", "v.title", "v.description"])
+    .havingRaw("(starts_at + duration * INTERVAL '1 second') >= ?", [
+      startTime.toISOString(),
+    ])
     .orderBy("starts_at")
 
   const lives = await db("live_programmes")
@@ -39,20 +39,34 @@ const buildxml = async (startTime: Date, endTime: Date) => {
       endsAt: db.raw("(starts_at + duration * INTERVAL '1 second')"),
     })
     .where("starts_at", "<=", endTime.toISOString())
-    .andWhere("starts_at", ">=", startTime.toISOString())
+    .groupBy(["id", "description"])
+    .havingRaw("(starts_at + duration * INTERVAL '1 second') >= ?", [
+      startTime.toISOString(),
+    ])
 
   const items = [
     ...jukeboxItems.filter(({ startsAt, endsAt }) => {
       const itemLasts = { start: startsAt, end: endsAt }
 
-      return !!lives.find(({ startsAt, endsAt }) => {
+      return !lives.find(({ startsAt, endsAt }) => {
         const liveLasts = { start: startsAt, end: endsAt }
 
-        return !areIntervalsOverlapping(liveLasts, itemLasts)
+        return areIntervalsOverlapping(liveLasts, itemLasts)
       })
     }),
     ...lives,
   ].sort((a, b) => compareAsc(a.startsAt, b.startsAt))
+
+  console.log(items)
+
+  return items
+}
+
+const buildxml = async (startTime: Date, endTime: Date) => {
+  const doc = new libxml.Document()
+  const tv = doc.node("tv")
+
+  const items = await getSchedule(startTime, endTime)
 
   tv.attr({ "generator-info-name": "fkweb.agenda.xmltv" })
     .node("channel")
