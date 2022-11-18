@@ -10,6 +10,7 @@ import { sendConfig } from "./middleware/sendConfig"
 import { sendOpenApiSpec } from "./middleware/sendOpenApiSpec"
 import { bulletinRouter } from "../bulletins/router"
 import { koaSwagger } from "koa2-swagger-ui"
+import { XMLTVRouter } from "../xmltv/router"
 
 const router = new Router()
 
@@ -53,6 +54,7 @@ router.use(videoRouter.middleware())
 router.use(scheduleRouter.middleware())
 router.use(bulletinRouter.middleware())
 router.use(playlistRouter.middleware())
+router.use(XMLTVRouter.middleware())
 import { openApiSpec } from "./middleware/sendOpenApiSpec"
 
 const spec = openApiSpec
