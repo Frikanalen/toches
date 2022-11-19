@@ -7,7 +7,7 @@ const buildxml = async (startTime: Date, endTime: Date) => {
   const doc = new libxml.Document()
   const tv = doc.node("tv")
 
-  const items = await getSchedule(startTime, endTime)
+  const items = await getSchedule({ start: startTime, end: endTime })
 
   tv.attr({ "generator-info-name": "fkweb.agenda.xmltv" })
     .node("channel")
@@ -20,8 +20,8 @@ const buildxml = async (startTime: Date, endTime: Date) => {
     const p = tv.node("programme")
     p.attr({
       channel: "frikanalen.tv",
-      start: format(item.startsAt, "yyyyMMddHHmmss XX"),
-      stop: format(item.endsAt, "yyyyMMddHHmmss XX"),
+      start: format(item.start, "yyyyMMddHHmmss XX"),
+      stop: format(item.end, "yyyyMMddHHmmss XX"),
     })
 
     p.node("title", item.title).attr({ lang: "no" })

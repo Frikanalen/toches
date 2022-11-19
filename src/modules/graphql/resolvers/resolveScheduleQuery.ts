@@ -33,7 +33,7 @@ export const resolveScheduleQuery: Resolver<
   const { from, to = add(from, { days: 1 }) } = await parseFilterArg(args.filter)
 
   try {
-    const items = await getSchedule(from, to)
+    const items = await getSchedule({ start: from, end: to })
 
     const { page = 1, perPage = items.length } = args
 
@@ -54,7 +54,6 @@ export const resolveScheduleVideo: Resolver<
   ScheduleItemWithKeys
 > = async ({ id, videoId, liveId }) => {
   if (liveId) {
-    console.log("hi")
     return await db("live_programmes")
       .select("description", "title", {
         id: db.raw("id::text"),

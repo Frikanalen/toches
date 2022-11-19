@@ -150,8 +150,8 @@ type LiveVideo implements BasicVideoMetadata {
 
 type ScheduleItem {
     id: ID!
-    startsAt: DateTime!
-    endsAt: DateTime!
+    start: DateTime!
+    end: DateTime!
     video: BasicVideoMetadata!
 }
 
