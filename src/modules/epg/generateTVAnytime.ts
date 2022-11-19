@@ -2,8 +2,6 @@ import { add, parse, startOfDay } from "date-fns"
 import { Middleware } from "koa"
 import { getSchedule } from "./getSchedule"
 import { Document } from "libxmljs2"
-// @ts-ignore
-import xsd from "libxmljs2-xsd"
 
 import { formatISO } from "date-fns"
 
@@ -90,16 +88,7 @@ const buildTVAnytime = async (startTime: Date, endTime: Date) => {
   })
   ServiceInformation.node("tva:ServiceLanguage", "no")
 
-  const rendered = doc.toString()
-
-  const schema = xsd.parseFile("./src/modules/epg/xmlSchemas/tva_metadata_3-1.xsd", {
-    baseUrl: "./src/modules/epg/xmlSchemas/",
-  })
-
-  const validationErrors = schema.validate(rendered)
-  if (validationErrors) console.log(validationErrors) // throw new Error(validationErrors.toString())
-
-  return rendered
+  return doc.toString()
 }
 
 export const getTVAnytimeForDay: Middleware = async (context, next) => {
