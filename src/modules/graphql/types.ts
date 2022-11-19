@@ -1,4 +1,5 @@
 import {
+  LiveVideo,
   Organization,
   Scalars,
   ScheduleItem,
@@ -14,6 +15,11 @@ import { app } from "../core/app"
 
 export type TochesContext = typeof app.context
 
+export type LiveVideoWithKeys = DeepPartial<LiveVideo> & {
+  id: Scalars["ID"]
+  organizationId: number
+}
+
 export type VideoWithKeys = DeepPartial<Video> & {
   id: Scalars["ID"]
   organizationId: number
@@ -26,8 +32,9 @@ export type OrganizationWithKeys = DeepPartial<Organization> & {
 }
 
 export type ScheduleItemWithKeys = DeepPartial<ScheduleItem> & {
-  id: Scalars["ID"]
-  videoId: Scalars["ID"]
+  id?: Scalars["ID"]
+  videoId?: Scalars["ID"]
+  liveId?: Scalars["ID"]
 }
 
 export type SchedulePaginationWithKeys = DeepPartial<SchedulePagination> & {

@@ -1,4 +1,5 @@
-import "dotenv/config.js"
+import * as dotenv from "dotenv"
+dotenv.config()
 import { app } from "./modules/core/app"
 import { testDBConnection } from "./modules/db/db"
 import { log } from "./modules/core/log"

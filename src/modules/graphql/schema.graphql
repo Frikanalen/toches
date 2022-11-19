@@ -134,11 +134,25 @@ enum VideoSort {
     DATE_DESC
 }
 
+interface BasicVideoMetadata {
+    title: String!
+    description: String!
+    organization: Organization!
+    url: String!
+}
+
+type LiveVideo implements BasicVideoMetadata {
+    title: String!
+    description: String!
+    organization: Organization!
+    url: String!
+}
+
 type ScheduleItem {
     id: ID!
     startsAt: DateTime!
     endsAt: DateTime!
-    video: Video!
+    video: BasicVideoMetadata!
 }
 
 type SchedulePagination {
@@ -216,10 +230,11 @@ type OrganizationEditor {
     email: String!
 }
 
-type Video {
+type Video implements BasicVideoMetadata {
     id: ID!
     title: String!
     description: String!
+    url: String!
 
     organization: Organization!
 

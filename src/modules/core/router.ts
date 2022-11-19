@@ -10,7 +10,7 @@ import { sendConfig } from "./middleware/sendConfig"
 import { sendOpenApiSpec } from "./middleware/sendOpenApiSpec"
 import { bulletinRouter } from "../bulletins/router"
 import { koaSwagger } from "koa2-swagger-ui"
-import { XMLTVRouter } from "../xmltv/router"
+import { XMLTVRouter } from "../epg/router"
 
 const router = new Router()
 

@@ -1,15 +1,11 @@
 import { add, startOfToday } from "date-fns"
-import {
-  QueryScheduleArgs,
-  Resolver,
-  ScheduleFilter,
-  ScheduleItem,
-} from "../../../generated/graphql"
+import { QueryScheduleArgs, Resolver, ScheduleFilter } from "../../../generated/graphql"
 import { date, object } from "yup"
 import { UserInputError } from "apollo-server-koa"
 import { db } from "../../db/db"
 import { getPageInfo } from "../utils/getPageInfo"
 import { ScheduleItemWithKeys, SchedulePaginationWithKeys, VideoWithKeys } from "../types"
+import { getSchedule } from "../../epg/getSchedule"
 
 const ScheduleFilterSchema = object({
   from: date().default(startOfToday()),
@@ -34,28 +30,14 @@ export const resolveScheduleQuery: Resolver<
   any,
   QueryScheduleArgs
 > = async (parent, args) => {
-  const { from, to } = await parseFilterArg(args.filter)
+  const { from, to = add(from, { days: 1 }) } = await parseFilterArg(args.filter)
 
   try {
-    const items = (await db<ScheduleItem>("jukebox_entries")
-      .select({
-        id: "j.id",
-        startsAt: "j.starts_at",
-        videoId: "j.video_id",
-        endsAt: db.raw("(starts_at + duration * INTERVAL '1 second')"),
-      })
-      .fromRaw("jukebox_entries as j, videos as v, video_media as vm")
-      .whereRaw("v.id = j.video_id")
-      .andWhereRaw("vm.id = v.media_id")
-      .andWhere("starts_at", "<=", to!.toISOString())
-      .groupBy(["j.id", "vm.duration"])
-      .havingRaw("(starts_at + duration * INTERVAL '1 second') >= ?", [
-        from.toISOString(),
-      ])
-      .orderBy("starts_at")) as ScheduleItemWithKeys[]
+    const items = await getSchedule(from, to)
+
     const { page = 1, perPage = items.length } = args
 
-    const pageInfo = getPageInfo(items.length, page, perPage)
+    const pageInfo = getPageInfo(items.length, Math.trunc(page), Math.trunc(perPage))
 
     return {
       items,
@@ -67,25 +49,41 @@ export const resolveScheduleQuery: Resolver<
   }
 }
 
-export const resolveVideo: Resolver<VideoWithKeys, ScheduleItemWithKeys> = async (
-  parent,
-) => {
+export const resolveScheduleVideo: Resolver<
+  VideoWithKeys,
+  ScheduleItemWithKeys
+> = async ({ id, videoId, liveId }) => {
+  if (liveId) {
+    console.log("hi")
+    return await db("live_programmes")
+      .select("description", "title", {
+        id: db.raw("id::text"),
+        createdAt: "created_at",
+        updatedAt: "updated_at",
+        organizationId: "organization_id",
+        url: db.raw("'/'"),
+        __typeName: db.raw("'LiveVideo'"),
+      })
+      .where("id", liveId)
+      .first()
+  }
+
+  if (!videoId)
+    throw new Error(`resolveVideo: Parent ID ${id} has bogus video ID ${videoId}!`)
+
   const video = await db("videos")
     .select("id")
     .select("description", "title", {
+      url: db.raw("'/video/' || id::text"),
       createdAt: "created_at",
       updatedAt: "updated_at",
       viewCount: "view_count",
       organizationId: "organization_id",
       mediaId: "media_id",
+      __typeName: db.raw("'Video'"),
     })
-    .where("id", parent.videoId)
+    .where("id", videoId)
     .first()
-
-  if (!video?.id)
-    throw new Error(
-      `resolveVideo: Parent ID ${parent.id} has bogus video ID ${parent.videoId}!`,
-    )
 
   video.id = video.id.toString()
 

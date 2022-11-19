@@ -8,4 +8,4 @@ export const db = knex({
   debug: IS_DEV && IS_VERBOSE,
 })
 
-export const testDBConnection = () => db.raw("select 1+1 as result")
+export const testDBConnection = () => db.raw("set session timezone to 'Europe/Oslo'")

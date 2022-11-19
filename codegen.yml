@@ -10,6 +10,7 @@ generates:
       mappers:
         User: ../modules/graphql/types#UserWithKeys
         UserRole: ../modules/graphql/types#UserRoleWithKeys
+        LiveVideo: ../modules/graphql/types#LiveVideoWithKeys
         Video: ../modules/graphql/types#VideoWithKeys
         VideoPagination: ../modules/graphql/types#VideoPaginationWithKeys
         VideoSearchResults: ../modules/graphql/types#VideoSearchResultsWithKeys

@@ -1,5 +1,5 @@
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
-import { UserWithKeys, UserRoleWithKeys, VideoWithKeys, VideoPaginationWithKeys, VideoSearchResultsWithKeys, ScheduleItemWithKeys, SchedulePaginationWithKeys, OrganizationWithKeys, TochesContext } from '../modules/graphql/types';
+import { UserWithKeys, UserRoleWithKeys, LiveVideoWithKeys, VideoWithKeys, VideoPaginationWithKeys, VideoSearchResultsWithKeys, ScheduleItemWithKeys, SchedulePaginationWithKeys, OrganizationWithKeys, TochesContext } from '../modules/graphql/types';
 import { DeepPartial } from 'utility-types';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
@@ -16,6 +16,13 @@ export type Scalars = {
   Int: number;
   Float: number;
   DateTime: any;
+};
+
+export type BasicVideoMetadata = {
+  description: Scalars['String'];
+  organization: Organization;
+  title: Scalars['String'];
+  url: Scalars['String'];
 };
 
 export type Bulletin = {
@@ -37,6 +44,14 @@ export type BulletinPagination = {
   __typename?: 'BulletinPagination';
   items: Array<Bulletin>;
   pageInfo: PaginationInfo;
+};
+
+export type LiveVideo = BasicVideoMetadata & {
+  __typename?: 'LiveVideo';
+  description: Scalars['String'];
+  organization: Organization;
+  title: Scalars['String'];
+  url: Scalars['String'];
 };
 
 export type LoginInput = {
@@ -162,7 +177,7 @@ export type ScheduleItem = {
   endsAt: Scalars['DateTime'];
   id: Scalars['ID'];
   startsAt: Scalars['DateTime'];
-  video: Video;
+  video: BasicVideoMetadata;
 };
 
 export type SchedulePagination = {
@@ -214,7 +229,7 @@ export type UserRole = {
   role: RoleType;
 };
 
-export type Video = {
+export type Video = BasicVideoMetadata & {
   __typename?: 'Video';
   assets: Array<VideoAsset>;
   createdAt: Scalars['DateTime'];
@@ -224,6 +239,7 @@ export type Video = {
   organization: Organization;
   title: Scalars['String'];
   updatedAt: Scalars['DateTime'];
+  url: Scalars['String'];
   viewCount?: Maybe<Scalars['Int']>;
 };
 
@@ -417,6 +433,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = ResolversObject<{
+  BasicVideoMetadata: ResolversTypes['LiveVideo'] | ResolversTypes['Video'];
   Boolean: ResolverTypeWrapper<DeepPartial<Scalars['Boolean']>>;
   Bulletin: ResolverTypeWrapper<DeepPartial<Bulletin>>;
   BulletinInput: ResolverTypeWrapper<DeepPartial<BulletinInput>>;
@@ -424,6 +441,7 @@ export type ResolversTypes = ResolversObject<{
   DateTime: ResolverTypeWrapper<DeepPartial<Scalars['DateTime']>>;
   ID: ResolverTypeWrapper<DeepPartial<Scalars['ID']>>;
   Int: ResolverTypeWrapper<DeepPartial<Scalars['Int']>>;
+  LiveVideo: ResolverTypeWrapper<LiveVideoWithKeys>;
   LoginInput: ResolverTypeWrapper<DeepPartial<LoginInput>>;
   Mutation: ResolverTypeWrapper<{}>;
   MutationStatus: ResolverTypeWrapper<DeepPartial<MutationStatus>>;
@@ -461,6 +479,7 @@ export type ResolversTypes = ResolversObject<{
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = ResolversObject<{
+  BasicVideoMetadata: ResolversParentTypes['LiveVideo'] | ResolversParentTypes['Video'];
   Boolean: DeepPartial<Scalars['Boolean']>;
   Bulletin: DeepPartial<Bulletin>;
   BulletinInput: DeepPartial<BulletinInput>;
@@ -468,6 +487,7 @@ export type ResolversParentTypes = ResolversObject<{
   DateTime: DeepPartial<Scalars['DateTime']>;
   ID: DeepPartial<Scalars['ID']>;
   Int: DeepPartial<Scalars['Int']>;
+  LiveVideo: LiveVideoWithKeys;
   LoginInput: DeepPartial<LoginInput>;
   Mutation: {};
   Organization: OrganizationWithKeys;
@@ -500,6 +520,14 @@ export type ResolversParentTypes = ResolversObject<{
   VideoSearchResults: VideoSearchResultsWithKeys;
 }>;
 
+export type BasicVideoMetadataResolvers<ContextType = TochesContext, ParentType extends ResolversParentTypes['BasicVideoMetadata'] = ResolversParentTypes['BasicVideoMetadata']> = ResolversObject<{
+  __resolveType: TypeResolveFn<'LiveVideo' | 'Video', ParentType, ContextType>;
+  description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  organization?: Resolver<ResolversTypes['Organization'], ParentType, ContextType>;
+  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+}>;
+
 export type BulletinResolvers<ContextType = TochesContext, ParentType extends ResolversParentTypes['Bulletin'] = ResolversParentTypes['Bulletin']> = ResolversObject<{
   createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
@@ -518,6 +546,14 @@ export type BulletinPaginationResolvers<ContextType = TochesContext, ParentType 
 export interface DateTimeScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['DateTime'], any> {
   name: 'DateTime';
 }
+
+export type LiveVideoResolvers<ContextType = TochesContext, ParentType extends ResolversParentTypes['LiveVideo'] = ResolversParentTypes['LiveVideo']> = ResolversObject<{
+  description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  organization?: Resolver<ResolversTypes['Organization'], ParentType, ContextType>;
+  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
 
 export type MutationResolvers<ContextType = TochesContext, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
   bulletin?: Resolver<ResolversTypes['Bulletin'], ParentType, ContextType, RequireFields<MutationBulletinArgs, 'bulletin'>>;
@@ -571,7 +607,7 @@ export type ScheduleItemResolvers<ContextType = TochesContext, ParentType extend
   endsAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   startsAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
-  video?: Resolver<ResolversTypes['Video'], ParentType, ContextType>;
+  video?: Resolver<ResolversTypes['BasicVideoMetadata'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -623,6 +659,7 @@ export type VideoResolvers<ContextType = TochesContext, ParentType extends Resol
   organization?: Resolver<ResolversTypes['Organization'], ParentType, ContextType>;
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   viewCount?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
@@ -683,9 +720,11 @@ export type VideoSearchResultsResolvers<ContextType = TochesContext, ParentType 
 }>;
 
 export type Resolvers<ContextType = TochesContext> = ResolversObject<{
+  BasicVideoMetadata?: BasicVideoMetadataResolvers<ContextType>;
   Bulletin?: BulletinResolvers<ContextType>;
   BulletinPagination?: BulletinPaginationResolvers<ContextType>;
   DateTime?: GraphQLScalarType;
+  LiveVideo?: LiveVideoResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Organization?: OrganizationResolvers<ContextType>;
   OrganizationEditor?: OrganizationEditorResolvers<ContextType>;

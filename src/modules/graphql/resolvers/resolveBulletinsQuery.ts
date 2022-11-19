@@ -21,7 +21,7 @@ export const resolveBulletinsQuery: Resolver<
     .from("bulletins")
     .limit(perPage)
 
-  const pageInfo = getPageInfo(items.length, page, perPage)
+  const pageInfo = getPageInfo(items.length, Math.trunc(page), Math.trunc(perPage))
 
   return {
     items,

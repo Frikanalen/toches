@@ -11,7 +11,7 @@ import { TochesContext } from "../types"
 import { Videos } from "../../../generated/tableTypes"
 import { db } from "../../db/db"
 import { GraphQLError } from "graphql"
-import { getVideo } from "./getVideo"
+import { videoGet } from "./resolveVideoGet"
 import { DeepPartial } from "utility-types"
 import { requireVideoOwner } from "../utils/requireVideoOwner"
 
@@ -65,7 +65,7 @@ export const mutateVideo: Resolver<
 
   const updatedId = input.id ? await updateVideo(input) : await createVideo(input)
 
-  const video = await getVideo(updatedId)
+  const video = await videoGet(updatedId)
 
   return {
     status: video ? MutationStatus.Success : MutationStatus.Error,
@@ -84,7 +84,7 @@ export const mutateVideoPublish: Resolver<
   await db("videos")
     .update("published", info.fieldName === "publish")
     .where("id", parseInt(videoId))
-  const video = await getVideo(videoId)
+  const video = await videoGet(videoId)
 
   return {
     status: MutationStatus.Success,

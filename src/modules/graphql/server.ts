@@ -5,7 +5,7 @@ import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-co
 import { resolveVideoAssets } from "./resolvers/resolveVideoAssets"
 import { Resolvers } from "../../generated/graphql"
 import { resolveUser } from "./resolvers/resolveUser"
-import { resolveVideoQuery, resolveVideoList } from "./resolvers/getVideo"
+import { resolveVideoGet } from "./resolvers/resolveVideoGet"
 import {
   resolveOrganization,
   resolveOrganizationEditor,
@@ -13,7 +13,10 @@ import {
   resolveOrganizationQuery,
 } from "./resolvers/resolveOrganization"
 
-import { resolveScheduleQuery, resolveVideo } from "./resolvers/resolveScheduleQuery"
+import {
+  resolveScheduleQuery,
+  resolveScheduleVideo,
+} from "./resolvers/resolveScheduleQuery"
 import { resolveSessionQuery } from "./resolvers/resolveSessionQuery"
 import { resolveBulletinsQuery } from "./resolvers/resolveBulletinsQuery"
 import { resolveBulletinQuery } from "./resolvers/resolveBulletinQuery"
@@ -30,6 +33,7 @@ import {
 } from "./resolvers/mutateVideo"
 import { mutationRegister } from "./resolvers/mutationRegister"
 import { resolveVideoSearch } from "./resolvers/resolveVideoSearch"
+import { resolveVideoList } from "./resolvers/resolveVideoList"
 
 const typeDefs = readFileSync(`src/modules/graphql/schema.graphql`).toString()
 
@@ -49,13 +53,25 @@ const resolvers: Resolvers = {
     bulletins: resolveBulletinsQuery,
     bulletin: resolveBulletinQuery,
   },
+  BasicVideoMetadata: {
+    __resolveType(obj, context, info) {
+      // Only Author has a name field
+      if (obj.__typename === "Video") {
+        return "Video"
+      }
+      return "LiveVideo"
+    },
+  },
   ScheduleItem: {
-    video: resolveVideo,
+    video: resolveScheduleVideo,
   },
   VideoQueries: {
-    get: resolveVideoQuery,
+    get: resolveVideoGet,
     list: resolveVideoList,
     search: resolveVideoSearch,
+  },
+  LiveVideo: {
+    organization: resolveOrganization,
   },
   Video: {
     assets: resolveVideoAssets,

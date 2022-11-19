@@ -1,44 +1,10 @@
-import { UserInputError } from "apollo-server-koa"
+import { Resolver, VideoQueriesListArgs } from "../../../generated/graphql"
+import { VideoPaginationWithKeys } from "../types"
 import { db } from "../../db/db"
 import { Videos } from "../../../generated/tableTypes"
-import {
-  VideoQueriesGetArgs,
-  Resolver,
-  VideoQueriesListArgs,
-} from "../../../generated/graphql"
-import { getPageInfo } from "../utils/getPageInfo"
 import { getOrderBy } from "../utils/getOrderBy"
-import { VideoPaginationWithKeys, VideoWithKeys } from "../types"
-
-export const getVideo = async (videoId: string) => {
-  if (!videoId) throw new Error("getVideo called with nullish id")
-
-  return await db<Videos>("videos")
-    .select("title", {
-      description: db.raw("COALESCE(description, '')"),
-      id: db.raw("id::text"),
-      createdAt: "created_at",
-      updatedAt: "updated_at",
-      viewCount: "view_count",
-      organizationId: "organization_id",
-      mediaId: "media_id",
-    })
-    .where("id", videoId)
-    .first()
-}
-
-export const resolveVideoQuery: Resolver<
-  VideoWithKeys,
-  any,
-  any,
-  VideoQueriesGetArgs
-> = async (parent, { id }) => {
-  const video = await getVideo(id)
-
-  if (!video) throw new UserInputError(`Video ${id} does not exist`, { id })
-
-  return video
-}
+import { getPageInfo } from "../utils/getPageInfo"
+import { UserInputError } from "apollo-server-koa"
 
 // Count the rows of a given table
 // TODO: Add filter option
@@ -69,6 +35,7 @@ export const resolveVideoList: Resolver<
       viewCount: "view_count",
       organizationId: "organization_id",
       mediaId: "media_id",
+      url: db.raw("('/video/' || id::text)"),
     })
     .orderBy(getOrderBy(sort))
     .offset((page - 1) * perPage)
@@ -80,7 +47,7 @@ export const resolveVideoList: Resolver<
     items = await query.where("organization_id", filter.organizationId)
   } else items = await query
 
-  const pageInfo = getPageInfo(await countRows("videos"), page, perPage)
+  const pageInfo = getPageInfo(100, Math.trunc(page), Math.trunc(perPage))
 
   return {
     items,
