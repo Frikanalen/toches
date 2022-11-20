@@ -20,6 +20,8 @@ export const migrateFkwebCommand = new Command("migrate-fkweb")
     await db("videos").delete()
     log.warn("Deleting video media")
     await db("video_media").delete()
+    log.warn("Deleting video media assets")
+    await db("video_media_assets").delete()
 
     log.info("Migrating users")
     await migrateUsers()
