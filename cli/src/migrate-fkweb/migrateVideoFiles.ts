@@ -125,6 +125,10 @@ export const migrateVideoFiles = async () => {
         },
       ),
   )
+  await db.raw(
+    "SELECT setval('video_media_assets_id_seq', (SELECT MAX(id) FROM video_media_assets));",
+  )
+  await db.raw("SELECT setval('video_media_id_seq', (SELECT MAX(id) FROM video_media));")
 
   log.warn(`Skipped ${skippedFilesInvalidFormat} videoFiles with unsupported format IDs`)
 }

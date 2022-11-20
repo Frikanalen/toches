@@ -52,4 +52,8 @@ export const migrateSchedule = async () => {
     `${skippedBecauseVideoDoesntExist} schedule items were skipped as they referred to non-existant videos`,
   )
   log.info(`Done.`)
+
+  await db.raw(
+    "SELECT setval('jukebox_entries_id_seq', (SELECT MAX(id) FROM jukebox_entries));",
+  )
 }
