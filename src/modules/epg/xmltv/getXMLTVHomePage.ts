@@ -72,7 +72,7 @@ export const getXMLTVHomePage: Middleware = async (context, next) => {
   <p>For example this is the URL of today:</p>
   <p>
     <blockquote>
-      GET <a href="${dateStr}">https://frikanalen.no/xmltv/${dateStr}</a>
+      GET <a href="./${dateStr}">https://frikanalen.no/xmltv/${dateStr}</a>
     </blockquote>
   </p>
   <h2>Upcoming week</h2>
@@ -81,7 +81,7 @@ export const getXMLTVHomePage: Middleware = async (context, next) => {
   </p>
   <p>
     <blockquote>
-      GET <a href="upcoming">https://frikanalen.no/xmltv/upcoming</a>
+      GET <a href="./upcoming">https://frikanalen.no/xmltv/upcoming</a>
     </blockquote>
   </p>
   <p>
