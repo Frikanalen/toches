@@ -43,6 +43,7 @@ const router = new Router({
  *               items:
  *                 $ref: '#/components/schemas/ScheduleEntry'
  */
+// TODO: Update the REST interface to match changes made to the GraphQL interface.
 router.get("/entries", sendSchedule())
 
 /**3

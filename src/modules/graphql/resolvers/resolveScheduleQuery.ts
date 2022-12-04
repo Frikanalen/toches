@@ -5,7 +5,7 @@ import { UserInputError } from "apollo-server-koa"
 import { db } from "../../db/db"
 import { getPageInfo } from "../utils/getPageInfo"
 import { ScheduleItemWithKeys, SchedulePaginationWithKeys, VideoWithKeys } from "../types"
-import { getSchedule } from "../../epg/common/getSchedule"
+import { getSchedulePresentation } from "../../presentation/getSchedulePresentation"
 
 const ScheduleFilterSchema = object({
   from: date().default(startOfToday()),
@@ -33,7 +33,7 @@ export const resolveScheduleQuery: Resolver<
   const { from, to = add(from, { days: 1 }) } = await parseFilterArg(args.filter)
 
   try {
-    const items = await getSchedule({ start: from, end: to })
+    const items = await getSchedulePresentation({ start: from, end: to })
 
     const { page = 1, perPage = items.length } = args
 

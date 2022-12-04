@@ -87,3 +87,8 @@ Batch 3 run: 1 migrations
 Done in 1.27s.
 
 ```
+
+
+## Glossary
+
+* *Presentation*: Schedule data for presentation to end-users and electronic programme guide providers  

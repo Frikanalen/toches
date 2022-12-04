@@ -1,12 +1,12 @@
 import { format } from "date-fns"
 import libxml from "libxmljs2"
-import { getSchedule } from "../common/getSchedule"
+import { getSchedulePresentation } from "../../presentation/getSchedulePresentation"
 
 export const buildxml = async (startTime: Date, endTime: Date) => {
   const doc = new libxml.Document()
   const tv = doc.node("tv")
 
-  const items = await getSchedule({ start: startTime, end: endTime })
+  const items = await getSchedulePresentation({ start: startTime, end: endTime })
 
   tv.attr({ "generator-info-name": "fkweb.agenda.xmltv" })
     .node("channel")

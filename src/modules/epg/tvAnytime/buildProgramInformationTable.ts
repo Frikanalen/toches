@@ -1,11 +1,11 @@
-import { ScheduleEntry } from "../types"
+import { PresentationEvent } from "../types"
 import { Element } from "libxmljs2"
 
 // Defined in TS 102 822-3-1 - 6.3.6:
 // V1.8.1: https://tech.ebu.ch/docs/metadata/ts_1028220301v010801p.pdf
 export const buildProgramInformationTable = (
   tvaProgramDescription: Element,
-  scheduleEntries: ScheduleEntry[],
+  scheduleEntries: PresentationEvent[],
 ) => {
   const tvaPIT = tvaProgramDescription.node("tva:ProgramInformationTable")
   const seenCRIDs: string[] = []

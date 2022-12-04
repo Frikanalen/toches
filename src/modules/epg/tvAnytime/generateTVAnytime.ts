@@ -1,6 +1,6 @@
 import { add, parse, startOfDay } from "date-fns"
 import { Middleware } from "koa"
-import { getSchedule } from "../common/getSchedule"
+import { getSchedulePresentation } from "../../presentation/getSchedulePresentation"
 import { buildProgramDescription } from "./buildProgramDescription"
 import { buildProgramInformationTable } from "./buildProgramInformationTable"
 import { buildServiceInformationTable } from "./buildServiceInformationTable"
@@ -10,7 +10,7 @@ import { buildProgramLocationTable } from "./buildProgramLocationTable"
 // Schemas are here: https://github.com/ebu/tvanytime/tree/master/schemas/part31
 const buildTVAnytime = async (start: Date, end: Date) => {
   const tvaProgramDescription = buildProgramDescription()
-  const items = await getSchedule({ start, end })
+  const items = await getSchedulePresentation({ start, end })
 
   await buildProgramInformationTable(tvaProgramDescription, items)
   await buildProgramLocationTable(tvaProgramDescription, items, { start, end })

@@ -1,4 +1,4 @@
-import { ScheduleEntry, ScheduleInterval } from "../types"
+import { PresentationEvent, ScheduleInterval } from "../types"
 import { Element } from "libxmljs2"
 import { formatISO } from "date-fns"
 
@@ -8,7 +8,7 @@ import { formatISO } from "date-fns"
 // v1.8.1:  https://tech.ebu.ch/docs/metadata/ts_1028220301v010801p.pdf
 export const buildProgramLocationTable = (
   tvaProgramDescription: Element,
-  scheduleEntries: ScheduleEntry[],
+  scheduleEntries: PresentationEvent[],
   { start, end }: ScheduleInterval,
 ) => {
   const tvaProgramLocationTable = tvaProgramDescription.node("tva:ProgramLocationTable")

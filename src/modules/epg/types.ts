@@ -1,15 +1,15 @@
 // Bog-standard Interval does not ensure start and end are Date
 export type ScheduleInterval = { start: Date; end: Date }
 
-export type ScheduleEntryLive = ScheduleEntryBase & {
+export type PresentationEventLive = BasePresentationEvent & {
   type: "live"
 }
 
-export type ScheduleEntryVideo = ScheduleEntryBase & {
+export type PresentationEventVideo = BasePresentationEvent & {
   type: "video"
 }
 
-type ScheduleEntryBase = {
+type BasePresentationEvent = {
   id: string
   title: string
   description: string
@@ -22,4 +22,4 @@ type ScheduleEntryBase = {
   duration: number
 }
 
-export type ScheduleEntry = ScheduleEntryVideo | ScheduleEntryLive
+export type PresentationEvent = PresentationEventVideo | PresentationEventLive
