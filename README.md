@@ -10,6 +10,8 @@ We use [Koa](https://koajs.com/) as our framework, and we try to comply with the
 
 Our database is PostgreSQL, which we query using the Knex builder.
 
+If you're interested in contributing, grep the code for "TODO" :)
+
 ## Dev environment
 
 The following guide assumes a recent-ish Node, yarn, docker and docker compose.
