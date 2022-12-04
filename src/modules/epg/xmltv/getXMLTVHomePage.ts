@@ -3,6 +3,14 @@ import { Middleware } from "koa"
 
 export const getXMLTVHomePage: Middleware = async (context, next) => {
   const dateStr = format(new Date(), "yyyy/MM/dd")
+
+  // We need the trailing slash for the relative URLs to work
+  if (!context.path.endsWith("/")) {
+    const { request, response } = context
+    response.status = 302
+    return response.redirect(request.url + "/")
+  }
+
   context.type = "text/html"
   context.body = `
   <!DOCTYPE html>
