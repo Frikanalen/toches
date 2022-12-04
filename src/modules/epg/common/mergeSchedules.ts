@@ -1,5 +1,5 @@
 import { areIntervalsOverlapping, compareAsc } from "date-fns"
-import { ScheduleEntry } from "./types"
+import { ScheduleEntry } from "../types"
 
 // TODO: Some test coverage here would be real nice
 export const mergeSchedules = (

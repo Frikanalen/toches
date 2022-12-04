@@ -1,6 +1,6 @@
-import { db } from "../db/db"
+import { db } from "../../db/db"
 import { mergeSchedules } from "./mergeSchedules"
-import { ScheduleEntryLive, ScheduleEntryVideo, ScheduleInterval } from "./types"
+import { ScheduleEntryLive, ScheduleEntryVideo, ScheduleInterval } from "../types"
 
 const selectJukeboxItems = async ({
   start,

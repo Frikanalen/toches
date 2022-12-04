@@ -5,7 +5,7 @@ import { UserInputError } from "apollo-server-koa"
 import { db } from "../../db/db"
 import { getPageInfo } from "../utils/getPageInfo"
 import { ScheduleItemWithKeys, SchedulePaginationWithKeys, VideoWithKeys } from "../types"
-import { getSchedule } from "../../epg/getSchedule"
+import { getSchedule } from "../../epg/common/getSchedule"
 
 const ScheduleFilterSchema = object({
   from: date().default(startOfToday()),

@@ -1,10 +1,10 @@
 import { add, parse, startOfDay } from "date-fns"
 import { Middleware } from "koa"
-import { getSchedule } from "./getSchedule"
-import { buildProgramDescription } from "./tvAnytime/buildProgramDescription"
-import { buildProgramInformationTable } from "./tvAnytime/buildProgramInformationTable"
-import { buildServiceInformationTable } from "./tvAnytime/buildServiceInformationTable"
-import { buildProgramLocationTable } from "./tvAnytime/buildProgramLocationTable"
+import { getSchedule } from "../common/getSchedule"
+import { buildProgramDescription } from "./buildProgramDescription"
+import { buildProgramInformationTable } from "./buildProgramInformationTable"
+import { buildServiceInformationTable } from "./buildServiceInformationTable"
+import { buildProgramLocationTable } from "./buildProgramLocationTable"
 
 // TODO: Consider validating using https://hub.docker.com/r/isaitb/xml-validator
 // Schemas are here: https://github.com/ebu/tvanytime/tree/master/schemas/part31

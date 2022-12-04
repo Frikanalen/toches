@@ -1,6 +1,8 @@
 import Router from "@koa/router"
-import { getXMLTVForComingWeek, getXMLTVForDay } from "./generateXMLTV"
-import { getTVAnytimeForDay } from "./generateTVAnytime"
+import { getTVAnytimeForDay } from "./tvAnytime/generateTVAnytime"
+import { getXMLTVHomePage } from "./xmltv/getXMLTVHomePage"
+import { getXMLTVForDay } from "./xmltv/getXMLTVForDay"
+import { getXMLTVForComingWeek } from "./xmltv/getXMLTVForComingWeek"
 
 const router = new Router({
   prefix: "/epg",
@@ -8,7 +10,8 @@ const router = new Router({
 
 router.get("/xmltv/:year/:month/:date", getXMLTVForDay)
 router.get("/xmltv/upcoming", getXMLTVForComingWeek)
+router.get("/xmltv", getXMLTVHomePage)
 
-router.get("/tvAnytime/:year/:month/:date", getTVAnytimeForDay)
+router.get("/tva/:year/:month/:date", getTVAnytimeForDay)
 
 export { router as XMLTVRouter }
