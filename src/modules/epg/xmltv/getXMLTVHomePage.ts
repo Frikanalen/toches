@@ -7,7 +7,7 @@ export const getXMLTVHomePage: Middleware = async (context, next) => {
     const { request, response } = context
 
     response.status = 302
-    return response.redirect(request.url + "/")
+    return response.redirect(request.originalUrl + "/")
   }
 
   context.type = "text/html"
