@@ -9,10 +9,12 @@ import { OrganizationWithKeys, VideoWithKeys } from "../types"
 
 export const getOrganization = async (
   organizationId: number | string,
-): Promise<OrganizationWithKeys> =>
-  db("organizations")
+): Promise<OrganizationWithKeys> => {
+  console.log(organizationId)
+  return db("organizations")
     .select("name", "description", "homepage", {
       id: db.raw("id::text"),
+      idNumeric: "id",
       createdAt: "created_at",
       updatedAt: "updated_at",
       editorId: "editor_id",
@@ -22,6 +24,7 @@ export const getOrganization = async (
     })
     .where("id", organizationId)
     .first()
+}
 
 export const resolveOrganizationQuery: Resolver<
   OrganizationWithKeys,

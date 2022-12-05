@@ -4,10 +4,12 @@ import {
   Resolver,
 } from "../../../generated/graphql"
 import { OrganizationWithKeys } from "../types"
-import { requireAdmin } from "../utils/requireAdmin"
 import { db } from "../../db/db"
 import { Organizations } from "../../../generated/tableTypes"
 import { getOrganization } from "./resolveOrganization"
+import { requireUser } from "../utils/requireUser"
+import { requireOrganizationEditor } from "../utils/requireOrganizationEditor"
+import { requireAdmin } from "../utils/requireAdmin"
 
 const updateOrganization = async ({
   id,
@@ -33,17 +35,15 @@ const createOrganization = async ({
   brregId,
   editorId,
 }: OrganizationInput & { editorId: number }) =>
-  (
-    await db<Organizations>("organizations")
-      .insert({
-        name: name || undefined,
-        postal_address: postalAddress || undefined,
-        street_address: streetAddress || undefined,
-        brreg_number: brregId ? parseInt(brregId) : undefined,
-        editor_id: editorId,
-      })
-      .returning("id")
-  )[0].id
+  db<Organizations>("organizations")
+    .insert({
+      name: name || undefined,
+      postal_address: postalAddress || undefined,
+      street_address: streetAddress || undefined,
+      brreg_number: brregId ? parseInt(brregId) : undefined,
+      editor_id: editorId,
+    })
+    .returning("id")
 
 export const mutateOrganization: Resolver<
   OrganizationWithKeys,
@@ -51,14 +51,23 @@ export const mutateOrganization: Resolver<
   any,
   MutationOrganizationArgs
 > = async (parent, { organization }, context) => {
-  await requireAdmin(context.session)
+  if (!organization.id) {
+    const userId = await requireUser(context)
 
-  const id = organization.id
-    ? await updateOrganization(organization)
-    : await createOrganization({
-        ...organization,
-        editorId: context.session.user,
-      })
+    const [{ id }] = await createOrganization({
+      ...organization,
+      editorId: userId,
+    })
 
-  return getOrganization(id as unknown as number)
+    return getOrganization(id)
+  }
+
+  try {
+    await requireAdmin(context.session)
+  } catch {
+    await requireOrganizationEditor(context.session, organization.id)
+  }
+
+  const [{ id }] = await updateOrganization(organization)
+  return getOrganization(id)
 }

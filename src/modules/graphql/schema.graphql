@@ -45,8 +45,14 @@ type Mutation {
 
 type UserMutations {
     register(input: RegisterInput!): UserMutationResult!
+    profile(input: UserProfileInput!): UserMutationResult!
     login(input: LoginInput!): UserMutationResult!
     logout: UserMutationResult!
+}
+
+input UserProfileInput {
+    name: String
+    password: String
 }
 
 input RegisterInput {
