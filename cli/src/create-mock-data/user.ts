@@ -16,8 +16,7 @@ export const userCommand = new Command("users")
       .map(() => ({
         email: faker.internet.email(),
         password: "TEST_USER_PASSWORD",
-        first_name: faker.name.firstName(),
-        last_name: faker.name.lastName(),
+        name: faker.name.fullName()
       }))
 
     await db.batchInsert("users", users)

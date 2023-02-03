@@ -9,11 +9,10 @@ export const createAdminCommand = new Command("admin")
     const user = {
       email: "dev-admin@frikanalen.no",
       password: `bcrypt${password}`,
-      first_name: "Frikanalen admin",
-      last_name: "Istrator",
+      name: "Frikanalen Administrator",
     }
 
-    const [id] = await db.insert(user).into("users").returning("id")
+    const [{id}] = await db.insert(user).into("users").returning("id")
     await db.insert({ role_id: 1, user_id: id }).into("role_user_map")
 
     console.info("Generated user. It looks like this:")
