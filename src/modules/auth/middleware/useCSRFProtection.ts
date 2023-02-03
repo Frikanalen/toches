@@ -4,9 +4,6 @@ import { createCSRFToken } from "../helpers/createCSRFToken"
 import { log } from "../../core/log"
 
 export const useCSRFProtection = (): Middleware => async (context, next) => {
-  // GraphQL is exempt
-  if (context.request.path === "/graphql") return next()
-
   const { session, method, headers, cookies } = context
 
   const token = headers[CSRF_HEADER.toLowerCase()]
@@ -18,6 +15,9 @@ export const useCSRFProtection = (): Middleware => async (context, next) => {
       httpOnly: false,
     })
   }
+
+  // GraphQL is exempt
+  if (context.request.path === "/graphql") return next()
 
   // We don't care about protecting non-authenticated routes or safe http methods
   // Routes that need authentication will 401 if session.user isn't present anyway
