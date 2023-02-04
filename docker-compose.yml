@@ -18,9 +18,39 @@ services:
   mock-data:
     image: frikanalen/toches
     restart: on-failure
-    profiles: ['mockdata']
+    profiles: ["mockdata"]
     depends_on: [db]
     environment:
       - DATABASE_URL=postgres://postgres:fk@db/fk
       - FK_API_KEY=1234
-    command: [ 'sh', '-c', 'sleep 10s; yarn makeMockData' ]
+    command: ["sh", "-c", "sleep 10s; yarn makeMockData"]
+
+  s3-backend:
+    image: scireum/s3-ninja
+    ports:
+      - "9000:9000"
+
+  media-processor:
+    image: frikanalen/media-processor
+    environment:
+      - FK_API_KEY=1234
+      - FK_API=http://localhost:8080
+      - AWS_ENDPOINT=http://localhost:9000
+      - AWS_REGION=no-where-1
+      - AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE # Don't be fear, these are s3ninja defaults :)
+      - AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+      - REDIS_URL=redis://redis:6379
+    ports:
+      - "8001:8000"
+
+  redis:
+    image: "redis:alpine"
+    ports:
+      - "6379:6379"
+
+  redis-gui:
+    image: rediscommander/redis-commander
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+    ports:
+      - "8083:8081"
