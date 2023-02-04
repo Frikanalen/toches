@@ -34,7 +34,7 @@ export const proxyRequest =
       for (const [k, v] of Object.entries(response.headers)) context.set(k, v)
 
       return next()
-    } catch {
-      context.throw(500, "An error occurred proxying the request")
+    } catch (e) {
+      context.throw(500, `An error occurred proxying the request: ${e}`)
     }
   }
