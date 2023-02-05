@@ -11,16 +11,28 @@ export const resolveVideoSearch: Resolver<
 > = async (_, { input: { query, limit = 10 } }) => {
   const dbQuery = db<Videos>("videos")
     .select(["title"])
+    .fromRaw("videos as v, video_media as vm")
     .select({
-      description: db.raw("COALESCE(description, '')"),
-      id: db.raw("id::text"),
-      createdAt: "created_at",
-      updatedAt: "updated_at",
-      viewCount: "view_count",
-      organizationId: "organization_id",
-      mediaId: "media_id",
+      title: "v.title",
+      description: db.raw("COALESCE(v.description, '')"),
+      id: db.raw("v.id::text"),
+      createdAt: "v.created_at",
+      updatedAt: "v.updated_at",
+      viewCount: "v.view_count",
+      organizationId: "v.organization_id",
+      mediaId: "v.media_id",
+      duration: "vm.duration",
+      url: db.raw("('/video/' || v.id::text)"),
     })
-    .whereRaw("title || ' ' || description @@ plainto_tsquery('norwegian', ?)", query)
+    .whereRaw(
+      "v.title || ' ' || v.description @@ websearch_to_tsquery('english', ?)",
+      query,
+    )
+    .orWhereRaw(
+      "v.title || ' ' || v.description @@ websearch_to_tsquery('norwegian', ?)",
+      query,
+    )
+    .andWhereRaw("vm.id = v.media_id")
     .limit(Math.min(limit, 50))
 
   const videos = await dbQuery

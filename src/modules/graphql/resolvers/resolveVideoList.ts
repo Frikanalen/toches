@@ -6,14 +6,6 @@ import { getOrderBy } from "../utils/getOrderBy"
 import { getPageInfo } from "../utils/getPageInfo"
 import { UserInputError } from "apollo-server-koa"
 
-// Count the rows of a given table
-// TODO: Add filter option
-const countRows = async (tableName: string): Promise<number> => {
-  const data = await db(tableName).count({ rowCount: "*" })
-
-  return parseInt(data[0]?.rowCount as string)
-}
-
 export const resolveVideoList: Resolver<
   VideoPaginationWithKeys,
   any,
@@ -27,27 +19,33 @@ export const resolveVideoList: Resolver<
   if (page < 1) throw new UserInputError("page minimum value is 1.")
 
   const query = db<Videos>("videos")
-    .select("title", {
-      description: db.raw<string>("COALESCE(description, '')"),
-      id: db.raw<string>("id::text"),
-      createdAt: "created_at",
-      updatedAt: "updated_at",
-      viewCount: "view_count",
-      organizationId: "organization_id",
-      mediaId: "media_id",
-      url: db.raw("('/video/' || id::text)"),
+    .fromRaw("videos as v, video_media as vm")
+    .select({
+      title: "v.title",
+      description: db.raw("COALESCE(v.description, '')"),
+      id: db.raw("v.id::text"),
+      createdAt: "v.created_at",
+      updatedAt: "v.updated_at",
+      viewCount: "v.view_count",
+      organizationId: "v.organization_id",
+      mediaId: "v.media_id",
+      duration: "vm.duration",
+      url: db.raw("('/video/' || v.id::text)"),
     })
-    .orderBy(getOrderBy(sort))
+    .whereRaw("vm.id = v.media_id")
+    .orderBy(getOrderBy(sort, "v."))
     .offset((page - 1) * perPage)
     .limit(perPage)
 
   let items
 
   if (filter) {
-    items = await query.where("organization_id", filter.organizationId)
+    items = await query.where("v.organization_id", filter.organizationId)
   } else items = await query
 
-  const pageInfo = getPageInfo(100, Math.trunc(page), Math.trunc(perPage))
+  const [{ count }] = await db.count<{ count: number }[]>("*").from("videos")
+
+  const pageInfo = getPageInfo(count, Math.trunc(page), Math.trunc(perPage))
 
   return {
     items,

@@ -10,7 +10,6 @@ import { OrganizationWithKeys, VideoWithKeys } from "../types"
 export const getOrganization = async (
   organizationId: number | string,
 ): Promise<OrganizationWithKeys> => {
-  console.log(organizationId)
   return db("organizations")
     .select("name", "description", "homepage", {
       id: db.raw("id::text"),
@@ -49,14 +48,19 @@ export const resolveOrganizationLatestVideos: Resolver<
   Pick<Organization, "id">
 > = async (parent) =>
   await db("videos")
-    .select("description", "title", {
-      id: db.raw<string>("id::text"),
-      createdAt: "created_at",
-      updatedAt: "updated_at",
-      viewCount: "view_count",
-      mediaId: "media_id",
-      organizationId: "organization_id",
+    .fromRaw("videos as v, video_media as vm")
+    .select({
+      title: "v.title",
+      description: db.raw("COALESCE(v.description, '')"),
+      id: db.raw("v.id::text"),
+      createdAt: "v.created_at",
+      updatedAt: "v.updated_at",
+      viewCount: "v.view_count",
+      organizationId: "v.organization_id",
+      mediaId: "v.media_id",
+      duration: "vm.duration",
     })
-    .where("organization_id", parent.id)
-    .orderBy("created_at", "desc")
+    .where("v.organization_id", parent.id)
+    .andWhereRaw("vm.id = v.media_id")
+    .orderBy("v.created_at", "desc")
     .limit(5)

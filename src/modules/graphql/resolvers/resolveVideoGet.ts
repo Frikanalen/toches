@@ -22,7 +22,7 @@ export const videoGet = async (videoId: string) => {
       url: db.raw("('/video/' || v.id::text)"),
     })
     .where("v.id", videoId)
-    .andWhereRaw("vm.id = media_id")
+    .andWhereRaw("vm.id = v.media_id")
     .first()
 }
 

@@ -6,17 +6,20 @@ export type OrderBy = {
   nulls?: "first" | "last"
 }
 
-export const getOrderBy = (sorts?: InputMaybe<VideoSort[]>): OrderBy[] =>
+export const getOrderBy = (
+  sorts?: InputMaybe<VideoSort[]>,
+  tablePrefix = "",
+): OrderBy[] =>
   sorts?.map((sort): OrderBy => {
     switch (sort) {
       case VideoSort.DateAsc:
         return {
-          column: "created_at",
+          column: `${tablePrefix}created_at`,
           order: "asc",
         }
       case VideoSort.DateDesc:
         return {
-          column: "created_at",
+          column: `${tablePrefix}created_at`,
           order: "desc",
         }
     }
