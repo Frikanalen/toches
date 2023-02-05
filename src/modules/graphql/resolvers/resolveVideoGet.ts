@@ -7,18 +7,22 @@ import { VideoWithKeys } from "../types"
 export const videoGet = async (videoId: string) => {
   if (!videoId) throw new Error("resolveVideoGet called with nullish id")
 
-  return await db<Videos>("videos")
-    .select("title", {
-      description: db.raw("COALESCE(description, '')"),
-      id: db.raw("id::text"),
-      createdAt: "created_at",
-      updatedAt: "updated_at",
-      viewCount: "view_count",
-      organizationId: "organization_id",
-      mediaId: "media_id",
-      url: db.raw("('/video/' || id::text)"),
+  return db<Videos>("videos")
+    .fromRaw("videos as v, video_media as vm")
+    .select({
+      title: "v.title",
+      description: db.raw("COALESCE(v.description, '')"),
+      id: db.raw("v.id::text"),
+      createdAt: "v.created_at",
+      updatedAt: "v.updated_at",
+      viewCount: "v.view_count",
+      organizationId: "v.organization_id",
+      mediaId: "v.media_id",
+      duration: "vm.duration",
+      url: db.raw("('/video/' || v.id::text)"),
     })
-    .where("id", videoId)
+    .where("v.id", videoId)
+    .andWhereRaw("vm.id = media_id")
     .first()
 }
 

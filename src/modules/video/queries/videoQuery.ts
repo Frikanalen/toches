@@ -28,14 +28,10 @@ export type VideoQueryParams = InferOrderingParams<typeof videoOrdering> & {
 }
 
 export const videoQuery = new QueryTemplate<DefaultQueryOptions & VideoQueryParams>({
-  build: async (context) => {
-    const { query, options } = context
-
-    if (!options.count && !options.single) {
-      applyOrdering(videoOrdering, query, options)
-    }
-
+  build: async ({ query, options }) => {
     if (!options.count) {
+      if (!options.single) applyOrdering(videoOrdering, query, options)
+
       organization.apply(query, {})
 
       const assetSubquery = db

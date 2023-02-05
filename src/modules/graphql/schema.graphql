@@ -145,6 +145,7 @@ interface BasicVideoMetadata {
     description: String!
     organization: Organization!
     url: String!
+    duration: Int
 }
 
 type LiveVideo implements BasicVideoMetadata {
@@ -152,6 +153,7 @@ type LiveVideo implements BasicVideoMetadata {
     description: String!
     organization: Organization!
     url: String!
+    duration: Int
 }
 
 type ScheduleItem {
@@ -241,6 +243,7 @@ type Video implements BasicVideoMetadata {
     title: String!
     description: String!
     url: String!
+    duration: Int
 
     organization: Organization!
 
