@@ -6,8 +6,9 @@ export const getObjectURL = (locator?: string) => {
   const [scheme, ...rest] = locator.split(":")
 
   if (scheme === "S3") {
+    const mediaUrl = process.env["FK_MEDIA"] ?? ""
     const [bucket, ...path] = rest
-    return `/${bucket}/${path.join(":")}`
+    return `${mediaUrl}/${bucket}/${path.join(":")}`
   } else if (scheme === "legacy") {
     return "https://upload.frikanalen.no/media/" + rest.join(":")
   }
