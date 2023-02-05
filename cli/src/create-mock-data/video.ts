@@ -46,7 +46,11 @@ export const videoCommand = new Command("videos")
       const { stdout } = await execAsync(`fk media upload -f /tmp/file.mp4`)
       const media_id = Number(stdout.trim())
 
-      await db.insert({ ...video, media_id }).into("videos")
+      const [{ id }] = await db
+        .insert({ ...video, media_id })
+        .into("videos")
+        .returning("id")
+      console.info(`Created with ID "${id}"`)
     }
 
     console.info(`Generated ${amount} video(s).`)
