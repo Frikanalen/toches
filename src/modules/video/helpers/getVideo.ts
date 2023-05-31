@@ -1,7 +1,7 @@
-import { videoModel } from "../models/videoModel"
+import { VideoData, videoModel } from "../models/videoModel"
 import { videoQuery } from "../queries/videoQuery"
 
-export const getVideo = async (id: number) => {
+export const getVideo = async (id: number): Promise<VideoData> => {
   const [query] = await videoQuery.prepare({ single: true })
 
   query.from(videoModel.tableName).where("videos.id", id).first()
