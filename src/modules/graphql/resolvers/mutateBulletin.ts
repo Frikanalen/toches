@@ -39,8 +39,8 @@ export const mutateBulletin: Resolver<
   any,
   TochesContext,
   MutationBulletinArgs
-> = async (_, args, context) => {
-  await requireAdmin(context)
+> = async (_, args, { session }) => {
+  await requireAdmin(session)
 
   const { bulletin } = args
 

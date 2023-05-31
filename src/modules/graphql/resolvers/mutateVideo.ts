@@ -60,8 +60,8 @@ export const mutateVideo: Resolver<
   any,
   TochesContext,
   VideoMutationsUpdateArgs
-> = async (_, { input }, context) => {
-  if (input.id) await requireVideoOwner(context, input.id)
+> = async (_, { input }, { session }) => {
+  if (input.id) await requireVideoOwner(session, input.id)
 
   const updatedId = input.id ? await updateVideo(input) : await createVideo(input)
 
@@ -80,7 +80,7 @@ export const mutateVideoPublish: Resolver<
   VideoMutationsPublishArgs
 > = async (_, { videoId }, context, info) => {
   if (isNaN(parseInt(videoId || ""))) throw new GraphQLError("videoId is invalid")
-  await requireVideoOwner(context, videoId)
+  await requireVideoOwner(context.session, videoId)
   await db("videos")
     .update("published", info.fieldName === "publish")
     .where("id", parseInt(videoId))
@@ -99,7 +99,7 @@ export const mutateVideoDelete: Resolver<
   VideoMutationsDeleteArgs
 > = async (_, { videoId }, context) => {
   if (isNaN(parseInt(videoId || ""))) throw new GraphQLError("videoId is invalid")
-  await requireVideoOwner(context, videoId)
+  await requireVideoOwner(context.session, videoId)
   const rows = await db("videos").delete().where("id", parseInt(videoId))
 
   return {

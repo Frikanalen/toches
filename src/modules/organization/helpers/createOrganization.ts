@@ -6,7 +6,7 @@ import { getOrganization } from "./getOrganization"
 export const createOrganization = async (data: ValidatedOrganization, editor: number) => {
   const { brregNumber, name, homepage, postalAddress, streetAddress } = data
 
-  const [id] = await db
+  const [{ id }] = await db
     .insert({
       brreg_number: brregNumber,
       name,
@@ -16,7 +16,7 @@ export const createOrganization = async (data: ValidatedOrganization, editor: nu
       editor_id: editor,
     })
     .into(organizationModel.tableName)
-    .returning<number[]>("id")
+    .returning<[{ id: number }]>("id")
 
   return getOrganization(id)
 }

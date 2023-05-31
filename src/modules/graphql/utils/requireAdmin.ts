@@ -15,8 +15,8 @@ export const userIsAdmin = async (userId: number) => {
 
 // Ensure that the request is being carried out by an administrator.
 // Throws UnauthorizedError if not logged in, ForbiddenError if not admin.
-export const requireAdmin = async (context: TochesContext) => {
-  const userId = await requireUser(context)
+export const requireAdmin = async (session: TochesContext["session"]) => {
+  const userId = await requireUser(session)
 
   if (!(await userIsAdmin(userId))) throw new ForbiddenError("Must be an administrator")
 }

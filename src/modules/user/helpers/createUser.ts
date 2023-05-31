@@ -8,14 +8,14 @@ export const createUser = async (data: ValidatedUser) => {
   const { password, email, name } = data
   const hashed = await hashPassword(password)
 
-  const [id] = await db
+  const [{ id }] = await db
     .insert({
       email,
       password: hashed,
       name: name,
     })
     .into(userModel.tableName)
-    .returning<number[]>("id")
+    .returning<[{ id: number }]>("id")
 
   return getUser(id)
 }

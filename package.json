@@ -42,12 +42,13 @@
         "yup": "^0.32.11"
     },
     "devDependencies": {
-        "@faker-js/faker": "^7.2.0",
+        "@faker-js/faker": "^8.0.2",
         "@graphql-codegen/add": "^3.2.1",
         "@graphql-codegen/cli": "2.13.1",
         "@graphql-codegen/introspection": "2.2.1",
         "@graphql-codegen/typescript": "2.7.3",
         "@graphql-codegen/typescript-resolvers": "2.7.3",
+        "@shopify/jest-koa-mocks": "^5.1.1",
         "@tsconfig/node18": "^1.0.1",
         "@types/bcrypt": "^5.0.0",
         "@types/dotenv": "^8.2.0",

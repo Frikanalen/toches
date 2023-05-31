@@ -6,8 +6,11 @@ import { userIsAdmin } from "./requireAdmin"
 
 // Ensure that the request is being carried out by the editor of a video's organization
 // Throws UnauthorizedError if not logged in, ForbiddenError if not admin.
-export const requireVideoOwner = async (context: TochesContext, videoId: string) => {
-  const userId = await requireUser(context)
+export const requireVideoOwner = async (
+  session: TochesContext["session"],
+  videoId: string,
+) => {
+  const userId = await requireUser(session)
 
   if (await userIsAdmin(userId)) return
 

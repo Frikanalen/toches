@@ -50,9 +50,9 @@ export const mutateOrganization: Resolver<
   any,
   any,
   MutationOrganizationArgs
-> = async (parent, { organization }, context) => {
+> = async (parent, { organization }, { session }) => {
   if (!organization.id) {
-    const userId = await requireUser(context)
+    const userId = await requireUser(session)
 
     const [{ id }] = await createOrganization({
       ...organization,
@@ -63,9 +63,9 @@ export const mutateOrganization: Resolver<
   }
 
   try {
-    await requireAdmin(context.session)
+    await requireAdmin(session)
   } catch {
-    await requireOrganizationEditor(context.session, organization.id)
+    await requireOrganizationEditor(session, organization.id)
   }
 
   const [{ id }] = await updateOrganization(organization)
