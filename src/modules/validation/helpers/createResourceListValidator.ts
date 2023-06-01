@@ -1,5 +1,4 @@
-import { array, number, ValidationError } from "yup"
-import { RequiredNumberSchema } from "yup/lib/number"
+import * as yup from "yup"
 import { db } from "../../db/db"
 
 export type Options = {
@@ -10,9 +9,9 @@ export type Options = {
 
 export const createResourceListValidator = (options: Options) => {
   const { tableName, resourceName, requireUnique } = options
-  const id = number().required() as RequiredNumberSchema<number>
+  const id = yup.number().required()
 
-  return array(id).test(async (value) => {
+  return yup.array(id).test(async (value) => {
     if (!value) return true
 
     const unique = [...new Set(value)]
@@ -31,6 +30,6 @@ export const createResourceListValidator = (options: Options) => {
       return true
     }
 
-    throw new ValidationError(`Invalid ${resourceName} list`)
+    throw new yup.ValidationError(`Invalid ${resourceName} list`)
   })
 }

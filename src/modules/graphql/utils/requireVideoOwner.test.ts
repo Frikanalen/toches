@@ -1,12 +1,17 @@
 import { db } from "../../db/db"
 import { makeOrganization, makeSession, makeUser, makeVideo } from "./testingToolkit"
 import { requireVideoOwner } from "./requireVideoOwner"
+import { Knex } from "knex"
+
+let trx: Knex.Transaction
 
 beforeEach(async () => {
   await db.migrate.latest()
+  trx = await db.transaction()
 })
 
 afterEach(async () => {
+  await trx.commit()
   await db.migrate.rollback()
 })
 

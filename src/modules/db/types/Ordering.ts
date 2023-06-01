@@ -1,10 +1,9 @@
-import { ObjectSchema } from "yup"
+import * as yup from "yup"
 import { Knex } from "knex"
-import { ObjectShape } from "yup/lib/object"
 
-export type Ordering<N extends string = any, P extends object = {}> = {
-  name: N
-  schema: ObjectSchema<ObjectShape>
+export type Ordering<N extends string = string, P extends object = {}> = {
+  orderBy: N
+  schema: yup.ObjectSchema<yup.AnyObject>
   apply: (query: Knex.QueryBuilder, params: P) => void
 }
 

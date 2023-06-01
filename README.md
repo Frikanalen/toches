@@ -49,6 +49,19 @@ In production mode, this is handled by our traefik ingress controller.
 
 ## Unit tests
 
+The tests use a postgres database pointed to by the environment variable `TEST_DATABASE_URL`.
+
+By default, this points to the fktest database on the database specified by docker-compose.yml.
+
+You will have to create this database first:
+
+```bash
+source .env # cp dev-env .env if you haven't already
+psql $DATABASE_URL -c 'create database fktest;'
+```
+
+Then, run the tests as usual with
+
 ```bash
 yarn test
 ```

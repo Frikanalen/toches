@@ -8,7 +8,7 @@
         "toches": "./cli/build/index.js"
     },
     "scripts": {
-        "test": "jest",
+        "test": "jest --runInBand --detectOpenHandles --forceExit --coverageDirectory=\"./coverage\"",
         "build": "tsc",
         "start": "node build/index.js",
         "dev": "ts-node-dev src/index.ts",

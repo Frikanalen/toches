@@ -1,19 +1,19 @@
 import { add, startOfToday } from "date-fns"
 import { QueryScheduleArgs, Resolver, ScheduleFilter } from "../../../generated/graphql"
-import { date, object } from "yup"
+import * as yup from "yup"
 import { UserInputError } from "apollo-server-koa"
 import { db } from "../../db/db"
 import { getPageInfo } from "../utils/getPageInfo"
 import { ScheduleItemWithKeys, SchedulePaginationWithKeys, VideoWithKeys } from "../types"
 import { getSchedulePresentation } from "../../presentation/getSchedulePresentation"
 
-const ScheduleFilterSchema = object({
-  from: date().default(startOfToday()),
-  to: date().when("from", (from: Date) => {
-    return date()
-      .default(add(from, { hours: 24 }))
-      .max(add(from, { days: 7 }))
-  }),
+const ScheduleFilterSchema = yup.object({
+  from: yup.date().default(startOfToday()),
+  to: yup
+    .date()
+    .when("from", ([from]: Date[], schema) =>
+      schema.default(add(from, { hours: 24 })).max(add(from, { days: 7 })),
+    ),
 })
 
 const parseFilterArg = async (filter: ScheduleFilter) => {

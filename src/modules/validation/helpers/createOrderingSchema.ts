@@ -1,22 +1,32 @@
-import { array, ArraySchema, object, string, StringSchema } from "yup"
 import { Ordering } from "../../db/types/Ordering"
+import * as yup from "yup"
 
-export const createOrderingSchema = <O extends Ordering[], N extends O[number]["name"]>(
-  orderings: O,
+// I have no idea what this does...?
+const transformList = (_: any, o: string) => {
+  if (!o) return []
+  return o
+    .replace(/[\[\]"]/g, "")
+    .split(",")
+    .filter((val) => val !== "undefined")
+}
+
+export const createOrderingSchema = <
+  TOrdering extends Ordering,
+  TFieldName extends string = TOrdering["orderBy"],
+>(
+  orderings: TOrdering[],
 ) => {
-  const names = orderings.map((o) => o.name)
+  const names = orderings.map((o) => o.orderBy as TFieldName)
 
-  const base = object({
-    orderBy: array(string().oneOf(names)).transform((v, o: string) =>
-      o.replace(/[\[\]"]/g, "").split(","),
-    ) as ArraySchema<StringSchema<N>>,
+  const base = yup.object({
+    orderBy: yup
+      .array(yup.string().required().oneOf<TFieldName>(names))
+      .transform(transformList),
   })
 
-  return base.when("orderBy", (orderBy: N[]) => {
-    const [first, ...rest] = orderings.filter((o) =>
-      (orderBy ?? orderings[0].name).includes(o.name),
-    )
+  return base.when("orderBy", ([orderBy]: TFieldName[], schema) => {
+    const ordering = orderBy ?? orderings[0].orderBy
 
-    return rest.reduce((a, b) => a.concat(b.schema), base.concat(first.schema))
+    return schema.concat(orderings.find((o) => o.orderBy === ordering)!.schema)
   })
 }

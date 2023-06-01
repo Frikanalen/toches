@@ -1,7 +1,6 @@
-import { startOfToday, add } from "date-fns"
+import { add, startOfToday } from "date-fns"
 import { Middleware } from "koa"
-import { date } from "yup"
-import { object } from "yup"
+import * as yup from "yup"
 import { getJukeboxEntries } from "../helpers/getJukeboxEntries"
 import { serializeJukeboxEntry } from "../helpers/serializeJukeboxEntry"
 
@@ -32,14 +31,16 @@ import { serializeJukeboxEntry } from "../helpers/serializeJukeboxEntry"
 export const sendSchedule = (): Middleware => async (context, next) => {
   const { query } = context
 
-  const { from, to } = await object({
-    from: date().default(startOfToday()),
-    to: date().when("from", (from: Date) => {
-      return date()
-        .default(add(from, { hours: 24 }))
-        .max(add(from, { days: 7 }))
-    }),
-  }).validate(query)
+  const { from, to } = await yup
+    .object({
+      from: yup.date().default(startOfToday()),
+      to: yup
+        .date()
+        .when("from", ([from]: Date[], schema) =>
+          schema.default(add(from, { hours: 24 })).max(add(from, { days: 7 })),
+        ),
+    })
+    .validate(query)
 
   const jukeboxEntries = await getJukeboxEntries(from.toISOString(), to!.toISOString())
   context.body = jukeboxEntries.map(serializeJukeboxEntry)

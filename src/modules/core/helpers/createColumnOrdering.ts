@@ -1,4 +1,4 @@
-import { object, string } from "yup"
+import * as yup from "yup"
 import { Ordering } from "../../db/types/Ordering"
 
 export type Params = {
@@ -6,13 +6,15 @@ export type Params = {
 }
 
 export const createColumnOrdering = <N extends string>(
-  name: N,
+  orderBy: N,
   column: string,
 ): Ordering<N, Params> => ({
-  name,
-  schema: object({
+  orderBy,
+  schema: yup.object({
     // Yup will not treat an empty string (?ascending) as a boolean, so we need to use a string shema.
-    ascending: string().transform((value) => (typeof value === "string" ? "true" : "")),
+    ascending: yup
+      .string()
+      .transform((value) => (typeof value === "string" ? "true" : "")),
   }),
   apply: (query, params) => {
     query.orderBy(column, params.ascending ? "ASC" : "DESC")
