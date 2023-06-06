@@ -1,4 +1,4 @@
-FROM node:18-alpine as deps
+FROM node:20-bullseye as deps
 
 WORKDIR /home/node/app
 
@@ -7,7 +7,7 @@ COPY package.json .
 
 RUN yarn install --quiet --dev
 
-FROM node:18-alpine as runner
+FROM node:20-bullseye as runner
 
 COPY --from=deps /home/node/app/node_modules node_modules
 COPY . .

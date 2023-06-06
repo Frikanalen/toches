@@ -32,9 +32,9 @@ export type OrganizationWithKeys = DeepPartial<Organization> & {
 }
 
 export type ScheduleItemWithKeys = DeepPartial<ScheduleItem> & {
-  id?: Scalars["ID"]
-  videoId?: Scalars["ID"]
-  liveId?: Scalars["ID"]
+  id?: Scalars["ID"]["output"]
+  videoId?: Scalars["ID"]["output"]
+  liveId?: Scalars["ID"]["output"]
 }
 
 export type SchedulePaginationWithKeys = DeepPartial<SchedulePagination> & {

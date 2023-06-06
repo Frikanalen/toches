@@ -6,38 +6,41 @@ export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
+export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: NonNullable<T[P]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: string;
-  String: string;
-  Boolean: boolean;
-  Int: number;
-  Float: number;
-  DateTime: any;
+  ID: { input: string | number; output: string; }
+  String: { input: string; output: string; }
+  Boolean: { input: boolean; output: boolean; }
+  Int: { input: number; output: number; }
+  Float: { input: number; output: number; }
+  DateTime: { input: any; output: any; }
 };
 
 export type BasicVideoMetadata = {
-  description: Scalars['String'];
+  description: Scalars['String']['output'];
+  duration?: Maybe<Scalars['Float']['output']>;
   organization: Organization;
-  title: Scalars['String'];
-  url: Scalars['String'];
+  title: Scalars['String']['output'];
+  url: Scalars['String']['output'];
 };
 
 export type Bulletin = {
   __typename?: 'Bulletin';
-  createdAt: Scalars['DateTime'];
-  id: Scalars['ID'];
-  text: Scalars['String'];
-  title: Scalars['String'];
-  updatedAt: Scalars['DateTime'];
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['ID']['output'];
+  text: Scalars['String']['output'];
+  title: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
 };
 
 export type BulletinInput = {
-  id?: InputMaybe<Scalars['ID']>;
-  text?: InputMaybe<Scalars['String']>;
-  title?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  text?: InputMaybe<Scalars['String']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type BulletinPagination = {
@@ -48,15 +51,16 @@ export type BulletinPagination = {
 
 export type LiveVideo = BasicVideoMetadata & {
   __typename?: 'LiveVideo';
-  description: Scalars['String'];
+  description: Scalars['String']['output'];
+  duration?: Maybe<Scalars['Float']['output']>;
   organization: Organization;
-  title: Scalars['String'];
-  url: Scalars['String'];
+  title: Scalars['String']['output'];
+  url: Scalars['String']['output'];
 };
 
 export type LoginInput = {
-  email: Scalars['String'];
-  password: Scalars['String'];
+  email: Scalars['String']['input'];
+  password: Scalars['String']['input'];
 };
 
 export type Mutation = {
@@ -84,44 +88,44 @@ export enum MutationStatus {
 
 export type Organization = {
   __typename?: 'Organization';
-  brregId?: Maybe<Scalars['Int']>;
-  createdAt?: Maybe<Scalars['DateTime']>;
-  description?: Maybe<Scalars['String']>;
+  brregId?: Maybe<Scalars['Int']['output']>;
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  description?: Maybe<Scalars['String']['output']>;
   editor: OrganizationEditor;
-  homepage?: Maybe<Scalars['String']>;
-  id: Scalars['ID'];
+  homepage?: Maybe<Scalars['String']['output']>;
+  id: Scalars['ID']['output'];
   latestVideos?: Maybe<Array<Video>>;
-  name: Scalars['String'];
-  postalAddress: Scalars['String'];
-  streetAddress: Scalars['String'];
-  updatedAt?: Maybe<Scalars['DateTime']>;
+  name: Scalars['String']['output'];
+  postalAddress: Scalars['String']['output'];
+  streetAddress: Scalars['String']['output'];
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
 };
 
 export type OrganizationEditor = {
   __typename?: 'OrganizationEditor';
-  email: Scalars['String'];
-  id: Scalars['ID'];
-  name: Scalars['String'];
+  email: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
 };
 
 export type OrganizationInput = {
-  brregId?: InputMaybe<Scalars['String']>;
-  description?: InputMaybe<Scalars['String']>;
-  homepage?: InputMaybe<Scalars['String']>;
-  id?: InputMaybe<Scalars['ID']>;
-  name?: InputMaybe<Scalars['String']>;
-  postalAddress?: InputMaybe<Scalars['String']>;
-  streetAddress?: InputMaybe<Scalars['String']>;
+  brregId?: InputMaybe<Scalars['String']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  homepage?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  postalAddress?: InputMaybe<Scalars['String']['input']>;
+  streetAddress?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type PaginationInfo = {
   __typename?: 'PaginationInfo';
-  hasNextPage: Scalars['Boolean'];
-  hasPreviousPage: Scalars['Boolean'];
-  page: Scalars['Int'];
-  perPage: Scalars['Int'];
-  totalItems: Scalars['Int'];
-  totalPages: Scalars['Int'];
+  hasNextPage: Scalars['Boolean']['output'];
+  hasPreviousPage: Scalars['Boolean']['output'];
+  page: Scalars['Int']['output'];
+  perPage: Scalars['Int']['output'];
+  totalItems: Scalars['Int']['output'];
+  totalPages: Scalars['Int']['output'];
 };
 
 export type Query = {
@@ -136,30 +140,30 @@ export type Query = {
 
 
 export type QueryBulletinArgs = {
-  id: Scalars['ID'];
+  id: Scalars['ID']['input'];
 };
 
 
 export type QueryBulletinsArgs = {
-  page?: Scalars['Int'];
-  perPage?: Scalars['Int'];
+  page?: Scalars['Int']['input'];
+  perPage?: Scalars['Int']['input'];
 };
 
 
 export type QueryOrganizationArgs = {
-  id: Scalars['ID'];
+  id: Scalars['ID']['input'];
 };
 
 
 export type QueryScheduleArgs = {
   filter: ScheduleFilter;
-  page?: Scalars['Int'];
-  perPage?: Scalars['Int'];
+  page?: Scalars['Int']['input'];
+  perPage?: Scalars['Int']['input'];
 };
 
 export type RegisterInput = {
-  email: Scalars['String'];
-  password: Scalars['String'];
+  email: Scalars['String']['input'];
+  password: Scalars['String']['input'];
 };
 
 export enum RoleType {
@@ -168,15 +172,15 @@ export enum RoleType {
 }
 
 export type ScheduleFilter = {
-  from?: InputMaybe<Scalars['DateTime']>;
-  to?: InputMaybe<Scalars['DateTime']>;
+  from?: InputMaybe<Scalars['DateTime']['input']>;
+  to?: InputMaybe<Scalars['DateTime']['input']>;
 };
 
 export type ScheduleItem = {
   __typename?: 'ScheduleItem';
-  endsAt: Scalars['DateTime'];
-  id: Scalars['ID'];
-  startsAt: Scalars['DateTime'];
+  end: Scalars['DateTime']['output'];
+  id: Scalars['ID']['output'];
+  start: Scalars['DateTime']['output'];
   video: BasicVideoMetadata;
 };
 
@@ -188,15 +192,15 @@ export type SchedulePagination = {
 
 export type Session = {
   __typename?: 'Session';
-  authenticated: Scalars['Boolean'];
+  authenticated: Scalars['Boolean']['output'];
   user?: Maybe<User>;
 };
 
 export type User = {
   __typename?: 'User';
-  email: Scalars['String'];
-  id: Scalars['ID'];
-  name?: Maybe<Scalars['String']>;
+  email: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+  name?: Maybe<Scalars['String']['output']>;
   roles: Array<UserRole>;
 };
 
@@ -210,6 +214,7 @@ export type UserMutations = {
   __typename?: 'UserMutations';
   login: UserMutationResult;
   logout: UserMutationResult;
+  profile: UserMutationResult;
   register: UserMutationResult;
 };
 
@@ -219,8 +224,18 @@ export type UserMutationsLoginArgs = {
 };
 
 
+export type UserMutationsProfileArgs = {
+  input: UserProfileInput;
+};
+
+
 export type UserMutationsRegisterArgs = {
   input: RegisterInput;
+};
+
+export type UserProfileInput = {
+  name?: InputMaybe<Scalars['String']['input']>;
+  password?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type UserRole = {
@@ -232,53 +247,54 @@ export type UserRole = {
 export type Video = BasicVideoMetadata & {
   __typename?: 'Video';
   assets: Array<VideoAsset>;
-  createdAt: Scalars['DateTime'];
-  description: Scalars['String'];
-  id: Scalars['ID'];
+  createdAt: Scalars['DateTime']['output'];
+  description: Scalars['String']['output'];
+  duration?: Maybe<Scalars['Float']['output']>;
+  id: Scalars['ID']['output'];
   images: VideoImages;
   organization: Organization;
-  title: Scalars['String'];
-  updatedAt: Scalars['DateTime'];
-  url: Scalars['String'];
-  viewCount?: Maybe<Scalars['Int']>;
+  title: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+  url: Scalars['String']['output'];
+  viewCount?: Maybe<Scalars['Int']['output']>;
 };
 
 export type VideoAsset = {
   __typename?: 'VideoAsset';
-  id: Scalars['ID'];
-  path: Scalars['String'];
-  type: Scalars['String'];
+  id: Scalars['ID']['output'];
+  path: Scalars['String']['output'];
+  type: Scalars['String']['output'];
 };
 
 export type VideoFilter = {
-  organizationId?: InputMaybe<Scalars['ID']>;
-  query?: InputMaybe<Scalars['String']>;
+  organizationId?: InputMaybe<Scalars['ID']['input']>;
+  query?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type VideoImages = {
   __typename?: 'VideoImages';
-  thumbLarge: Scalars['String'];
-  thumbMedium: Scalars['String'];
-  thumbSmall: Scalars['String'];
+  thumbLarge: Scalars['String']['output'];
+  thumbMedium: Scalars['String']['output'];
+  thumbSmall: Scalars['String']['output'];
 };
 
 export type VideoInput = {
-  description?: InputMaybe<Scalars['String']>;
-  id?: InputMaybe<Scalars['ID']>;
-  mediaId?: InputMaybe<Scalars['ID']>;
-  organizationId?: InputMaybe<Scalars['ID']>;
-  title?: InputMaybe<Scalars['String']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  mediaId?: InputMaybe<Scalars['ID']['input']>;
+  organizationId?: InputMaybe<Scalars['ID']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type VideoList = {
   filter?: InputMaybe<VideoFilter>;
-  page?: Scalars['Int'];
-  perPage?: Scalars['Int'];
+  page?: Scalars['Int']['input'];
+  perPage?: Scalars['Int']['input'];
   sort?: InputMaybe<Array<VideoSort>>;
 };
 
 export type VideoMutationError = {
-  message: Scalars['String'];
+  message: Scalars['String']['output'];
 };
 
 export type VideoMutationPayload = {
@@ -286,7 +302,7 @@ export type VideoMutationPayload = {
   error?: Maybe<VideoMutationError>;
   status: MutationStatus;
   video?: Maybe<Video>;
-  videoId?: Maybe<Scalars['ID']>;
+  videoId?: Maybe<Scalars['ID']['output']>;
 };
 
 export type VideoMutations = {
@@ -305,17 +321,17 @@ export type VideoMutationsCreateArgs = {
 
 
 export type VideoMutationsDeleteArgs = {
-  videoId: Scalars['ID'];
+  videoId: Scalars['ID']['input'];
 };
 
 
 export type VideoMutationsPublishArgs = {
-  videoId: Scalars['ID'];
+  videoId: Scalars['ID']['input'];
 };
 
 
 export type VideoMutationsUnpublishArgs = {
-  videoId: Scalars['ID'];
+  videoId: Scalars['ID']['input'];
 };
 
 
@@ -338,7 +354,7 @@ export type VideoQueries = {
 
 
 export type VideoQueriesGetArgs = {
-  id: Scalars['ID'];
+  id: Scalars['ID']['input'];
 };
 
 
@@ -352,13 +368,13 @@ export type VideoQueriesSearchArgs = {
 };
 
 export type VideoSearch = {
-  limit?: Scalars['Int'];
-  query: Scalars['String'];
+  limit?: Scalars['Int']['input'];
+  query: Scalars['String']['input'];
 };
 
 export type VideoSearchResults = {
   __typename?: 'VideoSearchResults';
-  count: Scalars['Int'];
+  count: Scalars['Int']['output'];
   items: Array<Video>;
 };
 
@@ -431,16 +447,24 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
   info: GraphQLResolveInfo
 ) => TResult | Promise<TResult>;
 
+
+/** Mapping of interface types */
+export type ResolversInterfaceTypes<RefType extends Record<string, unknown>> = ResolversObject<{
+  BasicVideoMetadata: ( LiveVideoWithKeys ) | ( VideoWithKeys );
+  VideoMutationError: never;
+}>;
+
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = ResolversObject<{
-  BasicVideoMetadata: ResolversTypes['LiveVideo'] | ResolversTypes['Video'];
-  Boolean: ResolverTypeWrapper<DeepPartial<Scalars['Boolean']>>;
+  BasicVideoMetadata: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['BasicVideoMetadata']>;
+  Boolean: ResolverTypeWrapper<DeepPartial<Scalars['Boolean']['output']>>;
   Bulletin: ResolverTypeWrapper<DeepPartial<Bulletin>>;
   BulletinInput: ResolverTypeWrapper<DeepPartial<BulletinInput>>;
   BulletinPagination: ResolverTypeWrapper<DeepPartial<BulletinPagination>>;
-  DateTime: ResolverTypeWrapper<DeepPartial<Scalars['DateTime']>>;
-  ID: ResolverTypeWrapper<DeepPartial<Scalars['ID']>>;
-  Int: ResolverTypeWrapper<DeepPartial<Scalars['Int']>>;
+  DateTime: ResolverTypeWrapper<DeepPartial<Scalars['DateTime']['output']>>;
+  Float: ResolverTypeWrapper<DeepPartial<Scalars['Float']['output']>>;
+  ID: ResolverTypeWrapper<DeepPartial<Scalars['ID']['output']>>;
+  Int: ResolverTypeWrapper<DeepPartial<Scalars['Int']['output']>>;
   LiveVideo: ResolverTypeWrapper<LiveVideoWithKeys>;
   LoginInput: ResolverTypeWrapper<DeepPartial<LoginInput>>;
   Mutation: ResolverTypeWrapper<{}>;
@@ -456,10 +480,11 @@ export type ResolversTypes = ResolversObject<{
   ScheduleItem: ResolverTypeWrapper<ScheduleItemWithKeys>;
   SchedulePagination: ResolverTypeWrapper<SchedulePaginationWithKeys>;
   Session: ResolverTypeWrapper<DeepPartial<Omit<Session, 'user'> & { user?: Maybe<ResolversTypes['User']> }>>;
-  String: ResolverTypeWrapper<DeepPartial<Scalars['String']>>;
+  String: ResolverTypeWrapper<DeepPartial<Scalars['String']['output']>>;
   User: ResolverTypeWrapper<UserWithKeys>;
   UserMutationResult: ResolverTypeWrapper<DeepPartial<Omit<UserMutationResult, 'user'> & { user?: Maybe<ResolversTypes['User']> }>>;
-  UserMutations: ResolverTypeWrapper<DeepPartial<Omit<UserMutations, 'login' | 'logout' | 'register'> & { login: ResolversTypes['UserMutationResult'], logout: ResolversTypes['UserMutationResult'], register: ResolversTypes['UserMutationResult'] }>>;
+  UserMutations: ResolverTypeWrapper<DeepPartial<Omit<UserMutations, 'login' | 'logout' | 'profile' | 'register'> & { login: ResolversTypes['UserMutationResult'], logout: ResolversTypes['UserMutationResult'], profile: ResolversTypes['UserMutationResult'], register: ResolversTypes['UserMutationResult'] }>>;
+  UserProfileInput: ResolverTypeWrapper<DeepPartial<UserProfileInput>>;
   UserRole: ResolverTypeWrapper<UserRoleWithKeys>;
   Video: ResolverTypeWrapper<VideoWithKeys>;
   VideoAsset: ResolverTypeWrapper<DeepPartial<VideoAsset>>;
@@ -467,7 +492,7 @@ export type ResolversTypes = ResolversObject<{
   VideoImages: ResolverTypeWrapper<DeepPartial<VideoImages>>;
   VideoInput: ResolverTypeWrapper<DeepPartial<VideoInput>>;
   VideoList: ResolverTypeWrapper<DeepPartial<VideoList>>;
-  VideoMutationError: never;
+  VideoMutationError: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['VideoMutationError']>;
   VideoMutationPayload: ResolverTypeWrapper<DeepPartial<Omit<VideoMutationPayload, 'video'> & { video?: Maybe<ResolversTypes['Video']> }>>;
   VideoMutations: ResolverTypeWrapper<DeepPartial<Omit<VideoMutations, 'create' | 'delete' | 'publish' | 'unpublish' | 'update'> & { create: ResolversTypes['VideoMutationPayload'], delete: ResolversTypes['VideoMutationPayload'], publish: ResolversTypes['VideoMutationPayload'], unpublish: ResolversTypes['VideoMutationPayload'], update: ResolversTypes['VideoMutationPayload'] }>>;
   VideoPagination: ResolverTypeWrapper<VideoPaginationWithKeys>;
@@ -479,14 +504,15 @@ export type ResolversTypes = ResolversObject<{
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = ResolversObject<{
-  BasicVideoMetadata: ResolversParentTypes['LiveVideo'] | ResolversParentTypes['Video'];
-  Boolean: DeepPartial<Scalars['Boolean']>;
+  BasicVideoMetadata: ResolversInterfaceTypes<ResolversParentTypes>['BasicVideoMetadata'];
+  Boolean: DeepPartial<Scalars['Boolean']['output']>;
   Bulletin: DeepPartial<Bulletin>;
   BulletinInput: DeepPartial<BulletinInput>;
   BulletinPagination: DeepPartial<BulletinPagination>;
-  DateTime: DeepPartial<Scalars['DateTime']>;
-  ID: DeepPartial<Scalars['ID']>;
-  Int: DeepPartial<Scalars['Int']>;
+  DateTime: DeepPartial<Scalars['DateTime']['output']>;
+  Float: DeepPartial<Scalars['Float']['output']>;
+  ID: DeepPartial<Scalars['ID']['output']>;
+  Int: DeepPartial<Scalars['Int']['output']>;
   LiveVideo: LiveVideoWithKeys;
   LoginInput: DeepPartial<LoginInput>;
   Mutation: {};
@@ -500,10 +526,11 @@ export type ResolversParentTypes = ResolversObject<{
   ScheduleItem: ScheduleItemWithKeys;
   SchedulePagination: SchedulePaginationWithKeys;
   Session: DeepPartial<Omit<Session, 'user'> & { user?: Maybe<ResolversParentTypes['User']> }>;
-  String: DeepPartial<Scalars['String']>;
+  String: DeepPartial<Scalars['String']['output']>;
   User: UserWithKeys;
   UserMutationResult: DeepPartial<Omit<UserMutationResult, 'user'> & { user?: Maybe<ResolversParentTypes['User']> }>;
-  UserMutations: DeepPartial<Omit<UserMutations, 'login' | 'logout' | 'register'> & { login: ResolversParentTypes['UserMutationResult'], logout: ResolversParentTypes['UserMutationResult'], register: ResolversParentTypes['UserMutationResult'] }>;
+  UserMutations: DeepPartial<Omit<UserMutations, 'login' | 'logout' | 'profile' | 'register'> & { login: ResolversParentTypes['UserMutationResult'], logout: ResolversParentTypes['UserMutationResult'], profile: ResolversParentTypes['UserMutationResult'], register: ResolversParentTypes['UserMutationResult'] }>;
+  UserProfileInput: DeepPartial<UserProfileInput>;
   UserRole: UserRoleWithKeys;
   Video: VideoWithKeys;
   VideoAsset: DeepPartial<VideoAsset>;
@@ -511,7 +538,7 @@ export type ResolversParentTypes = ResolversObject<{
   VideoImages: DeepPartial<VideoImages>;
   VideoInput: DeepPartial<VideoInput>;
   VideoList: DeepPartial<VideoList>;
-  VideoMutationError: never;
+  VideoMutationError: ResolversInterfaceTypes<ResolversParentTypes>['VideoMutationError'];
   VideoMutationPayload: DeepPartial<Omit<VideoMutationPayload, 'video'> & { video?: Maybe<ResolversParentTypes['Video']> }>;
   VideoMutations: DeepPartial<Omit<VideoMutations, 'create' | 'delete' | 'publish' | 'unpublish' | 'update'> & { create: ResolversParentTypes['VideoMutationPayload'], delete: ResolversParentTypes['VideoMutationPayload'], publish: ResolversParentTypes['VideoMutationPayload'], unpublish: ResolversParentTypes['VideoMutationPayload'], update: ResolversParentTypes['VideoMutationPayload'] }>;
   VideoPagination: VideoPaginationWithKeys;
@@ -523,6 +550,7 @@ export type ResolversParentTypes = ResolversObject<{
 export type BasicVideoMetadataResolvers<ContextType = TochesContext, ParentType extends ResolversParentTypes['BasicVideoMetadata'] = ResolversParentTypes['BasicVideoMetadata']> = ResolversObject<{
   __resolveType: TypeResolveFn<'LiveVideo' | 'Video', ParentType, ContextType>;
   description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  duration?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
   organization?: Resolver<ResolversTypes['Organization'], ParentType, ContextType>;
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -549,6 +577,7 @@ export interface DateTimeScalarConfig extends GraphQLScalarTypeConfig<ResolversT
 
 export type LiveVideoResolvers<ContextType = TochesContext, ParentType extends ResolversParentTypes['LiveVideo'] = ResolversParentTypes['LiveVideo']> = ResolversObject<{
   description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  duration?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
   organization?: Resolver<ResolversTypes['Organization'], ParentType, ContextType>;
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -604,9 +633,9 @@ export type QueryResolvers<ContextType = TochesContext, ParentType extends Resol
 }>;
 
 export type ScheduleItemResolvers<ContextType = TochesContext, ParentType extends ResolversParentTypes['ScheduleItem'] = ResolversParentTypes['ScheduleItem']> = ResolversObject<{
-  endsAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  end?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  startsAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  start?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   video?: Resolver<ResolversTypes['BasicVideoMetadata'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
@@ -640,6 +669,7 @@ export type UserMutationResultResolvers<ContextType = TochesContext, ParentType 
 export type UserMutationsResolvers<ContextType = TochesContext, ParentType extends ResolversParentTypes['UserMutations'] = ResolversParentTypes['UserMutations']> = ResolversObject<{
   login?: Resolver<ResolversTypes['UserMutationResult'], ParentType, ContextType, RequireFields<UserMutationsLoginArgs, 'input'>>;
   logout?: Resolver<ResolversTypes['UserMutationResult'], ParentType, ContextType>;
+  profile?: Resolver<ResolversTypes['UserMutationResult'], ParentType, ContextType, RequireFields<UserMutationsProfileArgs, 'input'>>;
   register?: Resolver<ResolversTypes['UserMutationResult'], ParentType, ContextType, RequireFields<UserMutationsRegisterArgs, 'input'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
@@ -654,6 +684,7 @@ export type VideoResolvers<ContextType = TochesContext, ParentType extends Resol
   assets?: Resolver<Array<ResolversTypes['VideoAsset']>, ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  duration?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   images?: Resolver<ResolversTypes['VideoImages'], ParentType, ContextType>;
   organization?: Resolver<ResolversTypes['Organization'], ParentType, ContextType>;

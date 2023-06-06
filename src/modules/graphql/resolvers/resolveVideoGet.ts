@@ -3,8 +3,9 @@ import { db } from "../../db/db"
 import { Videos } from "../../../generated/tableTypes"
 import { Resolver, VideoQueriesGetArgs } from "../../../generated/graphql"
 import { VideoWithKeys } from "../types"
+import { DatabaseKey } from "../utils/requireOrganizationEditor"
 
-export const videoGet = async (videoId: string) => {
+export const videoGet = async (videoId: DatabaseKey) => {
   if (!videoId) throw new Error("resolveVideoGet called with nullish id")
 
   return db<Videos>("videos")

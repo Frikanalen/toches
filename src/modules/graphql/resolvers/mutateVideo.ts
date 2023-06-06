@@ -14,6 +14,7 @@ import { GraphQLError } from "graphql"
 import { videoGet } from "./resolveVideoGet"
 import { DeepPartial } from "utility-types"
 import { requireVideoOwner } from "../utils/requireVideoOwner"
+import { DatabaseKey } from "../utils/requireOrganizationEditor"
 
 const updateVideo = async ({
   id,
@@ -30,6 +31,13 @@ const updateVideo = async ({
     .returning<{ id: string }[]>("id")
     .then((row) => row[0]?.id)
 
+const validateId = (id: DatabaseKey | undefined | null) => {
+  if (!id) throw new GraphQLError("id is required")
+  const validatedId = typeof id === "number" ? id : parseInt(id || "")
+  if (isNaN(validatedId)) throw new GraphQLError("id is required")
+  return validatedId
+}
+
 const createVideo = async ({
   title,
   description,
@@ -38,11 +46,8 @@ const createVideo = async ({
 }: VideoInput): Promise<string> => {
   // FIXME: Must check if mediaId is valid here!
   // Does media exist? does media belong to user? etc
-  const validatedMediaId = parseInt(mediaId || "")
-  if (isNaN(validatedMediaId)) throw new GraphQLError("mediaId is required")
-
-  const validatedOrgId = parseInt(organizationId || "")
-  if (isNaN(validatedOrgId)) throw new GraphQLError("organizationId is required")
+  const validatedMediaId = validateId(mediaId)
+  const validatedOrgId = validateId(organizationId)
 
   return db<Videos>("videos")
     .insert({
@@ -79,12 +84,12 @@ export const mutateVideoPublish: Resolver<
   TochesContext,
   VideoMutationsPublishArgs
 > = async (_, { videoId }, context, info) => {
-  if (isNaN(parseInt(videoId || ""))) throw new GraphQLError("videoId is invalid")
+  const validatedVideoId = validateId(videoId)
   await requireVideoOwner(context.session, videoId)
   await db("videos")
     .update("published", info.fieldName === "publish")
-    .where("id", parseInt(videoId))
-  const video = await videoGet(videoId)
+    .where("id", validatedVideoId)
+  const video = await videoGet(validatedVideoId)
 
   return {
     status: MutationStatus.Success,
@@ -98,9 +103,9 @@ export const mutateVideoDelete: Resolver<
   TochesContext,
   VideoMutationsDeleteArgs
 > = async (_, { videoId }, context) => {
-  if (isNaN(parseInt(videoId || ""))) throw new GraphQLError("videoId is invalid")
-  await requireVideoOwner(context.session, videoId)
-  const rows = await db("videos").delete().where("id", parseInt(videoId))
+  const validatedVideoId = validateId(videoId)
+  await requireVideoOwner(context.session, validatedVideoId)
+  const rows = await db("videos").delete().where("id", validatedVideoId)
 
   return {
     status: rows === 1 ? MutationStatus.Success : MutationStatus.Error,

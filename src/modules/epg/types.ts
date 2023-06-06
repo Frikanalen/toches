@@ -1,4 +1,6 @@
 // Bog-standard Interval does not ensure start and end are Date
+import { Scalars } from "../../generated/graphql"
+
 export type ScheduleInterval = { start: Date; end: Date }
 
 export type PresentationEventLive = BasePresentationEvent & {
@@ -10,7 +12,7 @@ export type PresentationEventVideo = BasePresentationEvent & {
 }
 
 type BasePresentationEvent = {
-  id: string
+  id: Scalars["ID"]["output"]
   title: string
   description: string
   url: string
