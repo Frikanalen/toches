@@ -8,6 +8,11 @@ module.exports = {
       stub: "migration.stub.js",
     },
   },
+  client: "pg",
+  connection: process.env.DATABASE_URL,
+  migrations: {
+    stub: "migration.stub.js",
+  },
   postgres: {
     client: "pg",
     connection: process.env.DATABASE_URL,
