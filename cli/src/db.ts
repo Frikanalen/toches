@@ -5,7 +5,5 @@ const config = require("../../knexfile")
 export const db = knex({
   ...config,
   pool: { max: 64 },
-  acquireConnectionTimeout: 240000,
+  acquireConnectionTimeout: 24000000,
 })
-
-export const testDBConnection = () => db.raw("select 1+1 as result")
