@@ -1,3 +1,4 @@
+import { MEDIA_SERVER_BASE_URL } from "../../core/constants"
 import { VideoMediaAssetData } from "../models/videoModel"
 
 export const getObjectURL = (locator?: string) => {
@@ -6,9 +7,8 @@ export const getObjectURL = (locator?: string) => {
   const [scheme, ...rest] = locator.split(":")
 
   if (scheme === "S3") {
-    const mediaUrl = process.env["FK_MEDIA"] ?? ""
     const [bucket, ...path] = rest
-    return `${mediaUrl}/${bucket}/${path.join(":")}`
+    return `${MEDIA_SERVER_BASE_URL}/${bucket}/${path.join(":")}`
   } else if (scheme === "legacy") {
     return "https://upload.frikanalen.no/media/" + rest.join(":")
   }
