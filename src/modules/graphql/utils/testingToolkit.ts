@@ -19,6 +19,7 @@ export const makeUser = async (isAdmin: boolean = false) => {
 
   return id
 }
+
 export const makeOrganization = async (editorId: number) => {
   const { id } = await createOrganization(
     {

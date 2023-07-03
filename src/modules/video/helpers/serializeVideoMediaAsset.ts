@@ -22,17 +22,24 @@ export const getObjectURL = (locator?: string) => {
  *     VideoMediaAsset:
  *       type: object
  *       properties:
+ *         id:
+ *           type: number
  *         type:
  *           type: string
  *         url:
  *           type: string
  *         metadata:
  *           type: object
+ *       required:
+ *        - id
+ *        - type
+ *        - url
  */
 export const serializeVideoMediaAsset = (data: VideoMediaAssetData) => {
-  const { type, locator, metadata } = data
+  const { type, locator, metadata, id } = data
 
   return {
+    id,
     type,
     url: getObjectURL(locator),
     metadata,

@@ -23,7 +23,12 @@ import { OrganizationData } from "../models/organizationModel"
  *          type: string
  *        editor:
  *          $ref: '#/components/schemas/User'
- */
+ *      required:
+ *       - id
+ *       - name
+ *       - description
+ *       - editor
+*/
 export const serializeOrganization = (organization: OrganizationData) => {
   const { id, name, description, homepage, postalAddress, streetAddress, editor } =
     organization

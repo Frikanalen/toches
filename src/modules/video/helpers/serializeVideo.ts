@@ -47,6 +47,8 @@ import { serializeVideoMediaAsset } from "./serializeVideoMediaAsset"
  *           type: number
  *         jukeboxable:
  *           type: boolean
+ *         published:
+ *           type: boolean
  *       required:
  *         - id
  *         - title
@@ -59,6 +61,7 @@ import { serializeVideoMediaAsset } from "./serializeVideoMediaAsset"
  *         - media
  *         - viewCount
  *         - jukeboxable
+ *         - published
  *
  */
 export const serializeVideo = (video: VideoData) => {
@@ -75,6 +78,7 @@ export const serializeVideo = (video: VideoData) => {
     assets,
     viewCount,
     jukeboxable,
+    published,
   } = video
 
   return {
@@ -84,6 +88,7 @@ export const serializeVideo = (video: VideoData) => {
     duration,
     categories: categories.map((c) => c.id),
     createdAt,
+    published,
     updatedAt,
     organization: serializeOrganization(organization),
     media: {

@@ -11,7 +11,7 @@ export const resolveVideoList: Resolver<
   any,
   any,
   VideoQueriesListArgs
-> = async (parent, { input }) => {
+> = async (_, { input }) => {
   const { filter, sort, page = 0, perPage = 25 } = input
 
   if (perPage < 1) throw new UserInputError("perPage minimum value is 1.")
@@ -33,6 +33,7 @@ export const resolveVideoList: Resolver<
       url: db.raw("('/video/' || v.id::text)"),
     })
     .whereRaw("vm.id = v.media_id")
+    .andWhere("v.published", true)
     .orderBy(getOrderBy(sort, "v."))
     .offset((page - 1) * perPage)
     .limit(perPage)

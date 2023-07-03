@@ -4,8 +4,8 @@ import { db } from "../../db/db"
 import { AuthenticationError } from "apollo-server-koa"
 
 export const resolveUser: Resolver<User, any, TochesContext> = async (
-  parent,
-  args,
+  _,
+  __,
   { session },
 ) => {
   if (!session?.user) throw new AuthenticationError("Must be logged in")

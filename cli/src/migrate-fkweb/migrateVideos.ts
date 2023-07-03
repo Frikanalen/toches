@@ -69,6 +69,7 @@ export const migrateVideos = async () => {
             created_at: created_time || uploaded_time || updated_time || new Date(),
             updated_at: updated_time || new Date(),
             media_id: originals[id],
+            published: publish_on_web,
           })
         } catch (e) {
           log.warn(`Skipping video ${id} due to database error`)

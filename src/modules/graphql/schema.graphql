@@ -244,6 +244,7 @@ type Video implements BasicVideoMetadata {
     description: String!
     url: String!
     duration: Float
+    published: Boolean!
 
     organization: Organization!
 

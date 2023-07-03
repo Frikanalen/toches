@@ -1,12 +1,9 @@
 import * as dotenv from "dotenv"
-dotenv.config()
+dotenv.config({ path: __dirname + '/../.env' });
+
 import { app } from "./modules/core/app"
 import { testDBConnection } from "./modules/db/db"
 import { log } from "./modules/core/log"
-
-if (typeof process.env.DATABASE_URL === "undefined") {
-  throw new Error("DATABASE_URL is not set!")
-}
 
 const port = Number(process.env.PORT) || 8080
 
