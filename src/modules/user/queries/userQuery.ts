@@ -20,7 +20,7 @@ export const userQuery = new QueryTemplate<DefaultQueryOptions & UserQueryParams
           getAliasedColumns({
             columns: roleModel.columns,
             table: roleModel.tableName,
-            prefix: "role",
+            aliasPrefix: "role",
           }),
         )
         .from(roleModel.tableName)
@@ -35,7 +35,7 @@ export const userQuery = new QueryTemplate<DefaultQueryOptions & UserQueryParams
       getAliasedColumns({
         columns: userModel.columns,
         table: userModel.tableName,
-        prefix: "user",
+        aliasPrefix: "user",
       }),
     ),
 })

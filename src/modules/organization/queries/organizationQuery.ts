@@ -43,7 +43,7 @@ export const organizationQuery = new QueryTemplate<
       getAliasedColumns({
         columns: organizationModel.columns,
         table: organizationModel.tableName,
-        prefix: "organization",
+        aliasPrefix: "organization",
       }),
     ),
 })

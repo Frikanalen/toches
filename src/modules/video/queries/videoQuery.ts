@@ -80,7 +80,7 @@ export const videoQuery = new QueryTemplate<DefaultQueryOptions & VideoQueryPara
       getAliasedColumns({
         columns: videoModel.columns,
         table: videoModel.tableName,
-        prefix: "video",
+        aliasPrefix: "video",
       }),
     ),
 })

@@ -30,7 +30,7 @@ export const bulletinQuery = new QueryTemplate<DefaultQueryOptions & BulletinQue
         getAliasedColumns({
           columns: bulletinModel.columns,
           table: bulletinModel.tableName,
-          prefix: "bulletin",
+          aliasPrefix: "bulletin",
         }),
       )
     },

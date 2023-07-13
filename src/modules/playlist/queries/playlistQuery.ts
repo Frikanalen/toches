@@ -35,7 +35,7 @@ export const playlistQuery = new QueryTemplate<DefaultQueryOptions & PlaylistQue
         getAliasedColumns({
           columns: playlistModel.columns,
           table: playlistModel.tableName,
-          prefix: playlistModel.structure.prefix,
+          aliasPrefix: playlistModel.structure.prefix,
         }),
       ),
   },

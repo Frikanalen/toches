@@ -35,7 +35,7 @@ export class Relationship<O extends DefaultQueryOptions> {
       getAliasedColumns({
         columns: model.columns,
         table: alias,
-        prefix,
+        aliasPrefix: prefix,
       }),
     )
 

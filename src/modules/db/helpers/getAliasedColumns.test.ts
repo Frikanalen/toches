@@ -4,7 +4,7 @@ test("getAliasedColumns", () => {
   const result = getAliasedColumns({
     columns: ["id", "username"],
     table: "Users",
-    prefix: "User",
+    aliasPrefix: "User",
   })
 
   expect(result).toMatchObject([

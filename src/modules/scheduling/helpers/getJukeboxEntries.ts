@@ -19,7 +19,7 @@ export const getJukeboxEntries = async (
     .select(
       getAliasedColumns({
         columns: videoModel.columns,
-        prefix: videoModel.structure.prefix,
+        aliasPrefix: videoModel.structure.prefix,
         table: videoModel.tableName,
       }),
     )
