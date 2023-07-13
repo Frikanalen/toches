@@ -2,7 +2,7 @@ import { roleModel } from "../../access-control/models/roleModel"
 import { DefaultQueryOptions, QueryTemplate } from "../../db/classes/QueryTemplate"
 import { db } from "../../db/db"
 import { getAliasedColumns } from "../../db/helpers/getAliasedColumns"
-import { getArrayFromSubquery } from "../../db/helpers/getArrayFromSubquery"
+import { includeSubquery } from "../../db/helpers/includeSubquery"
 import { userModel } from "../models/userModel"
 
 export type UserQueryParams = {
@@ -27,7 +27,7 @@ export const userQuery = new QueryTemplate<DefaultQueryOptions & UserQueryParams
         .join("role_user_map", "role_user_map.role_id", "roles.id")
         .whereRaw("role_user_map.user_id = users.id")
 
-      query.select(getArrayFromSubquery(subquery, "user__roles"))
+      query.select(includeSubquery(subquery, "user__roles"))
     }
   },
   prepare: () =>
