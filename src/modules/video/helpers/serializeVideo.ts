@@ -1,6 +1,6 @@
 import { serializeOrganization } from "../../organization/helpers/serializeOrganization"
 import { VideoData } from "../models/videoModel"
-import { serializeVideoMediaAsset } from "./serializeVideoMediaAsset"
+import { getObjectURL, serializeVideoMediaAsset } from "./serializeVideoMediaAsset"
 
 /**
  * @openapi
@@ -19,6 +19,8 @@ import { serializeVideoMediaAsset } from "./serializeVideoMediaAsset"
  *           type: string
  *         duration:
  *           type: number
+ *         original:
+ *           type: uri
  *         categories:
  *           type: array
  *           items:
@@ -54,6 +56,7 @@ import { serializeVideoMediaAsset } from "./serializeVideoMediaAsset"
  *         - title
  *         - description
  *         - duration
+ *         - original
  *         - categories
  *         - createdAt
  *         - updatedAt
@@ -77,6 +80,7 @@ export const serializeVideo = (video: VideoData) => {
     categories,
     assets,
     viewCount,
+    original,
     jukeboxable,
     published,
   } = video
@@ -91,6 +95,7 @@ export const serializeVideo = (video: VideoData) => {
     published,
     updatedAt,
     organization: serializeOrganization(organization),
+    original: getObjectURL(original),
     media: {
       id: mediaId,
       assets: assets.map((a) => serializeVideoMediaAsset(a)),

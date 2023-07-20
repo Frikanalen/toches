@@ -38,14 +38,6 @@ export const videoQuery = new QueryTemplate<DefaultQueryOptions & VideoQueryPara
         .select(["id", "type", "locator", "metadata"])
         .from("video_media_assets")
         .whereRaw("video_media_assets.media_id = videos.media_id")
-        .unionAll(() => {
-          // "type" does not exist on video_media, so we statically
-          // assign it as "broadcastable" for now.
-          return db
-            .select(["id", db.raw("'broadcastable' AS type"), "locator", "metadata"])
-            .from("video_media")
-            .whereRaw("video_media.id = videos.media_id")
-        })
 
       query.select(includeSubquery(assetSubquery, "video__assets"))
 
@@ -58,6 +50,7 @@ export const videoQuery = new QueryTemplate<DefaultQueryOptions & VideoQueryPara
 
       query
         .select("video_media.duration AS video__duration")
+        .select("video_media.locator AS video__original")
         .join("video_media", "video_media.id", "videos.media_id")
     }
 

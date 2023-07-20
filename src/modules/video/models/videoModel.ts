@@ -31,6 +31,7 @@ export type VideoData = {
 
   viewCount: number
 
+  original: string
   published: boolean
   jukeboxable: boolean
 }
