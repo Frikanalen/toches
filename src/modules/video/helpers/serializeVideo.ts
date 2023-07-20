@@ -20,7 +20,7 @@ import { getObjectURL, serializeVideoMediaAsset } from "./serializeVideoMediaAss
  *         duration:
  *           type: number
  *         original:
- *           type: uri
+ *           type: string
  *         categories:
  *           type: array
  *           items:
