@@ -4,9 +4,7 @@ import { db } from "../db"
 import { getRandomItem } from "../helpers/getRandomItem"
 
 const address = () =>
-  faker.helpers.fake(
-    "{{address.streetAddress}}\n{{address.zipCode}} {{address.state}}, {{address.country}}",
-  )
+  `${faker.location.streetAddress()}\n${faker.location.zipCode()} ${faker.location.city()}`
 
 export const organizationCommand = new Command("organizations")
   .description("Add randomly generated organizations to the database")
