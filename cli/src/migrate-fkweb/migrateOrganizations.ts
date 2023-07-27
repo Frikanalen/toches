@@ -40,6 +40,7 @@ export const migrateOrganizations = async () => {
             homepage,
             id,
             name,
+            active: fkmember,
             postal_address: postal_address || "",
             street_address: street_address || "",
           })

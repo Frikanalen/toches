@@ -9,7 +9,7 @@ import { CategoryData } from "../models/categoryModel"
  *       properties:
  *         id:
  *           type: number
- *         key:
+ *         slug:
  *           type: string
  *         name:
  *           type: string

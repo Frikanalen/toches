@@ -1,8 +1,41 @@
 import { fkweb } from "./fkwebDatabase"
 import { db } from "../db"
-import { FkVideo, Organizations, Videos } from "../tableTypes"
+import { Categories, FkVideo, Organizations, Videos } from "../tableTypes"
 import { getOriginalIds } from "./migrateVideoFiles"
 import { log } from "./log"
+
+// Uses the "name" field of both tables to return the new category ID
+const mapOldCategoryIdToNew = async (oldId: number) => {
+  // Get name for a given ID from old database:
+  const oldName = await fkweb<Categories>("fk_category")
+    .select("name")
+    .where("id", oldId)
+    .first()
+
+  if (!oldName) throw new Error(`Category ${oldId} not found in old database`)
+
+  const result = await db<Categories>("categories")
+    .select("id")
+    .where("name", oldName.name)
+    .first()
+
+  if (!result)
+    throw new Error(`Category ${oldId}: ${oldName.name} not found in new database`)
+  return result.id
+}
+
+const migrateVideoCategories = async (videoId: number) => {
+  const categoriesForVideo = await fkweb("fk_video_categories").where("video_id", videoId)
+
+  await Promise.all(
+    categoriesForVideo.map(async ({ category_id }) => {
+      await db("video_category_map").insert({
+        video_id: videoId,
+        category_id: await mapOldCategoryIdToNew(category_id),
+      })
+    }),
+  )
+}
 
 // TODO: Fix editorId and fkmember, resolve non-unique brregId
 // TODO: Resolve description issue, discontinuity between SQL schema and GraphQL schema
@@ -60,7 +93,7 @@ export const migrateVideos = async () => {
         }
 
         try {
-          return await db<Videos>("videos").insert({
+          const video = await db<Videos>("videos").insert({
             id,
             title: name,
             description: header || "",
@@ -70,7 +103,12 @@ export const migrateVideos = async () => {
             updated_at: updated_time || new Date(),
             media_id: originals[id],
             published: publish_on_web,
+            tono_encumbered: has_tono_records,
           })
+
+          await migrateVideoCategories(id)
+
+          return video
         } catch (e) {
           log.warn(`Skipping video ${id} due to database error`)
           console.log(e)

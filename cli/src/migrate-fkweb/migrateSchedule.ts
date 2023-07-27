@@ -24,27 +24,32 @@ export const migrateSchedule = async () => {
   log.info(`${scheduleItems.length} items read.`)
 
   log.info(`Building map of known videos`)
-  const knownVideos = (await db<Videos>("videos").select("id")).map(({ id }) => id)
+  const knownVideos = new Set(
+    (await db<Videos>("videos").select("id")).map(({ id }) => id),
+  )
 
-  log.info(`Building and storing schedule`)
-  await Promise.all(
-    scheduleItems.map(async ({ id, video_id, starttime }) => {
+  log.info(`Building schedule`)
+  const entries = scheduleItems
+    .filter(({ video_id }) => {
       if (!video_id) {
         skippedBecauseVideoNull += 1
-        return
+        return false
       }
-      if (!knownVideos.find((id) => id === video_id)) {
+      const known = knownVideos.has(video_id)
+      if (!known) {
         skippedBecauseVideoDoesntExist += 1
-        return
+        return false
       }
+      return true
+    })
+    .map(({ id, video_id, starttime: starts_at }) => ({
+      id,
+      video_id: video_id!,
+      starts_at,
+    }))
 
-      return db<JukeboxEntries>("jukebox_entries").insert({
-        id,
-        video_id,
-        starts_at: starttime,
-      })
-    }),
-  )
+  log.info(`Inserting ${entries.length} schedule items`)
+  await db.batchInsert("jukebox_entries", entries)
   log.warn(
     `${skippedBecauseVideoNull} schedule items were skipped because video_id was null`,
   )

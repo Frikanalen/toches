@@ -2,57 +2,57 @@
 
 const starterCategories = [
   {
-    key: "society",
+    slug: "society",
     name: "Samfunn og politikk",
     description: "",
   },
   {
-    key: "solidarity",
+    slug: "solidarity",
     name: "Solidaritet og bistand",
     description: "",
   },
   {
-    key: "religion",
+    slug: "religion",
     name: "Religion og livssyn",
     description: "",
   },
   {
-    key: "minorities",
+    slug: "minorities",
     name: "Minoriteter",
     description: "",
   },
   {
-    key: "welfare",
+    slug: "welfare",
     name: "Velferd",
     description: "",
   },
   {
-    key: "culture",
+    slug: "culture",
     name: "Kultur",
     description: "",
   },
   {
-    key: "sports",
+    slug: "sports",
     name: "Idrett",
     description: "",
   },
   {
-    key: "public-security",
+    slug: "public-security",
     name: "Beredskap",
     description: "",
   },
   {
-    key: "children",
+    slug: "children",
     name: "Barn og ungdom",
     description: "",
   },
   {
-    key: "technology",
+    slug: "technology",
     name: "Teknologi",
     description: "",
   },
   {
-    key: "other",
+    slug: "other",
     name: "Annet",
     description: "",
   },
@@ -65,7 +65,7 @@ exports.up = async (knex) => {
   await knex.schema.createTable("categories", (table) => {
     table.increments("id")
 
-    table.string("key").notNullable().unique()
+    table.string("slug").notNullable().unique()
     table.string("name").notNullable().unique()
     table.text("description").notNullable()
   })

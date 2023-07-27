@@ -299,6 +299,7 @@ export type Organizations = {
   homepage: string | null
   postal_address: string
   street_address: string
+  active: boolean
   editor_id: number
   created_at: Date
   updated_at: Date
@@ -384,4 +385,5 @@ export type Videos = {
   first_name: string
   last_name: string
   published: boolean
+  tono_encumbered: boolean
 }
