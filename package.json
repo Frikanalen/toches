@@ -10,7 +10,7 @@
     "scripts": {
         "test": "jest --runInBand --detectOpenHandles --forceExit --coverageDirectory=\"./coverage\"",
         "build": "tsc",
-        "start": "node build/index.js",
+        "start": "node --enable-source-maps build/index.js",
         "dev": "ts-node-dev src/index.ts",
         "build-cli": "tsc --project ./cli/tsconfig.json",
         "cli": "node ./cli/build/index.js",
@@ -31,7 +31,6 @@
         "knex": "^2.4.2",
         "koa": "^2.14.2",
         "koa-bodyparser": "^4.4.0",
-        "koa-logger": "^3.2.1",
         "koa-session": "^6.4.0",
         "koa2-swagger-ui": "^5.8.0",
         "libxmljs2": "^0.32.0",

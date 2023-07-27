@@ -5,15 +5,14 @@ import { useSession } from "../auth/middleware/useSession"
 import { IS_PROD } from "./constants"
 import { handleError } from "./middleware/handleError"
 import { sendCORSHeaders } from "./middleware/sendCORSHeaders"
-import logger from "koa-logger"
 import { router } from "./router"
 import { apolloServer } from "../graphql/server"
-import { log } from "./log"
+import { log, requestLogger } from "./log"
 
 const app = new Koa()
 
 app.proxy = IS_PROD
-app.use(logger())
+app.use(requestLogger())
 app.use(handleError())
 app.use(bodyParser())
 app.use(useSession(app))

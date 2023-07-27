@@ -43,13 +43,13 @@ export const videoCommand = new Command("videos")
       console.info(`Generating "${video.title}"`)
       await execAsync(`fk media generate -o /tmp/file.mp4 -s 5 -t "${video.title}"`)
 
-      const { stdout } = await execAsync(`fk media upload -f /tmp/file.mp4`)
-      const media_id = Number(stdout.trim())
+      const { stdout: mediaId } = await execAsync(`fk media upload -f /tmp/file.mp4`)
 
       const [{ id }] = await db
-        .insert({ ...video, media_id })
+        .insert({ ...video, media_id: parseInt(mediaId.trim()) })
         .into("videos")
         .returning("id")
+
       console.info(`Created with ID "${id}"`)
     }
 
